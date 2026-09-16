@@ -1,39 +1,26 @@
 -- Execute uma vez no SQL Editor do Supabase.
--- Três pareceristas oficiais entram no cálculo; Fabio Ribeiro fica apenas em apoio/auditoria.
+-- Remove apenas as avaliações de teste e garante os cinco acessos do sistema.
+
+begin;
+
+delete from avaliacoes;
 
 alter table avaliadores
   add column if not exists contabiliza boolean not null default true;
 
-update avaliadores set nome = 'Erica Orosco', contabiliza = true
-where token = 'parecerista-1' or lower(nome) = 'parecerista 1';
-
-update avaliadores set nome = 'Juliana Gelbaum', contabiliza = true
-where token = 'parecerista-2' or lower(nome) = 'parecerista 2';
-
-update avaliadores set nome = 'Thayna Bonsaver', contabiliza = true
-where token = 'parecerista-3' or lower(nome) = 'parecerista 3';
-
-insert into avaliadores (nome, papel, contabiliza)
-select 'Erica Orosco', 'parecerista', true
-where not exists (select 1 from avaliadores where lower(nome) = 'erica orosco');
-
-insert into avaliadores (nome, papel, contabiliza)
-select 'Juliana Gelbaum', 'parecerista', true
-where not exists (select 1 from avaliadores where lower(nome) = 'juliana gelbaum');
-
-insert into avaliadores (nome, papel, contabiliza)
-select 'Thayna Bonsaver', 'parecerista', true
-where not exists (select 1 from avaliadores where lower(nome) = 'thayna bonsaver');
-
-insert into avaliadores (nome, papel, contabiliza)
-select 'Fabio Ribeiro', 'parecerista', false
-where not exists (select 1 from avaliadores where lower(nome) = 'fabio ribeiro' and papel = 'parecerista');
-
-update avaliadores set contabiliza = true
-where lower(nome) in ('erica orosco','juliana gelbaum','thayna bonsaver') and papel = 'parecerista';
-
-update avaliadores set contabiliza = false
-where lower(nome) = 'fabio ribeiro' and papel = 'parecerista';
+insert into avaliadores (nome, email, papel, token, ativo, contabiliza)
+values
+  ('Administração', 'admin@local', 'admin', 'admin-demo', true, true),
+  ('Erica Orosco', 'erica@local', 'parecerista', 'parecerista-1', true, true),
+  ('Juliana Gelbaum', 'juliana@local', 'parecerista', 'parecerista-2', true, true),
+  ('Thayna Bonsaver', 'thayna@local', 'parecerista', 'parecerista-3', true, true),
+  ('Fabio Ribeiro', 'fabio@local', 'parecerista', 'fabio-ribeiro', true, false)
+on conflict (token) do update set
+  nome = excluded.nome,
+  email = excluded.email,
+  papel = excluded.papel,
+  ativo = excluded.ativo,
+  contabiliza = excluded.contabiliza;
 
 drop function if exists listar_avaliadores(text);
 create function listar_avaliadores(p_token text)
@@ -50,6 +37,8 @@ $$;
 
 revoke execute on function listar_avaliadores(text) from public, authenticated;
 grant execute on function listar_avaliadores(text) to anon;
+
+commit;
 
 select nome, papel, contabiliza, token
 from avaliadores

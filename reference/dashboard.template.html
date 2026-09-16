@@ -301,7 +301,7 @@ async function iniciar(){
   const v = await cliente.rpc("validar_token", {p_token: token});
   if (v.error || !v.data || v.data.papel !== "admin") return vazio("Acesso não reconhecido", "Este link não corresponde a um administrador ativo.");
   eu = v.data; $("#quem").textContent = eu.nome;
-  $("#abrir-auditoria").href = `auditoria?token=${encodeURIComponent(token)}`;
+  $("#abrir-auditoria").href = `auditoria.html?token=${encodeURIComponent(token)}`;
   await carregar();
 }
 
