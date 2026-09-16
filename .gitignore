@@ -1,0 +1,6 @@
+.DS_Store
+*.zip
+reference/__pycache__/
+reference/learning_sectors.db
+reference/learning_sectors.db-shm
+reference/learning_sectors.db-wal

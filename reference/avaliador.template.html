@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning Sectors 2026 · Avaliação das inscrições</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="supabase-shim.js"></script>
+<style>
+:root{
+  --roxo:#2B0A5A; --vermelho:#D8102E; --tinta:#1A1533; --cinza:#6B6880;
+  --linha:#E4E1EC; --leve:#F6F4FA; --fundo:#FFFFFF; --ok:#1E7F4F; --topo-h:58px;
+  --regua-controle-h:40px; --regua-pre-controle:28px;
+}
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable}
+html,body{margin:0;background:var(--fundo);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:15px;line-height:1.5;overscroll-behavior-y:none}
+body{padding-top:var(--topo-h)}
+a{color:var(--roxo)}
+button{font:inherit;cursor:pointer}
+.topo{position:fixed;z-index:30;top:0;left:0;right:0;height:var(--topo-h);border-bottom:3px solid #3E3B47;padding:7px 24px 6px;display:flex;flex-wrap:nowrap;gap:24px;align-items:center;background:#fff;box-shadow:0 2px 8px rgba(26,21,51,.06)}
+.topo-identidade{display:flex;min-width:0;flex-direction:column;gap:1px}
+.topo h1{margin:0;font-size:19px;font-weight:600;line-height:26px;color:#2F2C38}
+.topo .quem{display:flex;align-items:center;gap:7px;margin:0 0 0 auto;color:var(--cinza);font-size:14px;font-weight:500;line-height:20px}
+.topo .quem::before{content:"";width:14px;height:14px;flex:none;background:no-repeat center/14px 14px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%236B6880' stroke-width='1.35' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='5' r='2.5'/%3E%3Cpath d='M3.5 14c.25-3 1.72-4.5 4.5-4.5s4.25 1.5 4.5 4.5'/%3E%3C/svg%3E")}
+.fila-cab{position:sticky;z-index:3;top:-24px;margin-top:-24px;padding:24px 24px 0;background:#F8F8FA;border-bottom:1px solid var(--linha);box-shadow:0 5px 10px rgba(26,21,51,.035)}
+.fila-cab .titulo-coluna{margin-left:0;margin-right:0;margin-bottom:0}
+.fila-cab .prog{display:flex;align-items:center;height:28px;color:var(--cinza);font-size:12px;font-weight:500;line-height:18px}
+.app{display:grid;grid-template-columns:290px minmax(0,1fr);min-height:calc(100vh - var(--topo-h))}
+.fila{border-right:1px solid #DADBE0;padding:24px 0;overflow-y:auto;max-height:calc(100vh - var(--topo-h));position:sticky;top:var(--topo-h);background:#F8F8FA}
+.fila h2{margin-left:24px;margin-right:24px}
+.fila button{display:flex;align-items:center;gap:10px;width:100%;min-height:38px;text-align:left;border:0;background:none;padding:7px 24px;color:var(--tinta);border-left:3px solid transparent}
+.fila button:hover{background:var(--leve)}
+.fila button.ativa{border-left-color:#4A4653;background:#E5E4E9;color:#272330}
+.fila button.ativa .nome{font-weight:650}
+.fila button.avaliada{background:#EEF8F3;color:#145C3A}
+.fila button.avaliada:hover{background:#E3F3EA}
+.fila button.avaliada.ativa{background:#E3F3EA;border-left-color:var(--ok)}
+.fila button.bloqueada{opacity:.48;cursor:not-allowed;background:transparent;color:var(--cinza)}
+.fila button.bloqueada:hover{background:transparent}
+.fila .cod{color:var(--cinza);font-variant-numeric:tabular-nums;min-width:46px}
+.fila .nome{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-transform:uppercase}
+.fila .nota-time{display:inline-flex;align-items:center;justify-content:flex-end;gap:4px;flex:none;min-width:48px;margin-left:auto;margin-right:-4px;text-align:right;color:#3E6A54;font-size:13px;font-weight:400;line-height:18px;font-variant-numeric:tabular-nums}
+.fila .nota-time::before{content:"";width:10px;height:10px;flex:none;opacity:.72;background:no-repeat center/10px 10px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='%233E6A54' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2 8.2-.4 2.2 2.2-.4 5.8-5.8-1.8-1.8L2 8.2Z'/%3E%3Cpath d='m6.9 3.3 1.8 1.8'/%3E%3C/svg%3E")}
+.fila .st{display:grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--cinza);margin:0;flex:none;font-size:12px;font-weight:600;color:#fff}
+.fila .st.feita{background:var(--ok);border-color:var(--ok)}
+.fila .st.feita::after{content:"✓"}
+.fila .st.em-andamento{border-color:#5C5267;background:#5C5267;box-shadow:0 0 0 0 rgba(92,82,103,.3);animation:pulso-andamento 2.2s ease-in-out infinite}
+@keyframes pulso-andamento{0%,100%{opacity:.5;box-shadow:0 0 0 0 rgba(92,82,103,.24)}50%{opacity:1;box-shadow:0 0 0 4px rgba(92,82,103,0)}}
+@media (prefers-reduced-motion:reduce){.fila .st.em-andamento{animation:none;opacity:.85}}
+.fila .st.trancada{position:relative;border:0;border-radius:0;color:#77727F}
+.fila .st.trancada::before{content:"";position:absolute;left:5px;top:1px;width:8px;height:8px;border:1.5px solid currentColor;border-bottom:0;border-radius:5px 5px 0 0;box-sizing:border-box}
+.fila .st.trancada::after{content:"";position:absolute;left:3px;top:8px;width:12px;height:9px;border:1.5px solid currentColor;border-radius:2px;box-sizing:border-box;background:#F8F8FA}
+.sel-mobile{display:none;margin:12px 24px 0}
+.sel-mobile select{width:100%;font:inherit;padding:8px}
+main{padding:24px;width:100%;max-width:none;min-width:0}
+.ins{display:grid;grid-template-columns:minmax(0,1fr) calc(40% - 2px);gap:28px;align-items:stretch}
+.conteudo-ins{min-width:0}
+.coluna-titulo{margin-left:0;margin-right:0}
+.titulo-coluna{position:relative;display:flex;align-items:center;min-height:30px;margin-top:0;margin-bottom:0;padding:0 0 8px;color:#55515E!important;font-size:15px!important;font-weight:700!important;line-height:22px!important;letter-spacing:.085em;text-transform:uppercase;border-bottom:1px solid var(--linha)}
+.titulo-coluna::after{content:"";position:absolute;left:0;bottom:-1px;width:34px;height:2px;background:#77727F}
+.avaliacao-panel{position:sticky;top:var(--topo-h);display:flex;flex-direction:column;min-height:calc(100vh - var(--topo-h));max-height:calc(100vh - var(--topo-h));margin:-24px -24px -24px 0;padding:24px;background:var(--leve);border:0;border-radius:0;overflow-y:auto;color:var(--tinta)}
+.avaliacao-panel>h2{margin-left:0;margin-right:0}
+.avaliacao-panel>.intro-avaliacao{margin:0 0 14px}
+.intro-avaliacao>p{display:flex;align-items:center;height:var(--regua-pre-controle);margin:0;color:#4F4B57;font-size:13px;font-weight:500}
+.referencia-escala{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;width:100%;margin-left:0;color:var(--cinza);font-size:11px}
+.referencia-escala b{display:grid;place-items:center;width:100%;height:var(--regua-controle-h);border:1px solid var(--roxo);color:var(--roxo);font-size:12px}
+.referencia-escala .ref-inicio{grid-column:1/3;text-align:left;white-space:nowrap}
+.referencia-escala .ref-fim{grid-column:4/6;text-align:right;white-space:nowrap}
+.avaliacao-panel .crit{padding-top:10px;margin-bottom:10px}
+.avaliacao-panel .crit>.explicacao{margin-bottom:6px}
+.avaliacao-panel .crit .cab{min-height:24px}
+.avaliacao-panel .crit .desc{font-size:13px;line-height:1.45}
+.avaliacao-panel .escala{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:6px}
+.avaliacao-panel .escala button{display:grid;place-items:center;width:100%;max-width:none;height:var(--regua-controle-h);border:1px solid var(--roxo);border-radius:0;background:transparent;color:var(--roxo);font-size:12px;font-weight:700;line-height:1;transform:none;box-shadow:none}
+.avaliacao-panel .acoes{margin-top:auto;margin-bottom:-24px;background:var(--leve);border-top-color:var(--linha)}
+.avaliacao-panel .crit{border-top-color:var(--linha)}
+.avaliacao-panel .criterio-nome{color:var(--roxo)}
+.avaliacao-panel .cab .seta::before{border-color:var(--roxo)}
+.avaliacao-panel .escala button{background:transparent;border-color:var(--roxo);color:var(--roxo)}
+.avaliacao-panel .escala button:hover{border-color:var(--roxo)}
+.avaliacao-panel .escala button.on{background:var(--roxo);border-color:var(--roxo);color:#fff;transform:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
+.avaliacao-panel .escala button.on::after{display:none}
+.avaliacao-panel .explicacao-conteudo{background:#fff;border-left-color:var(--roxo);color:var(--cinza)}
+.avaliacao-panel .explicacao-conteudo h4,.avaliacao-panel .peso-explicacao{color:var(--roxo)}
+.avaliacao-panel textarea{background:#fff;border-color:#fff;color:var(--tinta)}
+.avaliacao-panel .btn{background:var(--roxo);border-color:var(--roxo);color:#fff}
+.avaliacao-panel .btn.sec{background:#fff;color:var(--roxo)}
+.avaliacao-panel .aviso{color:var(--cinza)}
+.ins h2{margin:0 0 4px;font-size:24px;font-weight:600;color:#2F2C38;line-height:1.2;text-transform:uppercase}
+.ins .sub{color:var(--cinza);margin-bottom:20px}
+.dados-inscricao{margin:12px 0 7px;border:1px solid var(--linha);border-radius:6px;background:#fff;overflow:hidden}
+.dados-inscricao h3{margin:0!important;padding:9px 12px;background:#F1EDF6;font-size:12px!important}
+.meta{display:block;margin:0}
+.meta-item{display:grid;grid-template-columns:280px minmax(0,1fr);align-items:start;min-height:34px;border-bottom:1px solid #F0EDF4}
+.meta-item:last-child{border-bottom:0}
+.meta dt{padding:5px 12px;color:var(--cinza);font-size:12px;line-height:1.3;white-space:nowrap}
+.meta dd{margin:0;padding:5px 12px;border-left:1px solid var(--linha);font-size:12px;line-height:1.3;max-width:none}
+.perfil-equipe{margin:0 0 18px;border:1px solid var(--linha);border-radius:6px;background:#fff;overflow:hidden}
+.perfil-equipe h3{margin:0!important;padding:9px 12px;background:#F1EDF6;font-size:12px!important}
+.perfil-subtitulo{padding:7px 12px;background:#F8F6FA;color:var(--roxo);font-size:12px;font-weight:600;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.perfil-linha{display:grid;grid-template-columns:280px minmax(0,1fr);align-items:start;min-height:34px;border-bottom:1px solid #F0EDF4}
+.perfil-linha:last-child{border-bottom:0}
+.perfil-rotulo{padding:5px 12px;color:var(--cinza);font-size:12px;line-height:1.3;white-space:nowrap}
+.perfil-valor{padding:5px 12px;border-left:1px solid var(--linha);font-size:12px;line-height:1.3}
+.resposta{display:inline-flex;align-items:center;justify-content:center;min-width:48px;padding:2px 7px;border-radius:999px;font-size:11px;font-weight:600;white-space:nowrap}
+.resposta.sim{background:#E4F4EB;color:#176B43}
+.resposta.nao{background:#FBE8EB;color:#A60F27}
+.resposta.neutra{background:#EEEAF3;color:#625D70}
+.informacoes{margin:var(--regua-pre-controle) 0 20px;border:0;background:#fff}
+.bloco-colapsavel{margin:0;border:0;border-bottom:1px solid #E5E3E8;border-radius:0;background:#fff;overflow:hidden}
+.bloco-colapsavel:last-child{border-bottom:0}
+.bloco-colapsavel summary{position:relative;padding:14px 38px 14px 14px;border-bottom:1px solid transparent;cursor:pointer;color:#302D36;font-size:15px;font-weight:600;list-style:none;background:#EFEFF1}
+.resumo-time{display:flex;align-items:baseline;gap:10px;min-width:0}
+.resumo-time .nome-time{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#241B31;font-size:17px;font-weight:750;line-height:22px;letter-spacing:.01em;text-transform:uppercase}
+.resumo-time .tipo-bloco{flex:none;margin-left:auto;color:#6F6B76;font-size:12px;font-weight:500;line-height:20px;letter-spacing:.01em;white-space:nowrap}
+.informacoes .bloco-colapsavel>summary{display:flex;align-items:center;height:var(--regua-controle-h);min-height:var(--regua-controle-h);padding-top:0;padding-bottom:0;border:1px solid #D8D0E3}
+.informacoes .resumo-time{width:100%;align-items:center}
+.bloco-colapsavel summary::-webkit-details-marker{display:none}
+.bloco-colapsavel summary::after{content:"";position:absolute;right:16px;top:50%;width:10px;height:10px;border-right:1px solid #77737E;border-bottom:1px solid #77737E;transform:translateY(-70%) rotate(45deg);transform-origin:center;transition:transform .15s}
+.bloco-colapsavel[open] summary::after{transform:translateY(-30%) rotate(225deg)}
+.bloco-colapsavel[open] summary{border-bottom:1px solid var(--linha);background:#F5F5F6}
+.bloco-colapsavel .meta{margin:0}
+.bloco-colapsavel .meta dt,.bloco-colapsavel .perfil-rotulo{font-size:13px}
+.bloco-colapsavel .meta dd,.bloco-colapsavel .perfil-valor{font-size:14px}
+.bloco-colapsavel .resposta{font-size:11px;padding:2px 7px}
+.informacoes .bloco-colapsavel>summary,.informacoes .bloco-colapsavel[open]>summary{background:#E9E1F1;color:#302A38;font-size:16px;border-color:#CEC1DB;border-bottom-color:#CEC1DB}
+.informacoes .bloco-colapsavel>summary::after{color:#5F5B66}
+.info-subtitulo{margin:0;padding:8px 12px;border-left:3px solid #8B8791;background:#F1F1F3;color:#55515E;font-size:12px;font-weight:600;border-top:1px solid var(--linha);border-bottom:1px solid var(--linha)}
+.meta+.info-subtitulo,.perfil-linha+.info-subtitulo{margin-top:14px;border-top:1px solid #C9C7CE}
+.narr h3{display:flex;align-items:center;gap:7px;font-size:17px;font-weight:600;color:#44414B;margin:0 0 9px;padding:0}
+.narr h3::after{content:"";width:15px;height:15px;flex:none;opacity:.68;background:no-repeat center/15px 15px url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%2344414B' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 2.5h7l3 3v8H3z'/%3E%3Cpath d='M10 2.5v3h3M5.5 8h5M5.5 10.5h5'/%3E%3C/svg%3E")}
+.crit h3{font-size:15px;font-weight:600;line-height:1.3;color:var(--roxo);margin:0 0 8px}
+.narr p{white-space:pre-wrap;margin:0;font-size:16px;line-height:1.65}
+.narr-bloco{max-width:78ch}
+.pergunta-bloco{margin:0 0 14px;padding:12px 14px;background:#F1F1F3;border-top:1px solid #D8D6DC;border-bottom:1px solid #D8D6DC}
+.resposta-bloco{padding:4px 0 4px 16px;border-left:3px solid #55515E}
+.narr-rotulo{display:block;margin-bottom:5px;color:#55515E;font-size:12px;font-weight:600}
+.pergunta-bloco p{color:#45424C;font-size:15px;font-weight:600;line-height:1.55}
+.resposta-bloco p{color:var(--tinta);font-size:15px;font-weight:400;line-height:1.7}
+.resposta-bloco p+p{margin-top:14px}
+.crit{border-top:1px solid var(--linha);padding-top:18px;margin-bottom:18px}
+.crit[data-k]{padding-left:0}
+.crit .cab{display:grid;grid-template-columns:minmax(0,1fr) 16px;gap:8px;align-items:center;width:100%;list-style:none}
+.crit .cab::-webkit-details-marker{display:none}
+.crit .criterio-nome{min-width:0;color:var(--roxo);font-size:15px;font-weight:600;line-height:1.3}
+.peso-explicacao{margin-bottom:8px;color:var(--roxo);font-size:12px;font-weight:600}
+.crit .desc{max-width:72ch;margin:6px 0 10px}
+.crit details{max-width:72ch;margin-bottom:10px;color:var(--cinza);font-size:14px}
+.crit summary{cursor:pointer;color:var(--roxo)}
+.crit ul{margin:6px 0 0;padding-left:20px}
+.crit>.explicacao{display:block;margin:0 0 5px;padding:0;border:0;max-width:none;color:var(--cinza)}
+.crit .cab .seta{display:grid;place-items:center;width:14px;height:14px;transition:transform .15s}
+.crit .cab .seta::before{content:"";width:7px;height:7px;border-right:2px solid var(--roxo);border-bottom:2px solid var(--roxo);transform:rotate(45deg)}
+.crit>.explicacao[open] .seta{transform:rotate(180deg)}
+.sr-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+.explicacao-conteudo{position:static;margin-top:8px;padding:10px 12px;border-left:2px solid var(--roxo);background:#fff;color:var(--cinza)}
+.crit .explicacao .desc{margin:0 0 7px;font-size:13px}
+.crit .explicacao h4{margin:8px 0 2px;font-size:12px;color:var(--tinta)}
+.escala{display:flex;gap:6px}
+.escala button{width:52px;height:32px;border:1.5px solid var(--linha);background:#fff;border-radius:4px;font-size:15px;font-weight:500;color:var(--tinta);transition:transform .15s,box-shadow .15s,background .15s}
+.escala button:hover{border-color:var(--roxo)}
+.escala button.on{position:relative;background:var(--roxo);border-color:var(--roxo);color:#fff;transform:translateY(-2px) scale(1.06);box-shadow:0 0 0 3px #F4CCD3,0 5px 12px rgba(43,10,90,.24)}
+.escala button.on::after{content:"✓";position:absolute;top:-8px;right:-7px;display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--vermelho);color:#fff;font-size:10px;font-weight:600;border:2px solid #fff}
+.escala button:focus-visible{outline:2px solid var(--vermelho);outline-offset:2px}
+textarea{width:100%;max-width:72ch;font:inherit;padding:10px;border:1.5px solid var(--linha);border-radius:4px;min-height:90px;resize:vertical}
+.acoes{position:sticky;z-index:4;bottom:-24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px -24px -24px;padding:10px 24px 8px;border-top:1px solid var(--linha);background:var(--leve);box-shadow:0 -6px 14px rgba(26,21,51,.06)}
+.acoes .btn{flex:1;white-space:nowrap}
+.acoes .aviso{flex-basis:100%}
+.acoes .aviso:empty{display:none}
+.btn{padding:11px 20px;border-radius:4px;border:1.5px solid var(--roxo);background:var(--roxo);color:#fff;font-weight:500}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.sec{background:#fff;color:var(--roxo)}
+.aviso{color:var(--cinza)}
+.aviso.erro{color:var(--vermelho)}
+.aviso.ok{color:var(--ok)}
+.vazio{padding:48px 24px;max-width:60ch}
+.vazio h2{color:#2F2C38;font-size:20px;margin:0 0 8px}
+.fim{padding:24px 0 40px}
+.fim h2{font-size:24px;color:#2F2C38;margin:0 0 6px}
+.fim .btn{margin-top:14px}
+dialog{width:min(420px,calc(100vw - 32px));border:0;padding:0;box-shadow:0 18px 60px rgba(26,21,51,.25);color:var(--tinta)}
+dialog::backdrop{background:rgba(26,21,51,.5)}
+.modal-incompleta{padding:22px}
+.modal-incompleta h2{margin:0 0 7px;font-size:19px;color:var(--roxo)}
+.modal-incompleta p{margin:0 0 18px;color:var(--cinza)}
+@media (max-width:820px){
+  :root{--topo-h:58px}
+  .topo{flex-wrap:nowrap;padding:7px 16px 6px}
+  .topo h1{font-size:17px;white-space:nowrap}
+  .topo .quem{font-size:13px;white-space:nowrap}
+  .app{grid-template-columns:1fr}
+  .fila{display:none}
+  .sel-mobile{display:block}
+  main{padding:16px}
+  .ins{grid-template-columns:1fr}
+  .avaliacao-panel{position:static;min-height:0;max-height:none;margin:0;padding:20px;overflow:visible}
+  .avaliacao-panel .acoes{position:static;margin:16px -20px -20px;padding:12px 20px 16px}
+  .meta-item{grid-template-columns:190px minmax(0,1fr)}
+  .perfil-linha,.meta-item{grid-template-columns:280px minmax(0,1fr)}
+}
+@media (max-width:520px){.perfil-linha,.meta-item{grid-template-columns:1fr}.perfil-rotulo,.meta dt{white-space:normal}.perfil-valor,.meta dd{border-left:0;padding-top:0}}
+</style>
+</head>
+<body>
+<script>
+// ------------------------------------------------------------- configuração
+const SUPABASE_URL = location.origin;
+const SUPABASE_ANON_KEY = "local";
+const CORTE = 20; // equipes selecionadas nesta etapa
+// ------------------------------------------------------------- dados (gerados por extrair.py, sem dados sensíveis)
+const INSCRICOES = __DADOS__;
+// ------------------------------------------------------------- critérios (regulamento 5.1.1)
+const CRITERIOS = [
+ {k:"edi", nome:"EDI (Equidade, Diversidade e Inclusão)", peso:30,
+  desc:"Como a proposta promove a inclusão e a equidade dentro da comunidade escolar. Ponto positivo: soluções que ampliam o acesso e atendem a diferentes perfis de usuários.",
+  ex:["Considera as necessidades de diferentes grupos da comunidade escolar","Incentiva a participação equitativa nas equipes","Amplia a acessibilidade e evita reforçar estereótipos ou práticas discriminatórias","Valoriza a equidade e a diversidade entre os públicos atendidos pela solução"]},
+ {k:"originalidade", nome:"Originalidade e Criatividade", peso:20,
+  desc:"A capacidade de propor soluções inovadoras e a aplicação criativa dos conceitos STEM. Ponto positivo: uso de técnicas ou tecnologias pouco exploradas no contexto escolar.",
+  ex:["Abordagem nova ou criativa para o problema identificado","Inovação na aplicação dos conceitos STEM","Ideias que diferem de práticas já comuns na comunidade escolar","Potencial de inspirar novas abordagens em outros contextos educacionais"]},
+ {k:"qualidade", nome:"Qualidade da Proposta", peso:20,
+  desc:"A clareza, a consistência e a demonstração da solução apresentada, bem como a capacidade do(a) professor(a)-líder de indicar o impacto da proposta em sala de aula. Ponto positivo: proposta bem estruturada, com problema, solução e impacto pedagógico claramente articulados.",
+  ex:["A narrativa explicita com clareza o problema, sua relevância, a solução e o impacto em sala de aula","O(a) professor(a)-líder descreve mudanças observadas ou esperadas na aprendizagem, no engajamento, na participação ou na dinâmica da turma","A solução é clara e prática para o público-alvo","Há equilíbrio entre simplicidade e eficiência na concepção da solução"]},
+ {k:"viabilidade", nome:"Viabilidade", peso:15,
+  desc:"O realismo e a consistência do caminho proposto para a implementação da solução. Ponto positivo: planejamento claro e alinhado à realidade da comunidade escolar.",
+  ex:["Pode ser implementada com os recursos financeiros, materiais e humanos disponíveis","Solução sustentável no longo prazo","Plano de ação bem estruturado","Considera limitações práticas, como infraestrutura e tempo disponível"]},
+ {k:"impacto", nome:"Impacto Social", peso:15,
+  desc:"A contribuição para a educação, a transformação social e a sustentabilidade da comunidade escolar. Ponto positivo: benefícios claros e duradouros para a comunidade escolar.",
+  ex:["Aborda um problema significativo e beneficia a comunidade escolar","Atende a uma necessidade real e relevante","Potencial de melhorar significativamente o ambiente educacional","Pode ser replicada ou adaptada para outros contextos"]},
+];
+</script>
+
+<header class="topo">
+  <div class="topo-identidade">
+    <h1>Learning Sectors 2026 · Avaliação das inscrições</h1>
+  </div>
+  <span class="quem" id="quem"></span>
+</header>
+
+<div id="raiz"></div>
+<dialog id="modal-incompleta" aria-labelledby="modal-incompleta-titulo">
+  <div class="modal-incompleta">
+    <h2 id="modal-incompleta-titulo">Avaliação incompleta</h2>
+    <p>Preencha os cinco critérios antes de salvar a avaliação.</p>
+    <button class="btn" id="fechar-incompleta" type="button">Entendi</button>
+  </div>
+</dialog>
+
+<script>
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const token = new URLSearchParams(location.search).get("token");
+const fila = INSCRICOES.filter(i => i.elegibilidade.status === "elegivel");
+let cliente, eu, minhas = {}, atual = 0, rascunho = {};
+
+function vazio(t, sub){
+  $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`;
+}
+
+async function iniciar(){
+  if (!token) return vazio("Link incompleto", "Este endereço precisa do seu código de acesso. Use o link que você recebeu por e-mail.");
+  if (SUPABASE_URL.startsWith("COLE")) return vazio("Configuração pendente", "Preencha SUPABASE_URL e SUPABASE_ANON_KEY no topo deste arquivo.");
+  cliente = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const {data, error} = await cliente.rpc("validar_token", {p_token: token});
+  if (error || !data) return vazio("Acesso não reconhecido", "Este link não corresponde a um parecerista ativo. Confira o endereço ou fale com a organização.");
+  eu = data;
+  $("#quem").textContent = eu.nome;
+  const r = await cliente.rpc("minhas_avaliacoes", {p_token: token});
+  (r.data || []).forEach(a => minhas[a.inscricao_id] = a);
+  atual = Math.max(0, fila.findIndex(i => !minhas[i.id]));
+  if (atual === -1) atual = 0;
+  render();
+}
+
+function progresso(){
+  const n = fila.filter(i => minhas[i.id]).length;
+  const el = $("#prog");
+  if (el) el.textContent = `${n} de ${fila.length} avaliadas`;
+}
+
+function mediaPonderada(a){
+  if (!a) return null;
+  return CRITERIOS.reduce((s,c) => s + Number(a[c.k]||0) * c.peso, 0) / 100;
+}
+
+function notaFila(a){
+  const n = mediaPonderada(a);
+  return n == null ? "" : n.toFixed(2).replace(".", ",");
+}
+
+function render(){
+  const ins = fila[atual];
+  const feitas = fila.filter(i => minhas[i.id]).length;
+  const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
+  const limite = primeiraPendente < 0 ? fila.length - 1 : primeiraPendente;
+  const listaHtml = fila.map((i, ix) => `
+    <button data-ix="${ix}" ${ix>limite?'disabled':''} class="${ix===atual?"ativa":""} ${minhas[i.id]?"avaliada":""} ${ix>limite?'bloqueada':''}" aria-label="${esc(i.codigo)} ${esc(i.equipe)}${minhas[i.id]?' — avaliada':ix>limite?' — bloqueada':' — disponível'}">
+      <span class="st ${minhas[i.id]?"feita":ix>limite?'trancada':ix===atual?'em-andamento':''}"></span>
+      <span class="cod">${esc(i.codigo)}</span><span class="nome">${esc(i.equipe)}</span>${minhas[i.id]?`<span class="nota-time" title="Avaliação concluída — clique para revisar">${notaFila(minhas[i.id])}</span>`:""}
+    </button>`).join("");
+  const selHtml = `<select id="sel">${fila.map((i,ix)=>`<option value="${ix}" ${ix===atual?"selected":""} ${ix>limite?'disabled':''}>${minhas[i.id]?"✓ ":ix>limite?'— ':''}${esc(i.codigo)} · ${esc(i.equipe)}</option>`).join("")}</select>`;
+
+  $("#raiz").innerHTML = `
+  <div class="app">
+    <nav class="fila"><div class="fila-cab"><h2 class="titulo-coluna">Fila</h2><span class="prog" id="prog"></span></div>${listaHtml}</nav>
+    <main>
+      <div class="sel-mobile">${selHtml}</div>
+      ${ins ? inscricaoHtml(ins) : ""}
+    </main>
+  </div>`;
+
+  progresso();
+
+  document.querySelectorAll(".fila button").forEach(b => b.onclick = () => ir(+b.dataset.ix));
+  $("#sel").onchange = e => ir(+e.target.value);
+  if (ins) ligarFormulario(ins);
+}
+
+function inscricaoHtml(i){
+  const a = minhas[i.id];
+  rascunho = a ? {edi:a.edi, originalidade:a.originalidade, qualidade:a.qualidade, viabilidade:a.viabilidade, impacto:a.impacto, comentario:a.comentario||""} : {comentario:""};
+  const series = {};
+  i.estudantes.forEach(e => series[e.serie] = (series[e.serie]||0)+1);
+  const seriesTxt = Object.entries(series).map(([s,n]) => `${n} na ${s}`).join(", ");
+  const auto = i.autodeclaracao;
+  return `
+  <article class="ins">
+    <div class="conteudo-ins">
+      <div class="coluna-titulo titulo-coluna">Proposta</div>
+      <div class="informacoes">
+      <details class="bloco-colapsavel">
+        <summary><span class="resumo-time"><span class="nome-time">${esc(i.equipe)}</span><span class="tipo-bloco">Perfil do time</span></span></summary>
+        <h4 class="info-subtitulo">Dados gerais</h4>
+        <dl class="meta">
+          <div class="meta-item"><dt>Escola</dt><dd>${esc(i.escola)} <span style="color:var(--cinza)">· ${esc(i.municipio)}, ${esc(i.uf)}</span></dd></div>
+          <div class="meta-item"><dt>Professor(a)-líder</dt><dd>${esc(i.professor)}${i.colider_nome?`<br><span style="color:var(--cinza)">Co-líder: ${esc(i.colider_nome)}</span>`:i.colider?"<br><span style='color:var(--cinza)'>Co-líder: nome não disponível na base importada</span>":""}</dd></div>
+          <div class="meta-item"><dt>Componentes curriculares</dt><dd>${esc(i.componentes.join(", ")) || "<span style='color:var(--cinza)'>Não informado</span>"}</dd></div>
+          <div class="meta-item"><dt>Estudantes</dt><dd>${i.estudantes.length} (${esc(seriesTxt)})</dd></div>
+        </dl>
+        <h4 class="info-subtitulo">Conhecimento em TI</h4>
+        <div class="perfil-linha"><div class="perfil-rotulo">Conhecimento prévio em TI / computação</div><div class="perfil-valor">${esc(i.conhecimento_ti)}</div></div>
+        <h4 class="info-subtitulo">Autodeclaração</h4>
+        <div class="perfil-linha"><div class="perfil-rotulo">Oportunidade para todos os perfis</div><div class="perfil-valor">${respostaAuto(auto.todos_perfis)}</div></div>
+        <div class="perfil-linha"><div class="perfil-rotulo">Diversidade de gênero</div><div class="perfil-valor">${respostaAuto(auto.genero)}</div></div>
+        <div class="perfil-linha"><div class="perfil-rotulo">Diversidade de cor ou raça</div><div class="perfil-valor">${respostaAuto(auto.cor_raca)}</div></div>
+        <div class="perfil-linha"><div class="perfil-rotulo">Pessoas com deficiência</div><div class="perfil-valor">${respostaAuto(auto.deficiencia)}</div></div>
+      </details>
+      </div>
+      <section class="narr">
+        <div class="narr-bloco">
+          <div class="pergunta-bloco"><h3>Narrativa de ideação</h3><p>Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?</p></div>
+          <div class="resposta-bloco"><span class="narr-rotulo">Resposta da equipe</span>${paragrafos(i.narrativa)}</div>
+        </div>
+      </section>
+    </div>
+    <aside class="avaliacao-panel" aria-label="Formulário de avaliação">
+    <h2 class="titulo-coluna">Avaliação</h2>
+    <div class="intro-avaliacao"><p>Selecione uma nota para cada critério.</p><div class="referencia-escala" aria-label="Escala de 1 a 5"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><span class="ref-inicio">Não atende</span><span class="ref-fim">Atende plenamente</span></div></div>
+    ${CRITERIOS.map(c => `
+    <section class="crit" data-k="${c.k}">
+      <details class="explicacao"><summary class="cab"><span class="criterio-nome">${esc(c.nome)}</span><span class="seta" aria-hidden="true"></span></summary><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p><h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div></details>
+      <div class="escala" role="radiogroup" aria-label="${esc(c.nome)}">
+        ${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" class="${rascunho[c.k]===n?"on":""}" aria-pressed="${rascunho[c.k]===n}">${n}</button>`).join("")}
+      </div>
+    </section>`).join("")}
+    <section class="crit">
+      <h3>Comentário (opcional)</h3>
+      <textarea id="coment" placeholder="Destaque pontos fortes, dúvidas ou aspectos que influenciaram sua avaliação.">${esc(rascunho.comentario)}</textarea>
+    </section>
+    <div class="acoes">
+      <button class="btn" id="salvar">${a ? "Salvar nova versão" : "Salvar avaliação"}</button>
+      <button class="btn sec" id="prox">Próxima pendente</button>
+      <span class="aviso" id="aviso">${a ? "Última versão salva em " + fmt(a.criado_em) + "." : ""}</span>
+    </div>
+    </aside>
+  </article>`;
+}
+
+function fmt(d){ return new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"}); }
+
+function respostaAuto(valor){
+  const v = String(valor || "Não informado");
+  const n = v.toLocaleLowerCase("pt-BR");
+  const classe = n === "sim" ? "sim" : n === "não" || n === "nao" ? "nao" : "neutra";
+  return `<span class="resposta ${classe}">${esc(v)}</span>`;
+}
+
+function paragrafos(texto){
+  return String(texto || "").split(/\n+/).map(x => x.trim()).filter(Boolean).map(x => `<p>${esc(x)}</p>`).join("");
+}
+
+function ligarFormulario(ins){
+  document.querySelectorAll(".crit[data-k]").forEach(sec => {
+    const k = sec.dataset.k;
+    sec.querySelectorAll(".escala button").forEach(b => b.onclick = () => {
+      rascunho[k] = +b.dataset.n;
+      sec.querySelectorAll(".escala button").forEach(x => {x.classList.toggle("on", x===b); x.setAttribute("aria-pressed", x===b);});
+      checar();
+    });
+  });
+  $("#coment").oninput = e => { rascunho.comentario = e.target.value; checar(); };
+  $("#salvar").onclick = () => salvar(ins);
+  $("#prox").onclick = () => { const ix = fila.findIndex((i,x) => x>atual && !minhas[i.id]); ir(ix>=0 ? ix : fila.findIndex(i=>!minhas[i.id])); };
+  $("#prox").disabled = !minhas[ins.id];
+  checar();
+}
+
+function completo(){ return CRITERIOS.every(c => rascunho[c.k] >= 1); }
+function checar(){ $("#salvar").setAttribute("aria-disabled", completo() ? "false" : "true"); }
+
+async function salvar(ins){
+  if (!completo()){ $("#modal-incompleta").showModal(); return; }
+  const btn = $("#salvar"), av = $("#aviso");
+  btn.disabled = true; av.className = "aviso"; av.textContent = "Salvando…";
+  const {data, error} = await cliente.rpc("salvar_avaliacao", {
+    p_token: token, p_inscricao_id: ins.id,
+    p_edi: rascunho.edi, p_originalidade: rascunho.originalidade, p_qualidade: rascunho.qualidade,
+    p_viabilidade: rascunho.viabilidade, p_impacto: rascunho.impacto, p_comentario: rascunho.comentario || null,
+  });
+  if (error){ av.className = "aviso erro"; av.textContent = "Não foi possível salvar (" + error.message + "). Tente de novo; se persistir, avise a organização."; btn.disabled = false; return; }
+  minhas[ins.id] = data;
+  av.className = "aviso ok"; av.textContent = "Avaliação salva às " + fmt(data.criado_em) + ".";
+  progresso();
+  const pend = fila.findIndex((i,x) => x>atual && !minhas[i.id]);
+  const qualquer = fila.findIndex(i => !minhas[i.id]);
+  setTimeout(() => {
+    if (pend >= 0) ir(pend);
+    else if (qualquer >= 0) ir(qualquer);
+    else fim();
+  }, 700);
+}
+
+function ir(ix){
+  const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
+  const limite = primeiraPendente < 0 ? fila.length - 1 : primeiraPendente;
+  if (ix < 0 || ix >= fila.length || ix > limite) return;
+  atual = ix; render(); window.scrollTo({top:0});
+}
+
+function fim(){
+  render();
+  $("main").insertAdjacentHTML("afterbegin", `<div class="fim"><h2>Todas as inscrições avaliadas</h2><p>Obrigado. Suas notas estão registradas. Até o fim do prazo você pode voltar a qualquer inscrição pela lista e salvar uma nova versão.</p></div>`);
+  window.scrollTo({top:0});
+}
+
+iniciar();
+$("#fechar-incompleta").onclick = () => $("#modal-incompleta").close();
+$("#modal-incompleta").onclick = e => { if (e.target.id === "modal-incompleta") e.target.close(); };
+</script>
+</body>
+</html>

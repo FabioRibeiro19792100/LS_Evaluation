@@ -1,0 +1,447 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning Sectors 2026 · Consolidação das avaliações</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="supabase-shim.js"></script>
+<style>
+:root{
+  --roxo:#2B0A5A; --vermelho:#D8102E; --tinta:#1A1533; --cinza:#6B6880;
+  --linha:#E4E1EC; --leve:#F6F4FA; --fundo:#FFFFFF; --ok:#1E7F4F; --corte:#FDF0F2;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--fundo);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:14px;line-height:1.5}
+a{color:var(--roxo)}
+button{font:inherit;cursor:pointer}
+.topo{border-bottom:3px solid var(--roxo);padding:18px 32px;display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start}
+.topo .marca{display:flex;flex-direction:column;gap:5px}
+.topo h1{margin:0;font-size:22px;font-weight:600;line-height:1.15;letter-spacing:-.015em;color:var(--roxo)}
+.topo .subtitulo{display:flex;align-items:center;gap:6px;color:var(--cinza);font-size:13px}
+.topo .subtitulo .ambiente{color:var(--vermelho);font-weight:600;text-transform:uppercase;letter-spacing:.045em;font-size:11px}
+.topo .quem{color:var(--cinza);font-weight:500}
+.topo .acoes{margin-left:auto;display:flex;gap:8px}
+.btn{padding:8px 14px;border-radius:4px;border:1.5px solid var(--roxo);background:#fff;color:var(--roxo);font-weight:500}
+.btn.pri{background:var(--roxo);color:#fff}
+main{width:100%;max-width:none;padding:20px 32px 32px}
+.resumo{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:28px}
+.resumo>div{border:1px solid var(--linha);border-radius:8px;padding:16px 18px;background:#fff}
+.resumo>div.destaque{background:var(--roxo);border-color:var(--roxo)}
+.resumo>div.destaque .n,.resumo>div.destaque .l{color:#fff}
+.resumo .n{font-size:30px;font-weight:600;color:var(--roxo);line-height:1.1}
+.resumo .l{color:var(--cinza);font-size:13px;margin-top:4px}
+.barra{height:6px;background:var(--linha);border-radius:3px;margin-top:6px;overflow:hidden;max-width:220px}
+.barra i{display:block;height:100%;background:var(--roxo)}
+h2{font-size:13px;font-weight:600;color:var(--roxo);margin:28px 0 10px}
+.titulo-secao{display:flex;align-items:center;gap:7px}
+.ranking-cabecalho{margin:0 0 14px}
+.ranking-cabecalho .titulo-secao{margin:0 0 4px;font-size:24px;line-height:1.2;letter-spacing:-.02em;color:var(--roxo)}
+.ranking-cabecalho p{margin:0;color:var(--cinza);font-size:14px}
+.info-btn{display:inline-grid;place-items:center;flex:none;width:27px;height:27px;padding:0;border:0;border-radius:50%;background:var(--vermelho);color:#fff;font-family:Georgia,serif;font-size:17px;font-weight:700;font-style:italic;line-height:1;box-shadow:0 2px 7px rgba(216,16,46,.28)}
+.info-btn:hover{background:#B90D27;transform:translateY(-1px);box-shadow:0 4px 10px rgba(216,16,46,.34)}
+.info-btn:focus-visible{outline:2px solid var(--vermelho);outline-offset:2px}
+.tabela-wrap{height:calc(100vh - 350px);min-height:360px;overflow:auto;border-top:0}
+.tabela-interior{min-width:1120px}
+.faixa-criterios{position:sticky;z-index:10;top:0;height:26px;background:#fff}
+.marcador-criterios{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:44.628%;height:26px;margin-left:46.446%;color:#77737E;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.marcador-criterios::before,.marcador-criterios::after{content:"";height:1px;background:#C9C7CE}
+table{border-collapse:collapse;width:100%;min-width:900px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha);vertical-align:top}
+th{font-weight:500;color:var(--cinza);font-size:12px;white-space:nowrap;cursor:pointer;user-select:none}
+th.num,td.num{text-align:right;font-variant-numeric:tabular-nums;font-family:"IBM Plex Mono",monospace;font-size:13px}
+tr.linha{cursor:default}
+tr.linha:hover{background:var(--leve)}
+.ranking-table tr.linha td:nth-child(3){cursor:pointer}
+.ranking-table th:nth-child(3){background:#EDE7F5;color:var(--roxo);border-left:1px solid #D8CEE6;border-right:1px solid #D8CEE6}
+.ranking-table td:nth-child(3){background:#F5F1F9;border-left:1px solid #E1D9EB;border-right:1px solid #E1D9EB}
+.ranking-table tr.linha:hover td:nth-child(3){background:#EAE3F2}
+.ranking-table{table-layout:fixed;min-width:1120px}
+.ranking-table th:nth-child(1),.ranking-table td:nth-child(1){width:72px;text-align:center}
+.ranking-table th:nth-child(2),.ranking-table td:nth-child(2){width:54px;padding-left:6px;padding-right:6px;white-space:nowrap}
+.ranking-table th:nth-child(3),.ranking-table td:nth-child(3){width:310px}
+.ranking-table th:nth-child(4),.ranking-table td:nth-child(4){width:126px;background:#FAF8FC;border-right:1px solid #E3DCEB}
+.ranking-table th:nth-child(4){background:#F4F1F7;color:#554A64;font-weight:600}
+.ranking-table tr.linha:hover td:nth-child(4){background:#F2EEF6}
+.ranking-table th:nth-child(n+5):nth-child(-n+9),.ranking-table td:nth-child(n+5):nth-child(-n+9){width:108px;text-align:center;border-left:1px solid #E1D9EB}
+.ranking-table th:nth-child(n+5):nth-child(-n+9){background:#E9EBEF;color:#4F4C5D;font-weight:600;border-top:0}
+.ranking-table thead th,.ranking-table thead th.num{position:sticky;z-index:8;top:26px;padding-top:10px;padding-bottom:10px;border-bottom:2px solid #BFC1C8;background:#fff;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:13px;line-height:18px;box-shadow:0 2px 4px rgba(26,21,51,.06)}
+.criterio-cab{display:block;font-family:inherit;font-size:13px;font-weight:600;line-height:18px}
+.peso-cab{display:block;margin-top:4px;color:#85818C;font-family:inherit;font-size:10px;font-weight:500;line-height:14px;letter-spacing:.01em}
+.ranking-table td:nth-child(n+5):nth-child(-n+9){background:#F7F8FA}
+.ranking-table th:nth-child(9),.ranking-table td:nth-child(9){border-right:1px solid #D9DCE2}
+.ranking-table tr.linha:hover td:nth-child(n+5):nth-child(-n+9){background:#ECEEF2}
+.ranking-table th:nth-child(10),.ranking-table td:nth-child(10){width:108px;border-left:1px solid #C7CAD1;text-align:center}
+.ranking-table th:nth-child(10){background:#C9CDD4;color:#2F2B3E;font-weight:600}
+.ranking-table td:nth-child(10){background:#E1E3E7;font-size:14px;color:#2F2B3E}
+.ranking-table tr.linha:hover td:nth-child(10){background:#D5D8DE}
+.status-avaliacao{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
+.status-avaliacao::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
+.status-avaliacao.concluida{background:#E7F5ED;color:#176B43}
+.status-avaliacao.em-andamento{background:#FFF4D8;color:#8A5E00}
+.status-avaliacao.pendente{background:#EFEDF3;color:#6B6880}
+.status-avaliacao.fora{background:#FDECEF;color:#B20D27}
+tr.dentro td.pos{color:var(--vermelho);font-weight:600}
+tr.corte td{border-bottom:2px solid var(--vermelho)}
+tr.fora td{color:var(--cinza)}
+.tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid var(--linha);color:var(--cinza);margin-left:6px;white-space:nowrap}
+.tag.alerta{border-color:var(--vermelho);color:var(--vermelho)}
+.tag.parcial{border-color:#C98A00;color:#8A5E00}
+.equipe{font-weight:500;text-transform:uppercase}
+.escola{color:var(--cinza);font-size:12px}
+.cidade{color:#8A8798;font-size:11px;margin-top:1px}
+.vazio{padding:48px 24px;max-width:60ch}
+.vazio h2{font-size:20px;margin:0 0 8px}
+/* painel lateral */
+.painel{position:fixed;z-index:25;top:0;right:0;width:min(720px,100vw);height:100vh;background:#fff;border-left:1px solid var(--linha);box-shadow:-12px 0 36px rgba(43,10,90,.14);overflow-y:auto;padding:0 28px 28px;transform:translateX(100%);transition:transform .2s}
+.painel.aberto{transform:none}
+.painel .fechar{position:sticky;z-index:2;top:14px;float:right;display:grid;place-items:center;width:34px;height:34px;border:0;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(26,21,51,.12);font-size:22px;color:var(--cinza)}
+.painel-topo{margin:0 -28px 22px;padding:26px 72px 20px 28px;background:var(--leve);border-bottom:1px solid var(--linha)}
+.painel h3{margin:0 0 5px;font-size:24px;color:var(--roxo);text-transform:uppercase}
+.painel-resumo{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.painel-codigo,.painel-posicao{display:inline-flex;align-items:center;min-height:26px;padding:3px 8px;border-radius:4px;font-size:12px;font-weight:600}
+.painel-codigo{background:#fff;color:var(--tinta);border:1px solid var(--linha)}
+.painel-posicao{background:var(--roxo);color:#fff}
+.painel-meta{display:grid;gap:3px;color:var(--cinza);font-size:13px}
+.painel-meta b{color:var(--tinta);font-weight:500}
+.narr-detalhe{margin:0 0 24px;border:1px solid var(--linha);border-radius:6px;background:#fff;overflow:hidden}
+.narr-detalhe summary{padding:12px 14px;background:#F7F6F9;color:var(--tinta);font-weight:600;cursor:pointer}
+.painel .narr{max-width:none;font-size:14px;line-height:1.65;border-top:1px solid var(--linha);padding:16px;margin:0;color:#45414C}
+.painel .narr p{margin:0}
+.painel .narr p+p{margin-top:14px}
+.painel-secao-titulo{margin:0 0 10px;font-size:18px;color:var(--tinta)}
+.painel .avaliacoes-grid thead th{font-size:11px;line-height:1.25;white-space:normal;background:#F1EFF4}
+.painel .avaliacoes-grid tbody td{height:52px}
+.status-controle{display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;height:26px}
+.ver-avaliacoes{display:grid;place-items:center;flex:none;width:26px;height:26px;margin:0;padding:0;border:0;border-radius:4px;background:transparent;color:#96929D;font-size:0}
+.ver-avaliacoes:hover{background:#E7E8EB}
+.ver-avaliacoes::before{content:"";width:7px;height:7px;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .15s}
+.ver-avaliacoes[aria-expanded="true"]::before{transform:translateY(2px) rotate(225deg)}
+.linha-parecerista[hidden]{display:none}
+.ranking-table .linha-parecerista td{height:38px;padding-top:5px;padding-bottom:5px;background:#F3F4F6;border-bottom:1px solid #D9DCE2;font-size:12px}
+.ranking-table .linha-parecerista td:nth-child(-n+2){background:#FAFAFB}
+.ranking-table .linha-parecerista td:nth-child(3),.ranking-table .linha-parecerista td:nth-child(4){background:#ECEEF1;border-color:#D9DCE2}
+.ranking-table .linha-parecerista td:nth-child(n+5):nth-child(-n+9){background:#F3F4F6;border-color:#D9DCE2}
+.ranking-table .linha-parecerista td:nth-child(10){background:#E1E3E7;border-color:#C7CAD1}
+.parecerista-identidade{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+.linha-parecerista .parecerista-nome{min-width:0;color:#4C4853;font-size:12px;font-weight:500}
+.linha-parecerista .parecerista-data{flex:none;color:#8A8792;font-size:9px;font-weight:400;white-space:nowrap}
+.linha-parecerista .estado-parecer{color:var(--cinza);font-size:12px;font-weight:500}
+.av{border-top:1px solid var(--linha);padding:12px 0}
+.av .cab{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap}
+.av .cab b{font-weight:600}
+.av .cab .quando{color:var(--cinza);font-size:12px}
+.notas{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;max-width:360px;margin:8px 0}
+.notas div{border:1px solid var(--linha);border-radius:4px;padding:4px 6px}
+.notas .k{font-size:11px;color:var(--cinza)}
+.notas .v{font-size:18px;font-weight:600;font-family:"IBM Plex Mono",monospace}
+.av .com{max-width:66ch;white-space:pre-wrap}
+.hist{margin-top:8px;font-size:12px;color:var(--cinza)}
+.hist summary{cursor:pointer;color:var(--roxo)}
+.hist table{min-width:0;font-size:12px}
+.hist td,.hist th{padding:3px 6px}
+.links td{font-family:"IBM Plex Mono",monospace;font-size:12px;word-break:break-all}
+.filtros{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:10px;color:var(--cinza)}
+.filtros label{display:flex;gap:6px;align-items:center}
+.filtros-ranking{display:grid;grid-template-columns:minmax(180px,1.25fr) minmax(150px,.85fr) minmax(190px,1.1fr) minmax(150px,.85fr) auto;gap:10px;align-items:end;margin:0 0 14px;padding:14px;border:1px solid var(--linha);border-radius:8px;background:var(--leve)}
+.filtro-campo label{display:block;margin-bottom:4px;color:var(--cinza);font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+.filtro-campo select{width:100%;height:38px;padding:0 32px 0 10px;border:1px solid var(--linha);border-radius:5px;background:#fff;color:var(--tinta);font:inherit}
+.filtro-campo select:focus{outline:2px solid var(--roxo);outline-offset:1px}
+.filtros-ranking .limpar{height:38px;white-space:nowrap}
+.resultado-filtro{margin:-4px 0 10px;color:var(--cinza);font-size:12px}
+.andamento{max-width:760px;margin-bottom:32px;border:1px solid var(--linha);border-radius:8px;overflow:hidden}
+.andamento-linha{display:grid;grid-template-columns:minmax(140px,1fr) minmax(180px,2fr) 100px;gap:18px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--linha)}
+.andamento-linha:last-child{border-bottom:0}
+.andamento-nome{font-weight:500}
+.andamento-meta{text-align:right}
+.andamento-meta b{display:block;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500}
+.andamento-meta span{display:block;color:var(--cinza);font-size:11px}
+.andamento .barra{width:100%;max-width:none;height:8px;margin:0;background:#EDEAF3}
+.andamento .barra i{background:var(--vermelho)}
+.avaliacoes-grid{width:100%;min-width:0!important;margin-top:10px;table-layout:fixed}
+.avaliacoes-grid col.col-parecerista{width:28%}
+.avaliacoes-grid col.col-nota{width:12%}
+.avaliacoes-grid th,.avaliacoes-grid td{padding:7px 6px}
+.avaliacoes-grid td.num{font-size:14px}
+.avaliacoes-grid .total{font-weight:600;color:var(--roxo)}
+.comentarios{margin-top:12px}
+.comentarios .item{border-top:1px solid var(--linha);padding:9px 0}
+.comentarios b{display:block;font-size:12px;margin-bottom:2px}
+.drawer-fundo{position:fixed;inset:0;background:rgba(26,21,51,.38);opacity:0;visibility:hidden;transition:opacity .2s;z-index:20}
+.drawer-fundo.aberto{opacity:1;visibility:visible}
+.drawer{position:fixed;z-index:21;top:0;right:0;width:min(460px,100vw);height:100vh;background:#fff;border-left:1px solid var(--linha);box-shadow:-12px 0 36px rgba(43,10,90,.14);padding:24px;transform:translateX(100%);transition:transform .2s;overflow:auto}
+.drawer.aberto{transform:none}
+.drawer-cab{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:22px}
+.drawer-cab h2{font-size:21px;line-height:1.25;margin:0;color:var(--roxo)}
+.drawer-cab p{margin:5px 0 0;color:var(--cinza)}
+.drawer-fechar{display:grid;place-items:center;flex:none;width:34px;height:34px;border:0;border-radius:50%;background:var(--leve);color:var(--tinta);font-size:22px}
+.drawer .andamento{margin:0;max-width:none}
+.drawer .andamento-linha{grid-template-columns:1fr;gap:9px}
+.drawer .andamento-meta{text-align:left;display:flex;align-items:baseline;gap:7px}
+.drawer .andamento-meta b,.drawer .andamento-meta span{display:inline}
+dialog{width:min(520px,calc(100vw - 32px));border:0;border-radius:10px;padding:0;color:var(--tinta);box-shadow:0 18px 60px rgba(26,21,51,.25)}
+dialog::backdrop{background:rgba(26,21,51,.52)}
+.modal-conteudo{padding:24px}
+.modal-conteudo h2{font-size:19px;margin:0 36px 10px 0}
+.modal-conteudo p{margin:0;color:var(--cinza);line-height:1.65}
+.modal-fechar{position:absolute;top:14px;right:14px;display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:var(--leve);color:var(--tinta);font-size:22px}
+.modal-fechar:hover{background:var(--linha)}
+@media (max-width:820px){ main{padding:16px} .topo{padding-left:16px;padding-right:16px} .topo .acoes{margin-left:0} .resumo{grid-template-columns:repeat(2,1fr)} .tabela-wrap{height:calc(100vh - 320px);min-height:320px;overflow:auto} }
+@media (max-width:760px){ .filtros-ranking{grid-template-columns:1fr 1fr}.filtros-ranking .limpar{width:100%} }
+@media (max-width:560px){ .andamento-linha{grid-template-columns:1fr auto;gap:7px 12px}.andamento-linha .barra{grid-column:1/-1;grid-row:2}.andamento-meta{grid-column:2;grid-row:1} }
+@media (max-width:480px){ .resumo,.filtros-ranking{grid-template-columns:1fr} }
+@media (prefers-reduced-motion:reduce){ .painel{transition:none} }
+@media (prefers-reduced-motion:reduce){ .drawer,.drawer-fundo{transition:none} }
+</style>
+</head>
+<body>
+<script>
+// ------------------------------------------------------------- configuração
+const SUPABASE_URL = location.origin;
+const SUPABASE_ANON_KEY = "local";
+const CORTE = 20; // equipes selecionadas nesta etapa
+const INSCRICOES = __DADOS__;
+const CRITERIOS = [
+ {k:"edi", nome:"EDI", peso:.30},
+ {k:"originalidade", nome:"Originalidade", peso:.20},
+ {k:"qualidade", nome:"Qualidade", peso:.20},
+ {k:"viabilidade", nome:"Viabilidade", peso:.15},
+ {k:"impacto", nome:"Impacto", peso:.15},
+];
+// Ordem de desempate (regulamento 5.1.2): EDI, Originalidade, Qualidade, Viabilidade, Impacto
+</script>
+
+<header class="topo">
+  <div class="marca">
+    <h1>Learning Sectors 2026 · Consolidação das avaliações</h1>
+    <div class="subtitulo"><span class="ambiente">Painel de controle</span><span aria-hidden="true">·</span><span class="quem" id="quem"></span></div>
+  </div>
+  <div class="acoes">
+    <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
+    <button class="btn" id="recarregar">Atualizar</button>
+    <button class="btn" id="csv-consol">Exportar ranking (CSV)</button>
+    <button class="btn" id="csv-audit">Exportar auditoria (CSV)</button>
+  </div>
+</header>
+<main id="raiz"></main>
+<aside class="painel" id="painel" aria-hidden="true"></aside>
+<div class="drawer-fundo" id="drawer-fundo"></div>
+<aside class="drawer" id="drawer-andamento" role="dialog" aria-modal="true" aria-labelledby="drawer-titulo" aria-hidden="true">
+  <div class="drawer-cab">
+    <div><h2 id="drawer-titulo">Andamento dos pareceristas</h2><p>Progresso das avaliações elegíveis.</p></div>
+    <button class="drawer-fechar" type="button" aria-label="Fechar andamento">×</button>
+  </div>
+  <div id="drawer-conteudo"></div>
+</aside>
+<dialog id="modal-ranking" aria-labelledby="modal-ranking-titulo">
+  <div class="modal-conteudo">
+    <button class="modal-fechar" type="button" aria-label="Fechar explicação">×</button>
+    <h2 id="modal-ranking-titulo">Como o ranking é calculado</h2>
+    <p>A nota final é a média ponderada dos cinco critérios de cada parecerista e, depois, a média entre os pareceristas, mantida na escala de 1 a 5. Em caso de empate, a ordem de desempate é: EDI, Originalidade, Qualidade, Viabilidade e Impacto. Clique em uma equipe no ranking para consultar a proposta.</p>
+  </div>
+</dialog>
+
+<script>
+const $ = (s, el=document) => el.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const paragrafosTexto = s => String(s ?? "").split(/\n\s*\n|\n/).map(x=>x.trim()).filter(Boolean).map(x=>`<p>${esc(x)}</p>`).join("");
+const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"});
+const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
+const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
+const token = new URLSearchParams(location.search).get("token");
+let cliente, eu, todas = [], pareceristas = [], consolidado = [], ordem = {col:"pos", asc:true};
+let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
+
+function vazio(t, sub){ $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`; }
+
+async function iniciar(){
+  if (!token) return vazio("Link incompleto", "Este endereço precisa do código de acesso do administrador.");
+  if (SUPABASE_URL.startsWith("COLE")) return vazio("Configuração pendente", "Preencha SUPABASE_URL e SUPABASE_ANON_KEY no topo deste arquivo.");
+  cliente = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const v = await cliente.rpc("validar_token", {p_token: token});
+  if (v.error || !v.data || v.data.papel !== "admin") return vazio("Acesso não reconhecido", "Este link não corresponde a um administrador ativo.");
+  eu = v.data; $("#quem").textContent = eu.nome;
+  await carregar();
+}
+
+async function carregar(){
+  const [a, p] = await Promise.all([cliente.rpc("todas_avaliacoes", {p_token: token}), cliente.rpc("listar_avaliadores", {p_token: token})]);
+  if (a.error) return vazio("Erro ao carregar", a.error.message);
+  todas = a.data || []; pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo);
+  consolidar(); render();
+}
+
+function pontos(av){ return CRITERIOS.reduce((s,c) => s + av[c.k]*c.peso, 0); } // 1 a 5 ponderado
+
+function consolidar(){
+  const atuais = todas.filter(a => a.atual);
+  consolidado = INSCRICOES.map(i => {
+    const avs = atuais.filter(a => a.inscricao_id === i.id);
+    const medias = {};
+    CRITERIOS.forEach(c => medias[c.k] = avs.length ? avs.reduce((s,a)=>s+a[c.k],0)/avs.length : null);
+    const porAv = {}; avs.forEach(a => porAv[a.avaliador_id] = pontos(a));
+    const final = avs.length ? avs.reduce((s,a)=>s+pontos(a),0)/avs.length : null;
+    return {ins:i, avs, medias, porAv, n:avs.length, final,
+            elegivel: i.elegibilidade.status === "elegivel"};
+  });
+  // ranking: elegíveis com nota, por nota final e desempate; depois elegíveis sem nota; depois fora
+  const cmp = (x,y) => {
+    if (x.elegivel !== y.elegivel) return x.elegivel ? -1 : 1;
+    if ((x.final==null) !== (y.final==null)) return x.final==null ? 1 : -1;
+    if (x.final==null) return x.ins.codigo.localeCompare(y.ins.codigo);
+    if (y.final !== x.final) return y.final - x.final;
+    for (const c of CRITERIOS){ if (y.medias[c.k] !== x.medias[c.k]) return y.medias[c.k] - x.medias[c.k]; }
+    return x.ins.codigo.localeCompare(y.ins.codigo);
+  };
+  consolidado.sort(cmp);
+  let pos = 0; consolidado.forEach(r => { r.pos = (r.elegivel && r.final!=null) ? ++pos : null; });
+  // empate total (mesma nota final e mesmas médias em todos os critérios) fica sinalizado: a ordem entre eles é apenas o código
+  const chave = r => r.final==null ? null : [r.final, ...CRITERIOS.map(c=>r.medias[c.k])].map(x=>x.toFixed(4)).join("|");
+  consolidado.forEach((r, ix) => { const k = chave(r); r.empate = k != null && ((ix>0 && chave(consolidado[ix-1])===k) || (ix<consolidado.length-1 && chave(consolidado[ix+1])===k)); });
+}
+
+function render(){
+  const total = INSCRICOES.length, eleg = consolidado.filter(r=>r.elegivel).length;
+  const completas = consolidado.filter(r => r.elegivel && r.n >= pareceristas.length && pareceristas.length).length;
+  const progAv = pareceristas.map(p => ({p, n: todas.filter(a => a.atual && a.avaliador_id === p.id && INSCRICOES.find(i=>i.id===a.inscricao_id)?.elegibilidade.status==="elegivel").length}));
+  const escolas = [...new Set(consolidado.map(r=>r.ins.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  const cidades = [...new Set(consolidado.map(r=>r.ins.municipio).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  const lideres = [...new Set(consolidado.map(r=>r.ins.professor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
+  const atendeTag = r => !filtrosRanking.tag ||
+    (filtrosRanking.tag==="selecionada" && r.pos && r.pos<=CORTE) ||
+    (filtrosRanking.tag==="completa" && r.elegivel && pareceristas.length>0 && r.n>=pareceristas.length) ||
+    (filtrosRanking.tag==="parcial" && r.elegivel && r.n>0 && r.n<pareceristas.length) ||
+    (filtrosRanking.tag==="sem_avaliacao" && r.elegivel && r.n===0) ||
+    (filtrosRanking.tag==="fora" && !r.elegivel);
+  const rows = consolidado.filter(r => (!filtrosRanking.escola || r.ins.escola===filtrosRanking.escola) && (!filtrosRanking.cidade || r.ins.municipio===filtrosRanking.cidade) && (!filtrosRanking.lider || r.ins.professor===filtrosRanking.lider) && atendeTag(r));
+  const avaliacoesAtuais = todas.filter(a=>a.atual).length;
+
+  $("#raiz").innerHTML = `
+
+  <div class="ranking-cabecalho">
+    <h2 class="titulo-secao">Classificação consolidada das inscrições <button class="info-btn" id="info-ranking" type="button" aria-label="Entenda como a classificação é calculada" aria-haspopup="dialog">i</button></h2>
+    <p>Acompanhe a posição, a nota final e o desempenho de cada equipe nos cinco critérios de avaliação.</p>
+  </div>
+  <div class="filtros-ranking" aria-label="Filtros do ranking">
+    <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+    <div class="filtro-campo"><label for="filtro-cidade">Cidade</label><select id="filtro-cidade"><option value="">Todas as cidades</option>${cidades.map(x=>`<option value="${esc(x)}" ${filtrosRanking.cidade===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+    <div class="filtro-campo"><label for="filtro-lider">Professor(a)-líder</label><select id="filtro-lider"><option value="">Todos os líderes</option>${lideres.map(x=>`<option value="${esc(x)}" ${filtrosRanking.lider===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+    <div class="filtro-campo"><label for="filtro-tag">Situação</label><select id="filtro-tag">
+      <option value="">Todas as situações</option>
+      <option value="selecionada" ${filtrosRanking.tag==='selecionada'?'selected':''}>Selecionada</option>
+      <option value="completa" ${filtrosRanking.tag==='completa'?'selected':''}>Avaliação completa</option>
+      <option value="parcial" ${filtrosRanking.tag==='parcial'?'selected':''}>Avaliação parcial</option>
+      <option value="sem_avaliacao" ${filtrosRanking.tag==='sem_avaliacao'?'selected':''}>Sem avaliação</option>
+      <option value="fora" ${filtrosRanking.tag==='fora'?'selected':''}>Fora da categoria</option>
+    </select></div>
+    <button class="btn limpar" id="limpar-filtros" type="button">Limpar filtros</button>
+  </div>
+  <div class="resultado-filtro">${rows.length} ${rows.length===1?'inscrição encontrada':'inscrições encontradas'}</div>
+  <div class="tabela-wrap"><div class="tabela-interior"><div class="faixa-criterios"><div class="marcador-criterios"><span>Critérios de avaliação</span></div></div><table class="ranking-table">
+    <thead><tr>
+      <th data-c="pos">Posição</th>
+      <th data-c="codigo">Código</th>
+      <th data-c="equipe">Equipe</th>
+      <th>Situação</th>
+      ${CRITERIOS.map(c=>`<th class="num" data-c="${c.k}"><span class="criterio-cab">${c.nome}</span><span class="peso-cab">peso ${Math.round(c.peso*100)}%</span></th>`).join("")}
+      <th class="num" data-c="final"><span class="criterio-cab">Média ponderada</span><span class="peso-cab">escala 1–5</span></th>
+    </tr></thead>
+    <tbody>${rows.map(r => linha(r)).join("")}</tbody>
+  </table></div></div>`;
+
+  document.querySelectorAll("tr.linha").forEach(tr => {
+    const equipe = tr.querySelector("td:nth-child(3)");
+    equipe.onclick = () => abrir(tr.dataset.id);
+  });
+  document.querySelectorAll(".ver-avaliacoes").forEach(b => b.onclick = e => {
+    e.stopPropagation();
+    const detalhes = document.querySelectorAll(`.linha-parecerista[data-id="${b.dataset.id}"]`);
+    const abrirLinha = detalhes.length && detalhes[0].hasAttribute("hidden");
+    detalhes.forEach(detalhe => detalhe.toggleAttribute("hidden", !abrirLinha));
+    b.setAttribute("aria-expanded", String(abrirLinha));
+  });
+  $("#info-ranking").onclick = () => $("#modal-ranking").showModal();
+  $("#filtro-escola").onchange = e => { filtrosRanking.escola=e.target.value; render(); };
+  $("#filtro-cidade").onchange = e => { filtrosRanking.cidade=e.target.value; render(); };
+  $("#filtro-lider").onchange = e => { filtrosRanking.lider=e.target.value; render(); };
+  $("#filtro-tag").onchange = e => { filtrosRanking.tag=e.target.value; render(); };
+  $("#limpar-filtros").onclick = () => { filtrosRanking={escola:"",cidade:"",lider:"",tag:""}; render(); };
+  $("#drawer-conteudo").innerHTML = `<div class="andamento">${progAv.map(x=>{const pct=eleg?Math.round(100*x.n/eleg):0,status=x.n===0?'Não iniciado':x.n>=eleg?'Concluído':'Em andamento';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${eleg}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${eleg}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`;
+}
+
+function linha(r){
+  const i = r.ins;
+  const dentro = r.pos && r.pos <= CORTE;
+  const cls = [ "linha", r.elegivel ? "" : "fora", dentro ? "dentro" : "", (r.pos === CORTE) ? "corte" : "" ].join(" ");
+  const tags = [];
+  if (r.empate) tags.push(`<span class="tag alerta" title="Mesma nota final e mesmas médias por critério; o regulamento não define o desempate além disso">empate</span>`);
+  const status = !r.elegivel
+    ? {classe:"fora", texto:"Fora da categoria"}
+    : r.n===0
+      ? {classe:"pendente", texto:"Não iniciada"}
+      : (pareceristas.length && r.n>=pareceristas.length)
+        ? {classe:"concluida", texto:"Concluída"}
+        : {classe:"em-andamento", texto:"Em andamento"};
+  const atuais = todas.filter(a=>a.inscricao_id===i.id && a.atual);
+  const avaliacoes = pareceristas.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id);return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num">—</td>`).join("")}<td class="num"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
+  return `<tr class="${cls}" data-id="${esc(i.id)}">
+    <td class="num pos">${r.pos ?? "—"}</td>
+    <td>${esc(i.codigo)}</td>
+    <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(i.escola)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
+    <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span><button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button></div></td>
+    ${CRITERIOS.map(c=>`<td class="num">${n2(r.medias[c.k])}</td>`).join("")}
+    <td class="num"><b>${n2(r.final)}</b></td>
+  </tr>${avaliacoes}`;
+}
+
+function abrir(id){
+  const r = consolidado.find(x => x.ins.id === id), i = r.ins;
+  const painel = $("#painel");
+  painel.innerHTML = `
+    <button class="fechar" aria-label="Fechar">×</button>
+    <header class="painel-topo">
+      <h3>${esc(i.equipe)}</h3>
+      <div class="painel-resumo"><span class="painel-codigo">${esc(i.codigo)}</span>${r.pos ? `<span class="painel-posicao">${r.pos}ª posição · média ${n2(r.final)} / 5</span>` : ""}</div>
+      <div class="painel-meta"><div><b>Escola:</b> ${esc(i.escola)}</div><div><b>Local:</b> ${esc(i.municipio)} · ${esc(i.uf)}</div><div><b>Professor(a)-líder:</b> ${esc(i.professor)}</div>${i.colider_nome?`<div><b>Co-líder:</b> ${esc(i.colider_nome)}</div>`:""}${!r.elegivel ? `<div style="color:var(--vermelho)">${esc(i.elegibilidade.motivo)}</div>` : ""}</div>
+    </header>
+    <details class="narr-detalhe" open><summary>Narrativa da proposta</summary><div class="narr">${paragrafosTexto(i.narrativa)}</div></details>`;
+  painel.classList.add("aberto"); painel.setAttribute("aria-hidden","false");
+  $(".fechar", painel).onclick = fechar;
+}
+function fechar(){ const p = $("#painel"); p.classList.remove("aberto"); p.setAttribute("aria-hidden","true"); }
+function abrirAndamento(){
+  const d=$("#drawer-andamento"),f=$("#drawer-fundo"),b=$("#abrir-andamento");
+  d.classList.add("aberto"); f.classList.add("aberto"); d.setAttribute("aria-hidden","false"); b.setAttribute("aria-expanded","true");
+  $(".drawer-fechar",d).focus();
+}
+function fecharAndamento(){
+  const d=$("#drawer-andamento"),f=$("#drawer-fundo"),b=$("#abrir-andamento");
+  d.classList.remove("aberto"); f.classList.remove("aberto"); d.setAttribute("aria-hidden","true"); b.setAttribute("aria-expanded","false"); b.focus();
+}
+$("#abrir-andamento").onclick = abrirAndamento;
+$(".drawer-fechar",$("#drawer-andamento")).onclick = fecharAndamento;
+$("#drawer-fundo").onclick = fecharAndamento;
+document.addEventListener("keydown", e => { if (e.key === "Escape"){ fechar(); if ($("#drawer-andamento").classList.contains("aberto")) fecharAndamento(); } });
+const modalRanking = $("#modal-ranking");
+$(".modal-fechar", modalRanking).onclick = () => modalRanking.close();
+modalRanking.onclick = e => { if (e.target === modalRanking) modalRanking.close(); };
+
+function baixar(nome, linhas){
+  const csv = linhas.map(l => l.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(";")).join("\r\n");
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob(["\ufeff"+csv], {type:"text/csv;charset=utf-8"})); a.download = nome; a.click();
+}
+$("#csv-consol").onclick = () => baixar("ranking-learning-sectors.csv", [
+  ["posicao","codigo","id_typeform","equipe","escola","municipio","uf","elegibilidade","motivo","n_avaliacoes","media_ponderada_1_a_5", ...pareceristas.map(p=>"media_1_a_5_"+p.nome), ...CRITERIOS.map(c=>"media_"+c.k), "selecionada"],
+  ...consolidado.map(r => [r.pos, r.ins.codigo, r.ins.id, r.ins.equipe, r.ins.escola, r.ins.municipio, r.ins.uf, r.ins.elegibilidade.status, r.ins.elegibilidade.motivo, r.n, r.final?.toFixed(2), ...pareceristas.map(p=>r.porAv[p.id]!=null?r.porAv[p.id].toFixed(2):""), ...CRITERIOS.map(c=>r.medias[c.k]?.toFixed(2)), r.pos && r.pos<=CORTE ? "sim" : "não"])
+]);
+$("#csv-audit").onclick = () => baixar("auditoria-learning-sectors.csv", [
+  ["id_avaliacao","codigo","id_typeform","equipe","parecerista","versao","atual","edi","originalidade","qualidade","viabilidade","impacto","media_ponderada_1_a_5","comentario","registrado_em"],
+  ...todas.map(a => { const i = INSCRICOES.find(x=>x.id===a.inscricao_id)||{}; return [a.id, i.codigo, a.inscricao_id, i.equipe, a.avaliador, a.versao, a.atual?"sim":"não", a.edi, a.originalidade, a.qualidade, a.viabilidade, a.impacto, pontos(a).toFixed(2), a.comentario||"", a.criado_em]; })
+]);
+$("#recarregar").onclick = carregar;
+iniciar();
+</script>
+</body>
+</html>
