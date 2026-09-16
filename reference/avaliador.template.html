@@ -246,6 +246,13 @@ const CRITERIOS = [
     <button class="btn" id="fechar-incompleta" type="button">Entendi</button>
   </div>
 </dialog>
+<dialog id="modal-bloqueio" aria-labelledby="modal-bloqueio-titulo">
+  <div class="modal-incompleta">
+    <h2 id="modal-bloqueio-titulo">Próximo time ainda bloqueado</h2>
+    <p id="mensagem-bloqueio">Conclua e salve a avaliação em andamento para liberar o próximo time da fila.</p>
+    <button class="btn" id="fechar-bloqueio" type="button">Entendi</button>
+  </div>
+</dialog>
 
 <script>
 const $ = (s, el=document) => el.querySelector(s);
@@ -295,7 +302,7 @@ function render(){
   const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
   const limite = primeiraPendente < 0 ? fila.length - 1 : primeiraPendente;
   const listaHtml = fila.map((i, ix) => `
-    <button data-ix="${ix}" ${ix>limite?'disabled':''} class="${ix===atual?"ativa":""} ${minhas[i.id]?"avaliada":""} ${ix>limite?'bloqueada':''}" aria-label="${esc(i.codigo)} ${esc(i.equipe)}${minhas[i.id]?' — avaliada':ix>limite?' — bloqueada':' — disponível'}">
+    <button data-ix="${ix}" ${ix>limite?'aria-disabled="true"':''} class="${ix===atual?"ativa":""} ${minhas[i.id]?"avaliada":""} ${ix>limite?'bloqueada':''}" aria-label="${esc(i.codigo)} ${esc(i.equipe)}${minhas[i.id]?' — avaliada':ix>limite?' — bloqueada':' — disponível'}">
       <span class="st ${minhas[i.id]?"feita":ix>limite?'trancada':ix===atual?'em-andamento':''}"></span>
       <span class="cod">${esc(i.codigo)}</span><span class="nome">${esc(i.equipe)}</span>${minhas[i.id]?`<span class="nota-time" title="Avaliação concluída — clique para revisar">${notaFila(minhas[i.id])}</span>`:""}
     </button>`).join("");
@@ -312,7 +319,11 @@ function render(){
 
   progresso();
 
-  document.querySelectorAll(".fila button").forEach(b => b.onclick = () => ir(+b.dataset.ix));
+  document.querySelectorAll(".fila button").forEach(b => b.onclick = () => {
+    const ix = +b.dataset.ix;
+    if (b.classList.contains("bloqueada")) return abrirBloqueio(ix);
+    ir(ix);
+  });
   $("#sel").onchange = e => ir(+e.target.value);
   if (ins) ligarFormulario(ins);
 }
@@ -438,6 +449,15 @@ function ir(ix){
   atual = ix; render(); window.scrollTo({top:0});
 }
 
+function abrirBloqueio(ix){
+  const pendente = fila.find(i => !minhas[i.id]);
+  const destino = fila[ix];
+  $("#mensagem-bloqueio").textContent = pendente
+    ? `Conclua e salve a avaliação de ${pendente.equipe.toUpperCase()} para liberar ${destino.equipe.toUpperCase()} e os próximos times da fila.`
+    : "Conclua e salve a avaliação em andamento para liberar o próximo time da fila.";
+  $("#modal-bloqueio").showModal();
+}
+
 function fim(){
   render();
   $("main").insertAdjacentHTML("afterbegin", `<div class="fim"><h2>Todas as inscrições avaliadas</h2><p>Obrigado. Suas notas estão registradas. Até o fim do prazo você pode voltar a qualquer inscrição pela lista e salvar uma nova versão.</p></div>`);
@@ -447,6 +467,8 @@ function fim(){
 iniciar();
 $("#fechar-incompleta").onclick = () => $("#modal-incompleta").close();
 $("#modal-incompleta").onclick = e => { if (e.target.id === "modal-incompleta") e.target.close(); };
+$("#fechar-bloqueio").onclick = () => $("#modal-bloqueio").close();
+$("#modal-bloqueio").onclick = e => { if (e.target.id === "modal-bloqueio") e.target.close(); };
 </script>
 </body>
 </html>
