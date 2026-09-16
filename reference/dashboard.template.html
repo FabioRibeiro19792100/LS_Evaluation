@@ -283,6 +283,14 @@ function solicitarAcesso(){
   };
 }
 
+async function prepararAcesso(){
+  if (!AMBIENTE_LOCAL) return solicitarAcesso();
+  try {
+    INSCRICOES = await fetch("inscricoes.json", {cache:"no-store"}).then(r => { if (!r.ok) throw new Error("base local indisponível"); return r.json(); });
+    await iniciar();
+  } catch (e) { vazio("Erro ao carregar", e.message); }
+}
+
 async function iniciar(){
   if (!token) return vazio("Link incompleto", "Este endereço precisa do código de acesso do administrador.");
   if (SUPABASE_URL.startsWith("COLE")) return vazio("Configuração pendente", "Preencha SUPABASE_URL e SUPABASE_ANON_KEY no topo deste arquivo.");
@@ -475,7 +483,7 @@ $("#csv-audit").onclick = () => baixar("auditoria-learning-sectors.csv", [
   ["id_avaliacao","codigo","id_typeform","equipe","parecerista","versao","atual","edi","originalidade","qualidade","viabilidade","impacto","media_ponderada_1_a_5","comentario","registrado_em"],
   ...todas.map(a => { const i = INSCRICOES.find(x=>x.id===a.inscricao_id)||{}; return [a.id, i.codigo, a.inscricao_id, i.equipe, a.avaliador, a.versao, a.atual?"sim":"não", a.edi, a.originalidade, a.qualidade, a.viabilidade, a.impacto, pontos(a).toFixed(2), a.comentario||"", a.criado_em]; })
 ]);
-solicitarAcesso();
+prepararAcesso();
 window.addEventListener("resize", ajustarAlturaTabela);
 </script>
 </body>

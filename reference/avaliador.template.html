@@ -295,6 +295,15 @@ function solicitarAcesso(){
   };
 }
 
+async function prepararAcesso(){
+  if (!AMBIENTE_LOCAL) return solicitarAcesso();
+  try {
+    INSCRICOES = await fetch("inscricoes.json", {cache:"no-store"}).then(r => { if (!r.ok) throw new Error("base local indisponível"); return r.json(); });
+    fila = INSCRICOES.filter(i=>i.elegibilidade.status==="elegivel");
+    await iniciar();
+  } catch (e) { vazio("Erro ao carregar", e.message); }
+}
+
 async function iniciar(){
   if (!token) return vazio("Link incompleto", "Este endereço precisa do seu código de acesso. Use o link que você recebeu por e-mail.");
   if (SUPABASE_URL.startsWith("COLE")) return vazio("Configuração pendente", "Preencha SUPABASE_URL e SUPABASE_ANON_KEY no topo deste arquivo.");
@@ -496,7 +505,7 @@ function fim(){
   window.scrollTo({top:0});
 }
 
-solicitarAcesso();
+prepararAcesso();
 $("#fechar-incompleta").onclick = () => $("#modal-incompleta").close();
 $("#modal-incompleta").onclick = e => { if (e.target.id === "modal-incompleta") e.target.close(); };
 $("#fechar-bloqueio").onclick = () => $("#modal-bloqueio").close();
