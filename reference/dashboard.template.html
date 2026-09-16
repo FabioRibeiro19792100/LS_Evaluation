@@ -308,9 +308,10 @@ async function iniciar(){
 async function carregar(){
   const [a, p] = await Promise.all([cliente.rpc("todas_avaliacoes", {p_token: token}), cliente.rpc("listar_avaliadores", {p_token: token})]);
   if (a.error) return vazio("Erro ao carregar", a.error.message);
-  todas = a.data || [];
-  pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo);
-  pareceristasOficiais = pareceristas.filter(x => x.contabiliza !== false);
+  pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo && x.contabiliza !== false);
+  pareceristasOficiais = pareceristas;
+  const oficiaisIds = new Set(pareceristas.map(x => x.id));
+  todas = (a.data || []).filter(x => oficiaisIds.has(x.avaliador_id));
   consolidar(); render();
 }
 
