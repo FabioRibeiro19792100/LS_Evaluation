@@ -35,9 +35,9 @@ ESCOLAS = {
 }
 
 CIDADES_POR_ESCOLA = {
-    "Escola Técnica Estadual Conselheiro Antônio Prado": "Campinas",
-    "Etec Irmã Agostina": "São Paulo",
-    "Etec Prefeito Alberto Feres": "Araras",
+    "Conselheiro Antônio Prado": "Campinas",
+    "Irmã Agostina": "São Paulo",
+    "Prefeito Alberto Feres": "Araras",
 }
 
 CIDADES = {
@@ -56,7 +56,14 @@ def nome_pessoa(valor):
 
 def escola(valor):
     valor = espacos(valor)
-    return ESCOLAS.get(valor, valor)
+    valor = ESCOLAS.get(valor, valor)
+    # No produto todas as unidades são tratadas como Etecs; exibe apenas o
+    # nome próprio para evitar repetir o tipo da instituição em cada linha.
+    valor = re.sub(r"^Colégio Estadual em Período Integral\s+", "", valor, flags=re.I)
+    valor = re.sub(r"^Escola Técnica Estadual\s+(?:de\s+)?", "", valor, flags=re.I)
+    valor = re.sub(r"^Escola Técnica\s+", "", valor, flags=re.I)
+    valor = re.sub(r"^Etec\s+(?:de\s+|da\s+)?", "", valor, flags=re.I)
+    return espacos(valor)
 
 dados = json.loads(ARQUIVO.read_text(encoding="utf-8"))
 for item in dados:

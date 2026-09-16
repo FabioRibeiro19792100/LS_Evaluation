@@ -4,7 +4,7 @@
   "codigo": "LS-01",
   "equipe": "NOZES",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
+  "escola": "Dr. Emílio Hernandez Aguilar",
   "municipio": "Franco da Rocha",
   "uf": "SP - São Paulo",
   "professor": "Mara Cristina Gonçalves",
@@ -18,19 +18,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
+    "escola": "Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
+    "escola": "Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
+    "escola": "Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
+    "escola": "Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    }
   ],
@@ -52,7 +52,7 @@
   "codigo": "LS-02",
   "equipe": "Friends",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec de Porto Feliz",
+  "escola": "Porto Feliz",
   "municipio": "Porto Feliz",
   "uf": "SP - São Paulo",
   "professor": "Walter Castelucci Neto",
@@ -63,19 +63,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec de Porto Feliz",
+    "escola": "Porto Feliz",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec de Porto Feliz",
+    "escola": "Porto Feliz",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec de Porto Feliz",
+    "escola": "Porto Feliz",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec de Porto Feliz",
+    "escola": "Porto Feliz",
     "serie": "2ª série EM"
    }
   ],
@@ -97,7 +97,7 @@
   "codigo": "LS-03",
   "equipe": "LEVEL UP",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Professor Luiz Pires Barbosa",
+  "escola": "Professor Luiz Pires Barbosa",
   "municipio": "Cândido Mota",
   "uf": "SP - São Paulo",
   "professor": "Juciani Aparecida Nardis Silva",
@@ -109,19 +109,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Professor Luiz Pires Barbosa",
+    "escola": "Professor Luiz Pires Barbosa",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Luiz Pires Barbosa",
+    "escola": "Professor Luiz Pires Barbosa",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Luiz Pires Barbosa",
+    "escola": "Professor Luiz Pires Barbosa",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Luiz Pires Barbosa",
+    "escola": "Professor Luiz Pires Barbosa",
     "serie": "2ª série EM"
    }
   ],
@@ -143,7 +143,7 @@
   "codigo": "LS-04",
   "equipe": "VIA",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Dr. Júlio Cardoso",
+  "escola": "Dr. Júlio Cardoso",
   "municipio": "Franca",
   "uf": "SP - São Paulo",
   "professor": "Gustavo Miranda",
@@ -155,19 +155,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Dr. Júlio Cardoso",
+    "escola": "Dr. Júlio Cardoso",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Dr. Júlio Cardoso",
+    "escola": "Dr. Júlio Cardoso",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Dr. Júlio Cardoso",
+    "escola": "Dr. Júlio Cardoso",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Dr. Júlio Cardoso",
+    "escola": "Dr. Júlio Cardoso",
     "serie": "2ª série EM"
    }
   ],
@@ -189,7 +189,7 @@
   "codigo": "LS-05",
   "equipe": "SENSIMOB",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Bento Quirino",
+  "escola": "Bento Quirino",
   "municipio": "Campinas",
   "uf": "SP - São Paulo",
   "professor": "Glaucia Gisele Tenorio",
@@ -200,15 +200,15 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Bento Quirino",
+    "escola": "Bento Quirino",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Bento Quirino",
+    "escola": "Bento Quirino",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Bento Quirino",
+    "escola": "Bento Quirino",
     "serie": "2ª série EM"
    }
   ],
@@ -230,7 +230,7 @@
   "codigo": "LS-06",
   "equipe": "Erro404",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+  "escola": "Professor Alfredo de Barros Santos",
   "municipio": "Guaratinguetá",
   "uf": "SP - São Paulo",
   "professor": "Carlos Alberto Bernardes",
@@ -241,19 +241,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+    "escola": "Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+    "escola": "Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+    "escola": "Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+    "escola": "Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    }
   ],
@@ -275,7 +275,7 @@
   "codigo": "LS-07",
   "equipe": "VOTO_AMS",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professor Elias Miguel Júnior",
+  "escola": "Professor Elias Miguel Júnior",
   "municipio": "Votorantim",
   "uf": "SP - São Paulo",
   "professor": "Claudio Roberto Corredato",
@@ -286,11 +286,11 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Professor Elias Miguel Júnior",
+    "escola": "Professor Elias Miguel Júnior",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professor Elias Miguel Júnior",
+    "escola": "Professor Elias Miguel Júnior",
     "serie": "2ª série EM"
    }
   ],
@@ -312,7 +312,7 @@
   "codigo": "LS-08",
   "equipe": "Time Ecológico",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec da Zona Leste",
+  "escola": "Zona Leste",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Paulo Curriel Rodrigues da Silva",
@@ -324,15 +324,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    }
   ],
@@ -354,7 +354,7 @@
   "codigo": "LS-09",
   "equipe": "PitStop Limpo",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professor Massuyuki Kawano",
+  "escola": "Professor Massuyuki Kawano",
   "municipio": "Tupã",
   "uf": "SP - São Paulo",
   "professor": "Ewerton José da Silva",
@@ -366,19 +366,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Professor Massuyuki Kawano",
+    "escola": "Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Professor Massuyuki Kawano",
+    "escola": "Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Professor Massuyuki Kawano",
+    "escola": "Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Professor Massuyuki Kawano",
+    "escola": "Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    }
   ],
@@ -400,7 +400,7 @@
   "codigo": "LS-10",
   "equipe": "Entende AÍ",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec da Zona Leste",
+  "escola": "Zona Leste",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Salomão Santana do Nascimento",
@@ -411,19 +411,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec da Zona Leste",
+    "escola": "Zona Leste",
     "serie": "2ª série EM"
    }
   ],
@@ -445,7 +445,7 @@
   "codigo": "LS-11",
   "equipe": "Inclusios Turing",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Antônio Furlan",
+  "escola": "Antônio Furlan",
   "municipio": "Barueri",
   "uf": "SP - São Paulo",
   "professor": "Elaine Alves Garrido",
@@ -456,19 +456,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Antônio Furlan",
+    "escola": "Antônio Furlan",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Antônio Furlan",
+    "escola": "Antônio Furlan",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Antônio Furlan",
+    "escola": "Antônio Furlan",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Antônio Furlan",
+    "escola": "Antônio Furlan",
     "serie": "1ª série EM"
    }
   ],
@@ -490,7 +490,7 @@
   "codigo": "LS-12",
   "equipe": "Frugalis",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual de Taboão da Serra",
+  "escola": "Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -501,11 +501,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    }
   ],
@@ -527,7 +527,7 @@
   "codigo": "LS-13",
   "equipe": "Carpe Diem",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual de Taboão da Serra",
+  "escola": "Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -538,19 +538,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    }
   ],
@@ -572,7 +572,7 @@
   "codigo": "LS-14",
   "equipe": "Capeem",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual de Taboão da Serra",
+  "escola": "Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -583,15 +583,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    }
   ],
@@ -613,7 +613,7 @@
   "codigo": "LS-15",
   "equipe": "LITERA",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Rosa Perrone Scavone",
+  "escola": "Rosa Perrone Scavone",
   "municipio": "Itatiba",
   "uf": "SP - São Paulo",
   "professor": "Anderson Wilker Sanfins",
@@ -624,15 +624,15 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Rosa Perrone Scavone",
+    "escola": "Rosa Perrone Scavone",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Rosa Perrone Scavone",
+    "escola": "Rosa Perrone Scavone",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Rosa Perrone Scavone",
+    "escola": "Rosa Perrone Scavone",
     "serie": "2ª série EM"
    }
   ],
@@ -654,7 +654,7 @@
   "codigo": "LS-16",
   "equipe": "Aurora",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Vereador e Vice Prefeito Sérgio da Fonseca",
+  "escola": "Vereador e Vice Prefeito Sérgio da Fonseca",
   "municipio": "Ibitinga",
   "uf": "SP - São Paulo",
   "professor": "Leandro Spanghero",
@@ -665,11 +665,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Vereador e Vice Prefeito Sérgio da Fonseca",
+    "escola": "Vereador e Vice Prefeito Sérgio da Fonseca",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Vereador e Vice Prefeito Sérgio da Fonseca",
+    "escola": "Vereador e Vice Prefeito Sérgio da Fonseca",
     "serie": "2ª série EM"
    }
   ],
@@ -691,7 +691,7 @@
   "codigo": "LS-17",
   "equipe": "STEMinist",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Jorge Street",
+  "escola": "Jorge Street",
   "municipio": "São Caetano do Sul",
   "uf": "SP - São Paulo",
   "professor": "Luzia Lazara de Souza",
@@ -702,15 +702,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "1ª série EM"
    }
   ],
@@ -732,7 +732,7 @@
   "codigo": "LS-18",
   "equipe": "Trajano Racing",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Trajano Camargo",
+  "escola": "Trajano Camargo",
   "municipio": "Limeira",
   "uf": "SP - São Paulo",
   "professor": "Thiago Morais Ceratti Ribeiro",
@@ -743,11 +743,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Trajano Camargo",
+    "escola": "Trajano Camargo",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Trajano Camargo",
+    "escola": "Trajano Camargo",
     "serie": "1ª série EM"
    }
   ],
@@ -769,7 +769,7 @@
   "codigo": "LS-19",
   "equipe": "Ilusionistas",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Philadelpho Gouvêa Netto",
+  "escola": "Philadelpho Gouvêa Netto",
   "municipio": "São José do Rio Preto",
   "uf": "SP - São Paulo",
   "professor": "Camila Brandão Fantozzi",
@@ -781,11 +781,11 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Philadelpho Gouvêa Netto",
+    "escola": "Philadelpho Gouvêa Netto",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Philadelpho Gouvêa Netto",
+    "escola": "Philadelpho Gouvêa Netto",
     "serie": "2ª série EM"
    }
   ],
@@ -807,7 +807,7 @@
   "codigo": "LS-20",
   "equipe": "Verstappen",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Pedro Ferreira Alves",
+  "escola": "Pedro Ferreira Alves",
   "municipio": "Mogi Mirim",
   "uf": "SP - São Paulo",
   "professor": "Rafael da Silva Polato",
@@ -818,15 +818,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Pedro Ferreira Alves",
+    "escola": "Pedro Ferreira Alves",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Pedro Ferreira Alves",
+    "escola": "Pedro Ferreira Alves",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Pedro Ferreira Alves",
+    "escola": "Pedro Ferreira Alves",
     "serie": "2ª série EM"
    }
   ],
@@ -848,7 +848,7 @@
   "codigo": "LS-21",
   "equipe": "ACESSAETECAP",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Conselheiro Antônio Prado",
+  "escola": "Conselheiro Antônio Prado",
   "municipio": "Campinas",
   "uf": "SP - São Paulo",
   "professor": "Marcelo João da Silva",
@@ -859,19 +859,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Conselheiro Antônio Prado",
+    "escola": "Conselheiro Antônio Prado",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Conselheiro Antônio Prado",
+    "escola": "Conselheiro Antônio Prado",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Conselheiro Antônio Prado",
+    "escola": "Conselheiro Antônio Prado",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Conselheiro Antônio Prado",
+    "escola": "Conselheiro Antônio Prado",
     "serie": "1ª série EM"
    }
   ],
@@ -893,7 +893,7 @@
   "codigo": "LS-22",
   "equipe": "Ponto-a-Ponto",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Jorge Street",
+  "escola": "Jorge Street",
   "municipio": "São Caetano do Sul",
   "uf": "SP - São Paulo",
   "professor": "Nelson Fabbri Gerbelli",
@@ -904,19 +904,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Jorge Street",
+    "escola": "Jorge Street",
     "serie": "2ª série EM"
    }
   ],
@@ -938,7 +938,7 @@
   "codigo": "LS-23",
   "equipe": "1°Meca ETEC Alberto Feres",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Prefeito Alberto Feres",
+  "escola": "Prefeito Alberto Feres",
   "municipio": "Araras",
   "uf": "SP - São Paulo",
   "professor": "Vinicius Tadeu Vieira Campelo dos Santos",
@@ -949,11 +949,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Prefeito Alberto Feres",
+    "escola": "Prefeito Alberto Feres",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Prefeito Alberto Feres",
+    "escola": "Prefeito Alberto Feres",
     "serie": "1ª série EM"
    },
    {
@@ -961,7 +961,7 @@
     "serie": ""
    },
    {
-    "escola": "Etec Prefeito Alberto Feres",
+    "escola": "Prefeito Alberto Feres",
     "serie": "1ª série EM"
    }
   ],
@@ -983,7 +983,7 @@
   "codigo": "LS-24",
   "equipe": "Velozes e Curiosos",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Presidente Vargas",
+  "escola": "Presidente Vargas",
   "municipio": "Mogi das Cruzes",
   "uf": "SP - São Paulo",
   "professor": "Débora Liliane de Souza Renó",
@@ -995,19 +995,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Presidente Vargas",
+    "escola": "Presidente Vargas",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Presidente Vargas",
+    "escola": "Presidente Vargas",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Presidente Vargas",
+    "escola": "Presidente Vargas",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Presidente Vargas",
+    "escola": "Presidente Vargas",
     "serie": "2ª série EM"
    }
   ],
@@ -1029,7 +1029,7 @@
   "codigo": "LS-25",
   "equipe": "SENSA",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Vasco Antônio Venchiarutti",
+  "escola": "Vasco Antônio Venchiarutti",
   "municipio": "Jundiaí",
   "uf": "SP - São Paulo",
   "professor": "Ariza Lopes",
@@ -1040,19 +1040,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Vasco Antônio Venchiarutti",
+    "escola": "Vasco Antônio Venchiarutti",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Vasco Antônio Venchiarutti",
+    "escola": "Vasco Antônio Venchiarutti",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Vasco Antônio Venchiarutti",
+    "escola": "Vasco Antônio Venchiarutti",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Vasco Antônio Venchiarutti",
+    "escola": "Vasco Antônio Venchiarutti",
     "serie": "1ª série EM"
    }
   ],
@@ -1074,7 +1074,7 @@
   "codigo": "LS-26",
   "equipe": "Infinit Pole Positon",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Tiquatira",
+  "escola": "Tiquatira",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Emerson José Dias de Araujo",
@@ -1085,11 +1085,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Tiquatira",
+    "escola": "Tiquatira",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Tiquatira",
+    "escola": "Tiquatira",
     "serie": "1ª série EM"
    }
   ],
@@ -1111,7 +1111,7 @@
   "codigo": "LS-27",
   "equipe": "Sonhe+",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+  "escola": "Professor Alfredo de Barros Santos",
   "municipio": "Guaratinguetá",
   "uf": "SP - São Paulo",
   "professor": "Jonhson de Tarso Silva",
@@ -1122,11 +1122,11 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+    "escola": "Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
+    "escola": "Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    }
   ],
@@ -1148,7 +1148,7 @@
   "codigo": "LS-28",
   "equipe": "Cloves",
   "categoria": "Centro Paula Souza",
-  "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+  "escola": "Osvaldo da Costa Meireles",
   "municipio": "Luziânia",
   "uf": "GO - Goiás",
   "professor": "Gabrielle Rosa Silva",
@@ -1161,15 +1161,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+    "escola": "Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+    "escola": "Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+    "escola": "Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    }
   ],
@@ -1191,7 +1191,7 @@
   "codigo": "LS-29",
   "equipe": "PawSave",
   "categoria": "Centro Paula Souza",
-  "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+  "escola": "Osvaldo da Costa Meireles",
   "municipio": "Luziânia",
   "uf": "GO - Goiás",
   "professor": "Gabrielle Rosa Silva",
@@ -1203,15 +1203,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+    "escola": "Osvaldo da Costa Meireles",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+    "escola": "Osvaldo da Costa Meireles",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
+    "escola": "Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    }
   ],
@@ -1233,7 +1233,7 @@
   "codigo": "LS-30",
   "equipe": "NutriTech",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec São Sebastião",
+  "escola": "São Sebastião",
   "municipio": "São Sebastião",
   "uf": "SP - São Paulo",
   "professor": "Vanessa Antonia Beltrami de Freitas Figueiredo Campos",
@@ -1244,19 +1244,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    }
   ],
@@ -1278,7 +1278,7 @@
   "codigo": "LS-31",
   "equipe": "Vozz",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual Professor Adolpho Arruda Mello",
+  "escola": "Professor Adolpho Arruda Mello",
   "municipio": "Presidente Prudente",
   "uf": "SP - São Paulo",
   "professor": "Luciane Lima Beckner",
@@ -1289,11 +1289,11 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual Professor Adolpho Arruda Mello",
+    "escola": "Professor Adolpho Arruda Mello",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual Professor Adolpho Arruda Mello",
+    "escola": "Professor Adolpho Arruda Mello",
     "serie": "1ª série EM"
    }
   ],
@@ -1315,7 +1315,7 @@
   "codigo": "LS-32",
   "equipe": "Swe MCM",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professora Maria Cristina Medeiros",
+  "escola": "Professora Maria Cristina Medeiros",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Suely dos Santos Sousa",
@@ -1326,19 +1326,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "2ª série EM"
    }
   ],
@@ -1360,7 +1360,7 @@
   "codigo": "LS-33",
   "equipe": "Projeto A.T.A: Acessibilidade e Tecnologia Assistiva",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Guarulhos",
+  "escola": "Guarulhos",
   "municipio": "Guarulhos",
   "uf": "SP - São Paulo",
   "professor": "Marlene da Silva Maximiano de Oliveira",
@@ -1372,19 +1372,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Guarulhos",
+    "escola": "Guarulhos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Guarulhos",
+    "escola": "Guarulhos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Guarulhos",
+    "escola": "Guarulhos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Guarulhos",
+    "escola": "Guarulhos",
     "serie": "1ª série EM"
    }
   ],
@@ -1406,7 +1406,7 @@
   "codigo": "LS-34",
   "equipe": "Inclui+",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professor Horácio Augusto da Silveira",
+  "escola": "Professor Horácio Augusto da Silveira",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Rodrigo Arakawa",
@@ -1417,15 +1417,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Professor Horácio Augusto da Silveira",
+    "escola": "Professor Horácio Augusto da Silveira",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professor Horácio Augusto da Silveira",
+    "escola": "Professor Horácio Augusto da Silveira",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professor Horácio Augusto da Silveira",
+    "escola": "Professor Horácio Augusto da Silveira",
     "serie": "2ª série EM"
    }
   ],
@@ -1447,7 +1447,7 @@
   "codigo": "LS-35",
   "equipe": "Conecta Escola",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual de Taboão da Serra",
+  "escola": "Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -1458,15 +1458,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    }
   ],
@@ -1488,7 +1488,7 @@
   "codigo": "LS-36",
   "equipe": "The Lookers",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual de Taboão da Serra",
+  "escola": "Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -1499,11 +1499,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    }
   ],
@@ -1525,7 +1525,7 @@
   "codigo": "LS-37",
   "equipe": "Construindo Pertencimento",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professora Maria Cristina Medeiros",
+  "escola": "Professora Maria Cristina Medeiros",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Suely dos Santos Sousa",
@@ -1536,15 +1536,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Professora Maria Cristina Medeiros",
+    "escola": "Professora Maria Cristina Medeiros",
     "serie": "1ª série EM"
    }
   ],
@@ -1566,7 +1566,7 @@
   "codigo": "LS-38",
   "equipe": "CONFI (Controle Financeiro Inteligente)",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec São Sebastião",
+  "escola": "São Sebastião",
   "municipio": "São Sebastião",
   "uf": "SP - São Paulo",
   "professor": "Marcio dos Santos",
@@ -1579,19 +1579,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec São Sebastião",
+    "escola": "São Sebastião",
     "serie": "2ª série EM"
    }
   ],
@@ -1613,7 +1613,7 @@
   "codigo": "LS-39",
   "equipe": "QuickSilvers",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual de Taboão da Serra",
+  "escola": "Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -1624,11 +1624,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de Taboão da Serra",
+    "escola": "Taboão da Serra",
     "serie": "1ª série EM"
    }
   ],
@@ -1650,7 +1650,7 @@
   "codigo": "LS-40",
   "equipe": "Inclui+",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professor Horácio Augusto da Silveira",
+  "escola": "Professor Horácio Augusto da Silveira",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Rodrigo Arakawa",
@@ -1661,11 +1661,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Professor Horácio Augusto da Silveira",
+    "escola": "Professor Horácio Augusto da Silveira",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Professor Horácio Augusto da Silveira",
+    "escola": "Professor Horácio Augusto da Silveira",
     "serie": "2ª série EM"
    }
   ],
@@ -1687,7 +1687,7 @@
   "codigo": "LS-41",
   "equipe": "ADM ETECIA",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Irmã Agostina",
+  "escola": "Irmã Agostina",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Gleiciane Oliveira de Morais",
@@ -1698,19 +1698,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Irmã Agostina",
+    "escola": "Irmã Agostina",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Irmã Agostina",
+    "escola": "Irmã Agostina",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Irmã Agostina",
+    "escola": "Irmã Agostina",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Irmã Agostina",
+    "escola": "Irmã Agostina",
     "serie": "2ª série EM"
    }
   ],
@@ -1732,7 +1732,7 @@
   "codigo": "LS-42",
   "equipe": "Identifiqui",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Doutor Celso Giglio",
+  "escola": "Doutor Celso Giglio",
   "municipio": "Osasco",
   "uf": "SP - São Paulo",
   "professor": "Anabel Kovacs",
@@ -1746,11 +1746,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Doutor Celso Giglio",
+    "escola": "Doutor Celso Giglio",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Etec Doutor Celso Giglio",
+    "escola": "Doutor Celso Giglio",
     "serie": "2ª série EM"
    }
   ],
