@@ -8,6 +8,13 @@ delete from avaliacoes;
 alter table avaliadores
   add column if not exists contabiliza boolean not null default true;
 
+-- Remove cadastros antigos dos mesmos nomes que receberam tokens aleatórios.
+delete from avaliadores
+where (lower(nome) = 'erica orosco' and token <> 'parecerista-1')
+   or (lower(nome) = 'juliana gelbaum' and token <> 'parecerista-2')
+   or (lower(nome) = 'thayna bonsaver' and token <> 'parecerista-3')
+   or (lower(nome) = 'fabio ribeiro' and token <> 'fabio-ribeiro');
+
 insert into avaliadores (nome, email, papel, token, ativo, contabiliza)
 values
   ('Administração', 'admin@local', 'admin', 'admin-demo', true, true),
