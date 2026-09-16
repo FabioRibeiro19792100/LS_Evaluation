@@ -59,5 +59,10 @@ Dois ambientes, um banco mínimo no Supabase, sem dado sensível fora da planilh
 
 ```
 python3 extrair.py LSBR-inscritos.xlsx inscricoes.json
-python3 build.py     # injeta o JSON em avaliador.html e dashboard.html
+python3 -m pip install -r requirements-build.txt
+LS_DATA_PASSWORD='SUA-SENHA' python3 build.py
 ```
+
+O build publica somente código e nome das equipes em texto aberto. Os demais
+campos das inscrições são protegidos com AES-GCM e PBKDF2 antes de serem
+incorporados às páginas. A senha não é gravada no HTML nem no repositório.

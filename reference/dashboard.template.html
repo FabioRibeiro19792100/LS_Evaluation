@@ -94,6 +94,12 @@ tr.fora td{color:var(--cinza)}
 .cidade{color:#8A8798;font-size:11px;margin-top:1px}
 .vazio{padding:48px 24px;max-width:60ch}
 .vazio h2{font-size:20px;margin:0 0 8px}
+.acesso-dados{max-width:560px;margin:56px auto;padding:28px;border:1px solid var(--linha);background:#fff;box-shadow:0 12px 34px rgba(26,21,51,.09)}
+.acesso-dados h2{margin:0 0 7px;color:var(--roxo);font-size:22px}.acesso-dados p{margin:0 0 16px;color:var(--cinza)}
+.acesso-dados form{display:flex;gap:8px}.acesso-dados input{min-width:0;flex:1;padding:10px 12px;border:1px solid var(--linha);font:inherit}
+.acesso-dados .erro-acesso{min-height:20px;margin:8px 0 0;color:var(--vermelho);font-size:13px}
+.equipes-publicas{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 0;padding:16px 0 0;border-top:1px solid var(--linha);list-style:none}
+.equipes-publicas li{padding:3px 7px;background:var(--leve);color:#615D6A;font-size:11px}
 /* painel lateral */
 .painel{position:fixed;z-index:25;top:0;right:0;width:min(720px,100vw);height:100vh;background:#fff;border-left:1px solid var(--linha);box-shadow:-12px 0 36px rgba(43,10,90,.14);overflow-y:auto;padding:0 28px 28px;transform:translateX(100%);transition:transform .2s}
 .painel.aberto{transform:none}
@@ -203,7 +209,9 @@ const AMBIENTE_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
 const SUPABASE_URL = AMBIENTE_LOCAL ? location.origin : "https://sxegrslhumunntjwzcoi.supabase.co";
 const SUPABASE_ANON_KEY = AMBIENTE_LOCAL ? "local" : "sb_publishable_PuIPOJ1YLX90a_Ig7yjEgw_EAJhP8ZH";
 const CORTE = 20; // equipes selecionadas nesta etapa
-const INSCRICOES = __DADOS__;
+const INSCRICOES_PUBLICAS = __DADOS_PUBLICOS__;
+const DADOS_PROTEGIDOS = __DADOS_CRIPTOGRAFADOS__;
+let INSCRICOES = [];
 const CRITERIOS = [
  {k:"edi", nome:"EDI", peso:.30},
  {k:"originalidade", nome:"Originalidade", peso:.20},
@@ -255,6 +263,25 @@ let cliente, eu, todas = [], pareceristas = [], consolidado = [], ordem = {col:"
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
 function vazio(t, sub){ $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`; }
+
+async function descriptografarInscricoes(senha){
+  const pacote = Uint8Array.from(atob(DADOS_PROTEGIDOS), c => c.charCodeAt(0));
+  const salt = pacote.slice(0,16), iv = pacote.slice(16,28), cifrado = pacote.slice(28);
+  const material = await crypto.subtle.importKey("raw", new TextEncoder().encode(senha), "PBKDF2", false, ["deriveKey"]);
+  const chave = await crypto.subtle.deriveKey({name:"PBKDF2",salt,iterations:250000,hash:"SHA-256"}, material, {name:"AES-GCM",length:256}, false, ["decrypt"]);
+  const aberto = await crypto.subtle.decrypt({name:"AES-GCM",iv}, chave, cifrado);
+  return JSON.parse(new TextDecoder().decode(aberto));
+}
+
+function solicitarAcesso(){
+  $("#raiz").innerHTML = `<section class="acesso-dados"><h2>Dados protegidos</h2><p>Digite a senha para acessar o painel completo das inscrições.</p><form id="form-acesso"><input id="senha-dados" type="password" autocomplete="current-password" placeholder="Senha de acesso" aria-label="Senha de acesso" required><button class="btn" type="submit">Acessar</button></form><p class="erro-acesso" id="erro-acesso" role="alert"></p><ul class="equipes-publicas" aria-label="Equipes inscritas">${INSCRICOES_PUBLICAS.map(i=>`<li>${esc(i.equipe)}</li>`).join("")}</ul></section>`;
+  $("#form-acesso").onsubmit = async e => {
+    e.preventDefault(); const erro = $("#erro-acesso"), botao = e.currentTarget.querySelector("button");
+    erro.textContent = ""; botao.disabled = true;
+    try { INSCRICOES = await descriptografarInscricoes($("#senha-dados").value); await iniciar(); }
+    catch { erro.textContent = "Senha incorreta."; botao.disabled = false; $("#senha-dados").select(); }
+  };
+}
 
 async function iniciar(){
   if (!token) return vazio("Link incompleto", "Este endereço precisa do código de acesso do administrador.");
@@ -441,7 +468,7 @@ $("#csv-audit").onclick = () => baixar("auditoria-learning-sectors.csv", [
   ["id_avaliacao","codigo","id_typeform","equipe","parecerista","versao","atual","edi","originalidade","qualidade","viabilidade","impacto","media_ponderada_1_a_5","comentario","registrado_em"],
   ...todas.map(a => { const i = INSCRICOES.find(x=>x.id===a.inscricao_id)||{}; return [a.id, i.codigo, a.inscricao_id, i.equipe, a.avaliador, a.versao, a.atual?"sim":"não", a.edi, a.originalidade, a.qualidade, a.viabilidade, a.impacto, pontos(a).toFixed(2), a.comentario||"", a.criado_em]; })
 ]);
-iniciar();
+solicitarAcesso();
 </script>
 </body>
 </html>
