@@ -160,6 +160,7 @@ tr.fora td{color:var(--cinza)}
 .andamento-linha{display:grid;grid-template-columns:minmax(140px,1fr) minmax(180px,2fr) 100px;gap:18px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--linha)}
 .andamento-linha:last-child{border-bottom:0}
 .andamento-nome{font-weight:500}
+.andamento-nome small{display:block;color:var(--cinza);font-size:10px;font-weight:500}
 .andamento-meta{text-align:right}
 .andamento-meta b{display:block;font-family:"IBM Plex Mono",monospace;font-size:13px;font-weight:500}
 .andamento-meta span{display:block;color:var(--cinza);font-size:11px}
@@ -259,7 +260,7 @@ const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeSty
 const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
 const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
 const token = new URLSearchParams(location.search).get("token");
-let cliente, eu, todas = [], pareceristas = [], consolidado = [], ordem = {col:"pos", asc:true};
+let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], consolidado = [], ordem = {col:"pos", asc:true};
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
 function vazio(t, sub){ $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`; }
@@ -304,7 +305,9 @@ async function iniciar(){
 async function carregar(){
   const [a, p] = await Promise.all([cliente.rpc("todas_avaliacoes", {p_token: token}), cliente.rpc("listar_avaliadores", {p_token: token})]);
   if (a.error) return vazio("Erro ao carregar", a.error.message);
-  todas = a.data || []; pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo);
+  todas = a.data || [];
+  pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo);
+  pareceristasOficiais = pareceristas.filter(x => x.contabiliza !== false);
   consolidar(); render();
 }
 
@@ -312,11 +315,13 @@ function pontos(av){ return CRITERIOS.reduce((s,c) => s + av[c.k]*c.peso, 0); } 
 
 function consolidar(){
   const atuais = todas.filter(a => a.atual);
+  const oficiaisIds = new Set(pareceristasOficiais.map(p=>p.id));
   consolidado = INSCRICOES.map(i => {
-    const avs = atuais.filter(a => a.inscricao_id === i.id);
+    const avsTodas = atuais.filter(a => a.inscricao_id === i.id);
+    const avs = avsTodas.filter(a => oficiaisIds.has(a.avaliador_id));
     const medias = {};
     CRITERIOS.forEach(c => medias[c.k] = avs.length ? avs.reduce((s,a)=>s+a[c.k],0)/avs.length : null);
-    const porAv = {}; avs.forEach(a => porAv[a.avaliador_id] = pontos(a));
+    const porAv = {}; avsTodas.forEach(a => porAv[a.avaliador_id] = pontos(a));
     const final = avs.length ? avs.reduce((s,a)=>s+pontos(a),0)/avs.length : null;
     return {ins:i, avs, medias, porAv, n:avs.length, final,
             elegivel: i.elegibilidade.status === "elegivel"};
@@ -339,15 +344,15 @@ function consolidar(){
 
 function render(){
   const total = INSCRICOES.length, eleg = consolidado.filter(r=>r.elegivel).length;
-  const completas = consolidado.filter(r => r.elegivel && r.n >= pareceristas.length && pareceristas.length).length;
+  const completas = consolidado.filter(r => r.elegivel && r.n >= pareceristasOficiais.length && pareceristasOficiais.length).length;
   const progAv = pareceristas.map(p => ({p, n: todas.filter(a => a.atual && a.avaliador_id === p.id && INSCRICOES.find(i=>i.id===a.inscricao_id)?.elegibilidade.status==="elegivel").length}));
   const escolas = [...new Set(consolidado.map(r=>r.ins.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   const cidades = [...new Set(consolidado.map(r=>r.ins.municipio).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   const lideres = [...new Set(consolidado.map(r=>r.ins.professor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   const atendeTag = r => !filtrosRanking.tag ||
     (filtrosRanking.tag==="selecionada" && r.pos && r.pos<=CORTE) ||
-    (filtrosRanking.tag==="completa" && r.elegivel && pareceristas.length>0 && r.n>=pareceristas.length) ||
-    (filtrosRanking.tag==="parcial" && r.elegivel && r.n>0 && r.n<pareceristas.length) ||
+    (filtrosRanking.tag==="completa" && r.elegivel && pareceristasOficiais.length>0 && r.n>=pareceristasOficiais.length) ||
+    (filtrosRanking.tag==="parcial" && r.elegivel && r.n>0 && r.n<pareceristasOficiais.length) ||
     (filtrosRanking.tag==="sem_avaliacao" && r.elegivel && r.n===0) ||
     (filtrosRanking.tag==="fora" && !r.elegivel);
   const rows = consolidado.filter(r => (!filtrosRanking.escola || r.ins.escola===filtrosRanking.escola) && (!filtrosRanking.cidade || r.ins.municipio===filtrosRanking.cidade) && (!filtrosRanking.lider || r.ins.professor===filtrosRanking.lider) && atendeTag(r));
@@ -403,7 +408,7 @@ function render(){
   $("#filtro-lider").onchange = e => { filtrosRanking.lider=e.target.value; render(); };
   $("#filtro-tag").onchange = e => { filtrosRanking.tag=e.target.value; render(); };
   $("#limpar-filtros").onclick = () => { filtrosRanking={escola:"",cidade:"",lider:"",tag:""}; render(); };
-  $("#drawer-conteudo").innerHTML = `<div class="andamento">${progAv.map(x=>{const pct=eleg?Math.round(100*x.n/eleg):0,status=x.n===0?'Não iniciado':x.n>=eleg?'Concluído':'Em andamento';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${eleg}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${eleg}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`;
+  $("#drawer-conteudo").innerHTML = `<div class="andamento">${progAv.map(x=>{const pct=eleg?Math.round(100*x.n/eleg):0,status=x.n===0?'Não iniciado':x.n>=eleg?'Concluído':'Em andamento',apoio=x.p.contabiliza===false?' · apoio, não contabiliza':'';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}${apoio?`<small>${apoio}</small>`:''}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${eleg}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${eleg}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`;
   requestAnimationFrame(ajustarAlturaTabela);
 }
 
@@ -423,11 +428,11 @@ function linha(r){
     ? {classe:"fora", texto:"Fora da categoria"}
     : r.n===0
       ? {classe:"pendente", texto:"Não iniciada"}
-      : (pareceristas.length && r.n>=pareceristas.length)
+      : (pareceristasOficiais.length && r.n>=pareceristasOficiais.length)
         ? {classe:"concluida", texto:"Concluída"}
         : {classe:"em-andamento", texto:"Em andamento"};
   const atuais = todas.filter(a=>a.inscricao_id===i.id && a.atual);
-  const avaliacoes = pareceristas.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id);return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num">—</td>`).join("")}<td class="num"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
+  const avaliacoes = pareceristas.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id),apoio=p.contabiliza===false;return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}${apoio?' · apoio':''}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${apoio?'Não contabiliza · ':''}${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num">—</td>`).join("")}<td class="num"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
   return `<tr class="${cls}" data-id="${esc(i.id)}">
     <td class="num pos">${r.pos ?? "—"}</td>
     <td>${esc(i.codigo)}</td>

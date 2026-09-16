@@ -37,6 +37,7 @@ def inicializar() -> None:
           id TEXT PRIMARY KEY, nome TEXT NOT NULL, email TEXT,
           papel TEXT NOT NULL CHECK (papel IN ('parecerista','admin')),
           token TEXT NOT NULL UNIQUE, ativo INTEGER NOT NULL DEFAULT 1,
+          contabiliza INTEGER NOT NULL DEFAULT 1,
           criado_em TEXT NOT NULL
         );
         CREATE TABLE IF NOT EXISTS avaliacoes (
@@ -52,17 +53,25 @@ def inicializar() -> None:
         CREATE INDEX IF NOT EXISTS avaliacoes_lookup
           ON avaliacoes (avaliador_id, inscricao_id, criado_em DESC);
         """)
+        if "contabiliza" not in {r[1] for r in con.execute("PRAGMA table_info(avaliadores)")}:
+            con.execute("ALTER TABLE avaliadores ADD COLUMN contabiliza INTEGER NOT NULL DEFAULT 1")
         if con.execute("SELECT COUNT(*) FROM avaliadores").fetchone()[0] == 0:
             contas = [
-                ("Administração", "admin@local", "admin", "admin-demo"),
-                ("Parecerista 1", "p1@local", "parecerista", "parecerista-1"),
-                ("Parecerista 2", "p2@local", "parecerista", "parecerista-2"),
-                ("Parecerista 3", "p3@local", "parecerista", "parecerista-3"),
+                ("Administração", "admin@local", "admin", "admin-demo", 1),
+                ("Erica Orosco", "erica@local", "parecerista", "parecerista-1", 1),
+                ("Juliana Gelbaum", "juliana@local", "parecerista", "parecerista-2", 1),
+                ("Thayna Bonsaver", "thayna@local", "parecerista", "parecerista-3", 1),
+                ("Fabio Ribeiro", "fabio@local", "parecerista", "fabio-ribeiro", 0),
             ]
             con.executemany(
-                "INSERT INTO avaliadores(id,nome,email,papel,token,ativo,criado_em) VALUES(?,?,?,?,?,1,?)",
+                "INSERT INTO avaliadores(id,nome,email,papel,token,ativo,contabiliza,criado_em) VALUES(?,?,?,?,?,1,?,?)",
                 [(str(uuid.uuid4()), *c, agora()) for c in contas],
             )
+        else:
+            con.execute("UPDATE avaliadores SET nome='Erica Orosco', contabiliza=1 WHERE token='parecerista-1'")
+            con.execute("UPDATE avaliadores SET nome='Juliana Gelbaum', contabiliza=1 WHERE token='parecerista-2'")
+            con.execute("UPDATE avaliadores SET nome='Thayna Bonsaver', contabiliza=1 WHERE token='parecerista-3'")
+            con.execute("INSERT INTO avaliadores(id,nome,email,papel,token,ativo,contabiliza,criado_em) SELECT ?,?,?,?,?,1,0,? WHERE NOT EXISTS (SELECT 1 FROM avaliadores WHERE token='fabio-ribeiro')", (str(uuid.uuid4()), "Fabio Ribeiro", "fabio@local", "parecerista", "fabio-ribeiro", agora()))
 
 
 def usuario(con: sqlite3.Connection, token: str, papel: str | None = None):
@@ -121,8 +130,8 @@ def executar_rpc(nome: str, p: dict):
             raise ValueError("token de administrador inválido")
 
         if nome == "listar_avaliadores":
-            rows = con.execute("SELECT id,nome,email,papel,token,ativo FROM avaliadores ORDER BY papel,nome").fetchall()
-            return [{**dicionario(r), "ativo": bool(r["ativo"])} for r in rows]
+            rows = con.execute("SELECT id,nome,email,papel,token,ativo,contabiliza FROM avaliadores ORDER BY papel,nome").fetchall()
+            return [{**dicionario(r), "ativo": bool(r["ativo"]), "contabiliza": bool(r["contabiliza"])} for r in rows]
 
         if nome == "todas_avaliacoes":
             rows = con.execute("""

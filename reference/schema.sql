@@ -16,8 +16,10 @@ create table if not exists avaliadores (
   papel      text not null default 'parecerista' check (papel in ('parecerista','admin')),
   token      text not null unique default encode(gen_random_bytes(12), 'hex'),
   ativo      boolean not null default true,
+  contabiliza boolean not null default true,
   criado_em  timestamptz not null default now()
 );
+alter table avaliadores add column if not exists contabiliza boolean not null default true;
 
 create table if not exists avaliacoes (
   id            uuid primary key default gen_random_uuid(),
@@ -90,10 +92,11 @@ language sql security definer set search_path = public as $$
 $$;
 
 -- Dashboard: lista de pareceristas e seus links
+drop function if exists listar_avaliadores(text);
 create or replace function listar_avaliadores(p_token text)
-returns table (id uuid, nome text, email text, papel text, token text, ativo boolean)
+returns table (id uuid, nome text, email text, papel text, token text, ativo boolean, contabiliza boolean)
 language sql security definer set search_path = public as $$
-  select id, nome, email, papel, token, ativo from avaliadores
+  select id, nome, email, papel, token, ativo, contabiliza from avaliadores
   where exists (select 1 from avaliadores x where x.token = p_token and x.ativo and x.papel = 'admin')
   order by papel, nome;
 $$;
@@ -117,10 +120,11 @@ grant execute on function listar_avaliadores(text) to anon;
 -- depois rode o select para copiar os links.
 --
 -- insert into avaliadores (nome, email, papel) values ('Fabio', 'fabio@...', 'admin');
--- insert into avaliadores (nome, email) values
---   ('Parecerista 1', 'p1@...'),
---   ('Parecerista 2', 'p2@...'),
---   ('Parecerista 3', 'p3@...');
+-- insert into avaliadores (nome, email, contabiliza) values
+--   ('Erica Orosco', 'erica@...', true),
+--   ('Juliana Gelbaum', 'juliana@...', true),
+--   ('Thayna Bonsaver', 'thayna@...', true),
+--   ('Fabio Ribeiro', 'fabio@...', false);
 --
 -- select nome, papel, token from avaliadores order by papel, nome;
 --
