@@ -262,7 +262,7 @@ const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeSty
 const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
 const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
 const token = new URLSearchParams(location.search).get("token");
-let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], consolidado = [], ordem = {col:"pos", asc:true};
+let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
 function vazio(t, sub){ $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`; }
@@ -303,6 +303,8 @@ async function iniciar(){
   eu = v.data; $("#quem").textContent = eu.nome;
   $("#abrir-auditoria").href = `auditoria.html?token=${encodeURIComponent(token)}`;
   await carregar();
+  clearInterval(timerAtualizacao);
+  timerAtualizacao = setInterval(() => { if (document.visibilityState === "visible") carregar(); }, 10000);
 }
 
 async function carregar(){
@@ -348,6 +350,9 @@ function consolidar(){
 }
 
 function render(){
+  const rolagemAnterior = $(".tabela-wrap")?.scrollTop || 0;
+  const rolagemHorizontalAnterior = $(".tabela-wrap")?.scrollLeft || 0;
+  const expandidas = new Set([...document.querySelectorAll(".ver-avaliacoes[aria-expanded='true']")].map(x=>x.dataset.id));
   const total = INSCRICOES.length, eleg = consolidado.filter(r=>r.elegivel).length;
   const completas = consolidado.filter(r => r.elegivel && r.n >= pareceristasOficiais.length && pareceristasOficiais.length).length;
   const progAv = pareceristas.map(p => ({p, n: todas.filter(a => a.atual && a.avaliador_id === p.id && INSCRICOES.find(i=>i.id===a.inscricao_id)?.elegibilidade.status==="elegivel").length}));
@@ -407,6 +412,12 @@ function render(){
     detalhes.forEach(detalhe => detalhe.toggleAttribute("hidden", !abrirLinha));
     b.setAttribute("aria-expanded", String(abrirLinha));
   });
+  expandidas.forEach(id => {
+    document.querySelectorAll(`.linha-parecerista[data-id="${id}"]`).forEach(x=>x.removeAttribute("hidden"));
+    const botao=document.querySelector(`.ver-avaliacoes[data-id="${id}"]`); if(botao) botao.setAttribute("aria-expanded","true");
+  });
+  const tabelaAtual=$(".tabela-wrap");
+  if(tabelaAtual){ tabelaAtual.scrollTop=rolagemAnterior; tabelaAtual.scrollLeft=rolagemHorizontalAnterior; }
   $("#info-ranking").onclick = () => $("#modal-ranking").showModal();
   $("#filtro-escola").onchange = e => { filtrosRanking.escola=e.target.value; render(); };
   $("#filtro-cidade").onchange = e => { filtrosRanking.cidade=e.target.value; render(); };
