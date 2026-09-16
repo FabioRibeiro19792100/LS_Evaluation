@@ -1,0 +1,9 @@
+*.template.html
+*.py
+*.json
+*.sql
+*.db
+*.db-shm
+*.db-wal
+README.md
+__pycache__/

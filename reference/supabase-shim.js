@@ -1,5 +1,5 @@
-/* Adaptador mínimo para manter o frontend original sem dependências externas. */
-window.supabase = {
+/* Adaptador local. Em produção, o cliente oficial carregado pelo CDN é preservado. */
+if (["localhost", "127.0.0.1"].includes(location.hostname)) window.supabase = {
   createClient(baseUrl) {
     return {
       async rpc(name, params = {}) {

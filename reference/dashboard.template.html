@@ -6,6 +6,7 @@
 <title>Learning Sectors 2026 · Consolidação das avaliações</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-shim.js"></script>
 <style>
 :root{
@@ -198,8 +199,9 @@ dialog::backdrop{background:rgba(26,21,51,.52)}
 <body>
 <script>
 // ------------------------------------------------------------- configuração
-const SUPABASE_URL = location.origin;
-const SUPABASE_ANON_KEY = "local";
+const AMBIENTE_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
+const SUPABASE_URL = AMBIENTE_LOCAL ? location.origin : "https://sxegrslhumunntjwzcoi.supabase.co";
+const SUPABASE_ANON_KEY = AMBIENTE_LOCAL ? "local" : "sb_publishable_PuIPOJ1YLX90a_Ig7yjEgw_EAJhP8ZH";
 const CORTE = 20; // equipes selecionadas nesta etapa
 const INSCRICOES = __DADOS__;
 const CRITERIOS = [
