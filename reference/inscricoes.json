@@ -18,19 +18,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Etec Dr. Emílio Hernandez Aguilar",
+    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Dr. Emílio Hernandez Aguilar",
+    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Dr. emílio Hernandez Aguilar",
+    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Etec Dr. Emílio Hernandez Aguilar",
+    "escola": "Escola Técnica Dr. Emílio Hernandez Aguilar",
     "serie": "1ª série EM"
    }
   ],
@@ -146,7 +146,7 @@
   "escola": "Etec Dr. Júlio Cardoso",
   "municipio": "Franca",
   "uf": "SP - São Paulo",
-  "professor": "GUSTAVO MIRANDA",
+  "professor": "Gustavo Miranda",
   "componentes": [
    "Artes",
    "Tecnologia e Ciências da Computação"
@@ -192,7 +192,7 @@
   "escola": "Escola Técnica Estadual Bento Quirino",
   "municipio": "Campinas",
   "uf": "SP - São Paulo",
-  "professor": "GLAUCIA GISELE TENORIO",
+  "professor": "Glaucia Gisele Tenorio",
   "componentes": [
    "Instalações Elétricas"
   ],
@@ -230,7 +230,7 @@
   "codigo": "LS-06",
   "equipe": "Erro404",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professor Alfredo de Barros Santos",
+  "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
   "municipio": "Guaratinguetá",
   "uf": "SP - São Paulo",
   "professor": "Carlos Alberto Bernardes",
@@ -241,19 +241,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Ceeteps - Etec Professor Alfredo de Barros Santos",
+    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Ceeteps - Etec Professor Alfredo de Barros Santos",
+    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Ceeteps - Etec Professor Alfredo de Barros Santos",
+    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    },
    {
-    "escola": "Ceeteps - Etec Professor Alfredo de Barros Santos",
+    "escola": "Escola Técnica Estadual Professor Alfredo de Barros Santos",
     "serie": "1ª série EM"
    }
   ],
@@ -278,7 +278,7 @@
   "escola": "Etec Professor Elias Miguel Júnior",
   "municipio": "Votorantim",
   "uf": "SP - São Paulo",
-  "professor": "CLAUDIO ROBERTO CORREDATO",
+  "professor": "Claudio Roberto Corredato",
   "componentes": [
    "Tecnologia e Ciências da Computação"
   ],
@@ -290,7 +290,7 @@
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC PROFESSOR ELIAS MIGUEL JÚNIOR",
+    "escola": "Etec Professor Elias Miguel Júnior",
     "serie": "2ª série EM"
    }
   ],
@@ -312,7 +312,7 @@
   "codigo": "LS-08",
   "equipe": "Time Ecológico",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC da Zona Leste",
+  "escola": "Etec da Zona Leste",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Paulo Curriel Rodrigues da Silva",
@@ -324,15 +324,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    }
   ],
@@ -354,7 +354,7 @@
   "codigo": "LS-09",
   "equipe": "PitStop Limpo",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC PROFESSOR MASSUYUKI KAWANO",
+  "escola": "Etec Professor Massuyuki Kawano",
   "municipio": "Tupã",
   "uf": "SP - São Paulo",
   "professor": "Ewerton José da Silva",
@@ -366,19 +366,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "ETEC PROFESSOR MASSUYUKI KAWANO",
+    "escola": "Etec Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC PROFESSOR MASSUYUKI KAWANO",
+    "escola": "Etec Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC PROFESSOR MASSUYUKI KAWANO",
+    "escola": "Etec Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC PROFESSOR MASSUYUKI KAWANO",
+    "escola": "Etec Professor Massuyuki Kawano",
     "serie": "1ª série EM"
    }
   ],
@@ -400,7 +400,7 @@
   "codigo": "LS-10",
   "equipe": "Entende AÍ",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC da Zona Leste",
+  "escola": "Etec da Zona Leste",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Salomão Santana do Nascimento",
@@ -411,19 +411,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC da Zona Leste",
+    "escola": "Etec da Zona Leste",
     "serie": "2ª série EM"
    }
   ],
@@ -445,7 +445,7 @@
   "codigo": "LS-11",
   "equipe": "Inclusios Turing",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC Antônio Furlan",
+  "escola": "Etec Antônio Furlan",
   "municipio": "Barueri",
   "uf": "SP - São Paulo",
   "professor": "Elaine Alves Garrido",
@@ -456,19 +456,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "ETEC Antônio Furlan",
+    "escola": "Etec Antônio Furlan",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC Antônio Furlan",
+    "escola": "Etec Antônio Furlan",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC Antônio Furlan",
+    "escola": "Etec Antônio Furlan",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC Antônio Furlan",
+    "escola": "Etec Antônio Furlan",
     "serie": "1ª série EM"
    }
   ],
@@ -490,7 +490,7 @@
   "codigo": "LS-12",
   "equipe": "Frugalis",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Tecnica Estadual de Taboão da Serra",
+  "escola": "Escola Técnica Estadual de Taboão da Serra",
   "municipio": "Taboão da Serra",
   "uf": "SP - São Paulo",
   "professor": "Stephany Martins Conceição",
@@ -501,7 +501,7 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Tecnica Estadual de Taboão da Serra",
+    "escola": "Escola Técnica Estadual de Taboão da Serra",
     "serie": "1ª série EM"
    },
    {
@@ -613,7 +613,7 @@
   "codigo": "LS-15",
   "equipe": "LITERA",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC Rosa Perrone Scavone",
+  "escola": "Etec Rosa Perrone Scavone",
   "municipio": "Itatiba",
   "uf": "SP - São Paulo",
   "professor": "Anderson Wilker Sanfins",
@@ -624,15 +624,15 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "ETEC Rosa Perrone Scavone",
+    "escola": "Etec Rosa Perrone Scavone",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC Rosa Perrone Scavone",
+    "escola": "Etec Rosa Perrone Scavone",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC Rosa Perrone Scavone",
+    "escola": "Etec Rosa Perrone Scavone",
     "serie": "2ª série EM"
    }
   ],
@@ -807,10 +807,10 @@
   "codigo": "LS-20",
   "equipe": "Verstappen",
   "categoria": "Centro Paula Souza",
-  "escola": "Escola Técnica Estadual (ETEC) \"Pedro Ferreira Alves\"",
+  "escola": "Etec Pedro Ferreira Alves",
   "municipio": "Mogi Mirim",
   "uf": "SP - São Paulo",
-  "professor": "RAFAEL DA SILVA POLATO",
+  "professor": "Rafael da Silva Polato",
   "componentes": [
    "Sistemas Embarcados e Internet das Coisas, Programação de Aplicativos Mobile I, Desenvolvimento Dispositivos Moveis I, Sistemas Embarcados, Sistemas Web I, Programação Web I"
   ],
@@ -818,15 +818,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual (ETEC) \"Pedro Ferreira Alves\"",
+    "escola": "Etec Pedro Ferreira Alves",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual (ETEC) \"Pedro Ferreira Alves\"",
+    "escola": "Etec Pedro Ferreira Alves",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual (ETEC) \"Pedro Ferreira Alves\"",
+    "escola": "Etec Pedro Ferreira Alves",
     "serie": "2ª série EM"
    }
   ],
@@ -849,9 +849,9 @@
   "equipe": "ACESSAETECAP",
   "categoria": "Centro Paula Souza",
   "escola": "Escola Técnica Estadual Conselheiro Antônio Prado",
-  "municipio": "SP",
+  "municipio": "Campinas",
   "uf": "SP - São Paulo",
-  "professor": "MARCELO JOÃO DA SILVA",
+  "professor": "Marcelo João da Silva",
   "componentes": [
    "Biologia"
   ],
@@ -893,8 +893,8 @@
   "codigo": "LS-22",
   "equipe": "Ponto-a-Ponto",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC JORGE STREET",
-  "municipio": "São CAETANO DO SUL",
+  "escola": "Etec Jorge Street",
+  "municipio": "São Caetano do Sul",
   "uf": "SP - São Paulo",
   "professor": "Nelson Fabbri Gerbelli",
   "componentes": [
@@ -904,19 +904,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "ETEC JORGE STREET",
+    "escola": "Etec Jorge Street",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC JORGE STREET",
+    "escola": "Etec Jorge Street",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC JORGE STREET",
+    "escola": "Etec Jorge Street",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC JORGE STREET",
+    "escola": "Etec Jorge Street",
     "serie": "2ª série EM"
    }
   ],
@@ -938,8 +938,8 @@
   "codigo": "LS-23",
   "equipe": "1°Meca ETEC Alberto Feres",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Prefeito Alberto Feres Centro Paula Souza",
-  "municipio": "SP Araras",
+  "escola": "Etec Prefeito Alberto Feres",
+  "municipio": "Araras",
   "uf": "SP - São Paulo",
   "professor": "Vinicius Tadeu Vieira Campelo dos Santos",
   "componentes": [
@@ -949,11 +949,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "ETEC Prefeito Alberto Feres",
+    "escola": "Etec Prefeito Alberto Feres",
     "serie": "1ª série EM"
    },
    {
-    "escola": "ETEC Prefeito Alberto Feres",
+    "escola": "Etec Prefeito Alberto Feres",
     "serie": "1ª série EM"
    },
    {
@@ -1161,7 +1161,7 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "Colégio Estadual em Período Integral Ovaldo da Costa Meireles",
+    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    },
    {
@@ -1169,7 +1169,7 @@
     "serie": "1ª série EM"
    },
    {
-    "escola": "Colégio Estadual em Período integral Osvaldo da Costa Meireles",
+    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    }
   ],
@@ -1203,15 +1203,15 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "colégio estadual em período integral osvaldo da costa meireles",
+    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
     "serie": "2ª série EM"
    },
    {
-    "escola": "colégio estadual em período integral osvaldo da costa meireles",
+    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
     "serie": "2ª série EM"
    },
    {
-    "escola": "colégio estadual em período integral osvaldo da costa meireles",
+    "escola": "Colégio Estadual em Período Integral Osvaldo da Costa Meireles",
     "serie": "1ª série EM"
    }
   ],
@@ -1233,7 +1233,7 @@
   "codigo": "LS-30",
   "equipe": "NutriTech",
   "categoria": "Centro Paula Souza",
-  "escola": "CENTRO PAULA SOUZA",
+  "escola": "Etec São Sebastião",
   "municipio": "São Sebastião",
   "uf": "SP - São Paulo",
   "professor": "Vanessa Antonia Beltrami de Freitas Figueiredo Campos",
@@ -1244,19 +1244,19 @@
   "colider": true,
   "estudantes": [
    {
-    "escola": "Escola Técnica Estadual de São Sebastião",
+    "escola": "Etec São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "Escola Técnica Estadual de São Sebastião",
+    "escola": "Etec São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC de São Sebastião",
+    "escola": "Etec São Sebastião",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ESCOLA TECNICA ESTADUAL DE SÃO SEBASTIÃO",
+    "escola": "Etec São Sebastião",
     "serie": "2ª série EM"
    }
   ],
@@ -1315,10 +1315,10 @@
   "codigo": "LS-32",
   "equipe": "Swe MCM",
   "categoria": "Centro Paula Souza",
-  "escola": "Etec Professora Maria Cristina  Medeiros",
+  "escola": "Etec Professora Maria Cristina Medeiros",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
-  "professor": "suely dos santos sousa",
+  "professor": "Suely dos Santos Sousa",
   "componentes": [
    "Tecnologia e Ciências da Computação"
   ],
@@ -1528,7 +1528,7 @@
   "escola": "Etec Professora Maria Cristina Medeiros",
   "municipio": "São Paulo",
   "uf": "SP - São Paulo",
-  "professor": "suely dos santos sousa",
+  "professor": "Suely dos Santos Sousa",
   "componentes": [
    "Tecnologia e Ciências da Computação"
   ],
@@ -1687,8 +1687,8 @@
   "codigo": "LS-41",
   "equipe": "ADM ETECIA",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC Irmã Agostina - Centro Paula Souza",
-  "municipio": "SP",
+  "escola": "Etec Irmã Agostina",
+  "municipio": "São Paulo",
   "uf": "SP - São Paulo",
   "professor": "Gleiciane Oliveira de Morais",
   "componentes": [
@@ -1698,19 +1698,19 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "ETEC Irmã Agostina",
+    "escola": "Etec Irmã Agostina",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC Irmã Agostina",
+    "escola": "Etec Irmã Agostina",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC Irmã Agostina",
+    "escola": "Etec Irmã Agostina",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC Irmã Agostina",
+    "escola": "Etec Irmã Agostina",
     "serie": "2ª série EM"
    }
   ],
@@ -1732,7 +1732,7 @@
   "codigo": "LS-42",
   "equipe": "Identifiqui",
   "categoria": "Centro Paula Souza",
-  "escola": "ETEC Doutor Celso Giglio",
+  "escola": "Etec Doutor Celso Giglio",
   "municipio": "Osasco",
   "uf": "SP - São Paulo",
   "professor": "Anabel Kovacs",
@@ -1746,11 +1746,11 @@
   "colider": false,
   "estudantes": [
    {
-    "escola": "ETEC Doutor Celso Giglio",
+    "escola": "Etec Doutor Celso Giglio",
     "serie": "2ª série EM"
    },
    {
-    "escola": "ETEC Doutor Celso Giglio",
+    "escola": "Etec Doutor Celso Giglio",
     "serie": "2ª série EM"
    }
   ],
