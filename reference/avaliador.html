@@ -165,10 +165,9 @@ main{padding:24px;width:100%;max-width:none;min-width:0}
 .escala button.on::after{content:"✓";position:absolute;top:-8px;right:-7px;display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:var(--vermelho);color:#fff;font-size:10px;font-weight:600;border:2px solid #fff}
 .escala button:focus-visible{outline:2px solid var(--vermelho);outline-offset:2px}
 textarea{width:100%;max-width:72ch;font:inherit;padding:10px;border:1.5px solid var(--linha);border-radius:4px;min-height:90px;resize:vertical}
-.comentario-campo{width:100%;border:1px solid #DDD9E3;background:#fff;padding:9px 12px 0;transition:border-color .15s,box-shadow .15s}
+.comentario-campo{width:100%;border:1px solid #DDD9E3;background:#fff;padding:0 12px;transition:border-color .15s,box-shadow .15s}
 .comentario-campo:focus-within{border-color:var(--roxo);box-shadow:0 0 0 2px rgba(43,10,90,.08)}
-.comentario-campo label{display:block;margin:0 0 2px;color:var(--roxo);font-size:15px;font-weight:600;line-height:22px}
-.comentario-campo textarea{display:block;max-width:none;min-height:72px;padding:5px 0 9px;border:0;border-radius:0;background:transparent;outline:0}
+.comentario-campo textarea{display:block;max-width:none;min-height:72px;padding:12px 0;border:0;border-radius:0;background:transparent;outline:0}
 .acoes{position:sticky;z-index:4;bottom:-24px;display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px -24px -24px;padding:10px 24px 8px;border-top:1px solid var(--linha);background:var(--leve);box-shadow:0 -6px 14px rgba(26,21,51,.06)}
 .acoes .btn{flex:1;white-space:nowrap}
 .acoes .aviso{flex-basis:100%}
@@ -381,8 +380,8 @@ function inscricaoHtml(i){
     </section>`).join("")}
     <section class="crit">
       <div class="comentario-campo">
-        <label for="coment">Comentário (opcional)</label>
-        <textarea id="coment" placeholder="Destaque pontos fortes, dúvidas ou aspectos que influenciaram sua avaliação.">${esc(rascunho.comentario)}</textarea>
+        <label class="sr-only" for="coment">Comentário (opcional)</label>
+        <textarea id="coment" placeholder="Comentário (opcional) — destaque pontos fortes, dúvidas ou aspectos que influenciaram sua avaliação.">${esc(rascunho.comentario)}</textarea>
       </div>
     </section>
     <div class="acoes">
