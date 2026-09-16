@@ -67,7 +67,7 @@ tr.linha:hover{background:var(--leve)}
 .ranking-table tr.linha:hover td:nth-child(4){background:#F2EEF6}
 .ranking-table th:nth-child(n+5):nth-child(-n+9),.ranking-table td:nth-child(n+5):nth-child(-n+9){width:108px;text-align:center;border-left:1px solid #E1D9EB}
 .ranking-table th:nth-child(n+5):nth-child(-n+9){background:#E9EBEF;color:#4F4C5D;font-weight:600;border-top:0}
-.ranking-table thead th,.ranking-table thead th.num{position:sticky;z-index:8;top:26px;padding-top:10px;padding-bottom:10px;border-bottom:2px solid #BFC1C8;background:#fff;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:13px;line-height:18px;box-shadow:0 2px 4px rgba(26,21,51,.06)}
+.ranking-table thead th,.ranking-table thead th.num{position:sticky;z-index:8;top:26px;padding-top:10px;padding-bottom:10px;border-bottom:2px solid #BFC1C8;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:13px;line-height:18px;box-shadow:0 2px 4px rgba(26,21,51,.06)}
 .criterio-cab{display:block;font-family:inherit;font-size:13px;font-weight:600;line-height:18px}
 .peso-cab{display:block;margin-top:4px;color:#85818C;font-family:inherit;font-size:10px;font-weight:500;line-height:14px;letter-spacing:.01em}
 .ranking-table td:nth-child(n+5):nth-child(-n+9){background:#F7F8FA}
@@ -98,8 +98,6 @@ tr.fora td{color:var(--cinza)}
 .acesso-dados h2{margin:0 0 7px;color:var(--roxo);font-size:22px}.acesso-dados p{margin:0 0 16px;color:var(--cinza)}
 .acesso-dados form{display:flex;gap:8px}.acesso-dados input{min-width:0;flex:1;padding:10px 12px;border:1px solid var(--linha);font:inherit}
 .acesso-dados .erro-acesso{min-height:20px;margin:8px 0 0;color:var(--vermelho);font-size:13px}
-.equipes-publicas{display:flex;flex-wrap:wrap;gap:6px;margin:20px 0 0;padding:16px 0 0;border-top:1px solid var(--linha);list-style:none}
-.equipes-publicas li{padding:3px 7px;background:var(--leve);color:#615D6A;font-size:11px}
 /* painel lateral */
 .painel{position:fixed;z-index:25;top:0;right:0;width:min(720px,100vw);height:100vh;background:#fff;border-left:1px solid var(--linha);box-shadow:-12px 0 36px rgba(43,10,90,.14);overflow-y:auto;padding:0 28px 28px;transform:translateX(100%);transition:transform .2s}
 .painel.aberto{transform:none}
@@ -274,7 +272,7 @@ async function descriptografarInscricoes(senha){
 }
 
 function solicitarAcesso(){
-  $("#raiz").innerHTML = `<section class="acesso-dados"><h2>Dados protegidos</h2><p>Digite a senha para acessar o painel completo das inscrições.</p><form id="form-acesso"><input id="senha-dados" type="password" autocomplete="current-password" placeholder="Senha de acesso" aria-label="Senha de acesso" required><button class="btn" type="submit">Acessar</button></form><p class="erro-acesso" id="erro-acesso" role="alert"></p><ul class="equipes-publicas" aria-label="Equipes inscritas">${INSCRICOES_PUBLICAS.map(i=>`<li>${esc(i.equipe)}</li>`).join("")}</ul></section>`;
+  $("#raiz").innerHTML = `<section class="acesso-dados"><h2>Acesso ao painel</h2><p>Digite a senha para continuar.</p><form id="form-acesso"><input id="senha-dados" type="password" autocomplete="current-password" placeholder="Senha de acesso" aria-label="Senha de acesso" required><button class="btn" type="submit">Acessar</button></form><p class="erro-acesso" id="erro-acesso" role="alert"></p></section>`;
   $("#form-acesso").onsubmit = async e => {
     e.preventDefault(); const erro = $("#erro-acesso"), botao = e.currentTarget.querySelector("button");
     erro.textContent = ""; botao.disabled = true;
