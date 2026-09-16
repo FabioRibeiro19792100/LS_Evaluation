@@ -219,7 +219,6 @@ const CRITERIOS = [
   </div>
   <div class="acoes">
     <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
-    <button class="btn" id="recarregar">Atualizar</button>
     <button class="btn" id="csv-consol">Exportar ranking (CSV)</button>
     <button class="btn" id="csv-audit">Exportar auditoria (CSV)</button>
   </div>
@@ -440,7 +439,6 @@ $("#csv-audit").onclick = () => baixar("auditoria-learning-sectors.csv", [
   ["id_avaliacao","codigo","id_typeform","equipe","parecerista","versao","atual","edi","originalidade","qualidade","viabilidade","impacto","media_ponderada_1_a_5","comentario","registrado_em"],
   ...todas.map(a => { const i = INSCRICOES.find(x=>x.id===a.inscricao_id)||{}; return [a.id, i.codigo, a.inscricao_id, i.equipe, a.avaliador, a.versao, a.atual?"sim":"não", a.edi, a.originalidade, a.qualidade, a.viabilidade, a.impacto, pontos(a).toFixed(2), a.comentario||"", a.criado_em]; })
 ]);
-$("#recarregar").onclick = carregar;
 iniciar();
 </script>
 </body>

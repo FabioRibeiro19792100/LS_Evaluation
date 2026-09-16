@@ -98,6 +98,14 @@ language sql security definer set search_path = public as $$
   order by papel, nome;
 $$;
 
+-- As funções SECURITY DEFINER não ficam acessíveis por padrão a outros papéis.
+-- A aplicação pública recebe somente as cinco operações explicitamente liberadas abaixo.
+revoke execute on function validar_token(text) from public, authenticated;
+revoke execute on function minhas_avaliacoes(text) from public, authenticated;
+revoke execute on function salvar_avaliacao(text,text,int,int,int,int,int,text) from public, authenticated;
+revoke execute on function todas_avaliacoes(text) from public, authenticated;
+revoke execute on function listar_avaliadores(text) from public, authenticated;
+
 grant execute on function validar_token(text) to anon;
 grant execute on function minhas_avaliacoes(text) to anon;
 grant execute on function salvar_avaliacao(text,text,int,int,int,int,int,text) to anon;
