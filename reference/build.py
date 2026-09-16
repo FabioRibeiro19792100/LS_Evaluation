@@ -20,7 +20,7 @@ texto = json.dumps(inscricoes, ensure_ascii=False, separators=(",", ":")).encode
 cifrado = AESGCM(chave).encrypt(iv, texto, None)
 protegido = json.dumps(base64.b64encode(salt + iv + cifrado).decode())
 publicos = json.dumps([{"codigo": x["codigo"], "equipe": x["equipe"]} for x in inscricoes], ensure_ascii=False)
-for t in ("avaliador","dashboard"):
+for t in ("avaliador","dashboard","auditoria"):
     html = open(raiz / f"{t}.template.html", encoding="utf-8").read()
     html = html.replace("__DADOS_PUBLICOS__", publicos).replace("__DADOS_CRIPTOGRAFADOS__", protegido)
     open(raiz / f"{t}.html", "w", encoding="utf-8").write(html)

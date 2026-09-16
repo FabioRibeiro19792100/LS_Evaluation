@@ -25,6 +25,7 @@ button{font:inherit;cursor:pointer}
 .topo .quem{color:var(--cinza);font-weight:500}
 .topo .acoes{margin-left:auto;display:flex;gap:8px}
 .btn{padding:8px 14px;border-radius:4px;border:1.5px solid var(--roxo);background:#fff;color:var(--roxo);font-weight:500}
+.topo a.btn{text-decoration:none}
 .btn.pri{background:var(--roxo);color:#fff}
 main{width:100%;max-width:none;padding:20px 32px 32px}
 .resumo{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:28px}
@@ -229,6 +230,7 @@ const CRITERIOS = [
   </div>
   <div class="acoes">
     <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
+    <a class="btn" id="abrir-auditoria" href="#">Planilha de auditoria</a>
     <button class="btn" id="csv-consol">Exportar ranking (CSV)</button>
     <button class="btn" id="csv-audit">Exportar auditoria (CSV)</button>
   </div>
@@ -299,6 +301,7 @@ async function iniciar(){
   const v = await cliente.rpc("validar_token", {p_token: token});
   if (v.error || !v.data || v.data.papel !== "admin") return vazio("Acesso não reconhecido", "Este link não corresponde a um administrador ativo.");
   eu = v.data; $("#quem").textContent = eu.nome;
+  $("#abrir-auditoria").href = `auditoria?token=${encodeURIComponent(token)}`;
   await carregar();
 }
 
