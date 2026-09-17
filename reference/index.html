@@ -3,42 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Learning Sectors 2026 · Avaliação</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<style>
-:root{--roxo:#2B0A5A;--tinta:#1A1533;--cinza:#6B6880;--linha:#E4E1EC;--leve:#F6F4FA}
-*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{display:grid;place-items:center;padding:24px;background:var(--leve);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,sans-serif}
-main{width:min(720px,100%);background:#fff;border:1px solid var(--linha);box-shadow:0 16px 48px rgba(43,10,90,.1)}
-header{padding:28px 32px 22px;border-bottom:3px solid var(--roxo)}h1{margin:0;color:var(--roxo);font-size:25px;line-height:1.2}header p{margin:6px 0 0;color:var(--cinza)}
-.acessos{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--linha)}section{padding:28px 32px;background:#fff}h2{margin:0 0 6px;color:var(--roxo);font-size:18px}p{margin:0 0 18px;color:var(--cinza);line-height:1.5}
-form{display:grid;gap:9px}label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.045em;color:var(--cinza)}input{width:100%;height:42px;padding:0 11px;border:1px solid var(--linha);font:inherit;color:var(--tinta)}button{height:42px;border:1px solid var(--roxo);background:var(--roxo);color:#fff;font:inherit;font-weight:600;cursor:pointer}.erro{min-height:18px;color:#B20D27;font-size:12px}
-footer{padding:12px 20px;border-top:1px solid var(--linha);color:#8A8792;text-align:center;font-size:10px;font-weight:500;letter-spacing:.045em;text-transform:uppercase}
-@media(max-width:620px){.acessos{grid-template-columns:1fr}header,section{padding:22px}}
-</style>
+<title>Learning Sectors 2026 · Painel de controle</title>
+<meta http-equiv="refresh" content="0;url=dashboard.html">
+<script>location.replace("dashboard.html")</script>
 </head>
-<body>
-<main>
-  <header><h1>Learning Sectors 2026</h1><p>Sistema de avaliação e consolidação das inscrições.</p></header>
-  <div class="acessos">
-    <section>
-      <h2>Administração</h2><p>Acesse o dashboard e a auditoria com o código administrativo.</p>
-      <form data-destino="dashboard.html"><label for="admin-token">Código de acesso</label><input id="admin-token" autocomplete="off" required><button>Acessar dashboard</button><span class="erro"></span></form>
-    </section>
-    <section>
-      <h2>Parecerista</h2><p>Entre na fila de avaliação usando o código individual recebido.</p>
-      <form data-destino="avaliador.html"><label for="parecerista-token">Código de acesso</label><input id="parecerista-token" autocomplete="off" required><button>Acessar avaliações</button><span class="erro"></span></form>
-    </section>
-  </div>
-  <footer>Mastertech · Processo de avaliação · Learning Sectors 2026</footer>
-</main>
-<script>
-document.querySelectorAll("form").forEach(form=>form.addEventListener("submit",event=>{
-  event.preventDefault();
-  const token=form.querySelector("input").value.trim();
-  if(!token){form.querySelector(".erro").textContent="Informe o código de acesso.";return}
-  location.href=`${form.dataset.destino}?token=${encodeURIComponent(token)}`;
-}));
-</script>
-</body>
+<body><p>Abrindo o painel de controle…</p></body>
 </html>
