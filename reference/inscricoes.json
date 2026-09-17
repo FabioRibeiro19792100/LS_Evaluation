@@ -518,8 +518,8 @@
   "narrativa": "Em nossa comunidade escolar, observamos alimentos retornando nos pratos e sendo descartados após as refeições. Além do desperdício de comida e de recursos públicos, esses resíduos ampliam impactos ambientais e revelam um problema pouco visível: o descarte não gera informações que permitam compreender o que, quanto e por que os estudantes deixam de consumir. O Frugalis nasce para transformar desperdício em dados e dados em ação. Propomos desenvolver um protótipo de baixo custo que integre balança, sensores e Inteligência Artificial para quantificar os resíduos e auxiliar na identificação dos alimentos mais descartados. Um painel apresentará indicadores e padrões de desperdício, enquanto uma consulta anônima e acessível dará voz aos estudantes sobre seus motivos, considerando porções, preferências e diferentes necessidades ou restrições alimentares. Esses dados poderão apoiar decisões mais inclusivas e sustentáveis da escola e se tornar recurso pedagógico em Matemática, Ciências e Tecnologia, permitindo trabalhar estatística, impactos ambientais, programação, IA e análise de dados a partir da realidade local. Como professora-líder, espero que o Frugalis transforme a escola em um laboratório vivo de aprendizagem, no qual estudantes investiguem problemas reais, levantem e testem hipóteses, interpretem evidências e proponham soluções. Esperamos reduzir desperdícios e fortalecer pensamento crítico, colaboração, consciência socioambiental e protagonismo.",
   "enviado_em": "2026-09-10 18:15:26",
   "elegibilidade": {
-   "status": "elegivel",
-   "motivo": ""
+   "status": "nao_selecionada",
+   "motivo": "Não selecionada: múltiplas inscrições submetidas pela mesma professora."
   }
  },
  {
@@ -563,8 +563,8 @@
   "narrativa": "Em nossa comunidade escolar, observamos que parte do tempo docente é consumida por tarefas repetitivas, como registrar aulas, frequência e notas. Além de aumentar a sobrecarga, processos manuais estão sujeitos a inconsistências e reduzem o tempo disponível para planejar, acompanhar dificuldades e apoiar os estudantes. O problema afeta toda a comunidade: professores precisam conciliar ensino e burocracia, estudantes podem ter registros incorretos e a gestão necessita de informações confiáveis para agir. Propomos uma plataforma intuitiva com IA como apoio ao professor, sempre com validação humana. A partir de anotações breves, a IA poderá sugerir registros estruturados da aula para revisão docente; na frequência, analisará padrões e sinalizará possíveis inconsistências; e, nas avaliações, organizará resultados e identificará conteúdos com maior índice de dificuldade. Assim, dados que hoje apenas registram o passado poderão apoiar decisões pedagógicas: indicar habilidades que precisam ser retomadas, estudantes que necessitam de acompanhamento e oportunidades de recuperação. A solução será pensada com acessibilidade, proteção de dados e supervisão humana, para que a tecnologia apoie, e não substitua, decisões do professor. Como professora-líder, espero que a redução de tarefas repetitivas devolva ao docente seu recurso mais valioso: tempo para ensinar, observar e intervir. Em sala, esperamos transformar registros em evidências para personalizar estratégias de aprendizagem.",
   "enviado_em": "2026-09-10 20:06:46",
   "elegibilidade": {
-   "status": "elegivel",
-   "motivo": ""
+   "status": "nao_selecionada",
+   "motivo": "Não selecionada: múltiplas inscrições submetidas pela mesma professora."
   }
  },
  {
@@ -604,8 +604,8 @@
   "narrativa": "Em nossa comunidade escolar, percebemos que a falta de motivação e interação entre alunos e professores pode reduzir a participação nas aulas e o interesse por novas oportunidades de aprendizagem. Esse problema é relevante porque o engajamento influencia não apenas o aprendizado, mas também a autonomia e o desenvolvimento acadêmico e profissional dos estudantes. Para enfrentá-lo, propomos uma plataforma interativa e gamificada que conecte alunos e professores e valorize cada etapa de sua evolução. Por meio de pontos e patentes, o sistema reconhecerá presença, participação, interação, realização de atividades, cursos e busca por conhecimento. Alunos terão acesso a exercícios, desafios, vestibulares, cursos e poderão registrar certificados e acompanhar seu progresso. Professores poderão acessar capacitações, registrar suas formações e encontrar oportunidades para ministrar cursos compatíveis com suas qualificações. A progressão será organizada por perfis e níveis, buscando uma experiência equilibrada entre usuários com diferentes trajetórias. Como professora-líder, espero que os desafios da plataforma também sejam integrados às aulas, incentivando participação, interação, autonomia e aplicação prática dos conteúdos. Esperamos aproximar alunos e professores e transformar cada conquista em incentivo para continuar aprendendo, ensinando e buscando novas oportunidades.",
   "enviado_em": "2026-09-11 01:57:47",
   "elegibilidade": {
-   "status": "elegivel",
-   "motivo": ""
+   "status": "nao_selecionada",
+   "motivo": "Não selecionada: múltiplas inscrições submetidas pela mesma professora."
   }
  },
  {
@@ -1183,7 +1183,7 @@
   "enviado_em": "2026-09-13 16:58:48",
   "elegibilidade": {
    "status": "fora_categoria",
-   "motivo": "Escola fora do Centro Paula Souza (GO - Goiás). A categoria CPS é exclusiva das unidades do CPS (cláusula 2)."
+   "motivo": "Não elegível: unidade localizada em Goiás, fora da categoria CPS."
   }
  },
  {
@@ -1225,7 +1225,7 @@
   "enviado_em": "2026-09-13 18:44:26",
   "elegibilidade": {
    "status": "fora_categoria",
-   "motivo": "Escola fora do Centro Paula Souza (GO - Goiás). A categoria CPS é exclusiva das unidades do CPS (cláusula 2)."
+   "motivo": "Não elegível: unidade localizada em Goiás, fora da categoria CPS."
   }
  },
  {
@@ -1516,8 +1516,8 @@
   "narrativa": "Em nossa comunidade escolar, percebemos que nem todos os estudantes conseguem aprender no mesmo ritmo. Quando uma dúvida permanece, novos conteúdos podem se acumular, causando desmotivação, menor participação e dificuldade para acompanhar disciplinas progressivas, inclusive matérias técnicas. Para enfrentar esse desafio, propomos a CenterPIa™, uma plataforma gamificada com Inteligência Artificial que complementa a atuação do professor e oferece novos caminhos para aprender. Os conteúdos serão organizados em “Mundos”, divididos por disciplinas e níveis de dificuldade. Ao cumprir missões, exercícios e desafios, o estudante conquistará estrelas e avançará progressivamente, podendo revisar etapas sempre que necessário. A CenterPIa atuará como tutora: em vez de simplesmente entregar respostas, poderá oferecer pistas, exemplos e explicações adaptadas às dúvidas e ao ritmo do estudante. Professores poderão inserir conteúdos, acompanhar o progresso e identificar dificuldades recorrentes para orientar retomadas em aula. A plataforma também será um espaço de aprendizagem prática: estudantes de cursos de tecnologia poderão desenvolver novas funcionalidades, jogos e melhorias com orientação docente, aplicando conhecimentos aprendidos em sala. Como professora, espero que a CenterPIa amplie a participação, a autonomia e a confiança para aprender, respeitando diferentes ritmos e transformando estudantes de usuários da tecnologia em criadores de soluções para a própria comunidade escolar.",
   "enviado_em": "2026-09-14 01:40:52",
   "elegibilidade": {
-   "status": "elegivel",
-   "motivo": ""
+   "status": "nao_selecionada",
+   "motivo": "Não selecionada: múltiplas inscrições submetidas pela mesma professora."
   }
  },
  {
@@ -1641,8 +1641,8 @@
   "narrativa": "Nem toda barreira escolar é visível. Em nossa comunidade, ruído excessivo, iluminação inadequada, desconforto térmico, sinalização pouco clara e obstáculos físicos podem afetar concentração, autonomia, participação e aprendizagem, especialmente de estudantes com diferentes necessidades. Sem dados e espaços de escuta, muitas dessas barreiras podem permanecer invisíveis. Propomos o IncluSense, um mapa vivo de acessibilidade que une tecnologia e participação da comunidade para identificar onde o ambiente escolar pode dificultar a aprendizagem. Dispositivos de baixo custo, construídos com sensores, coletarão dados de ruído, luminosidade e temperatura em diferentes espaços. As medições serão combinadas a avaliações anônimas e acessíveis de estudantes e profissionais em um mapa digital, sem diagnosticar ou rotular pessoas. A partir das evidências, a comunidade poderá priorizar barreiras, propor melhorias de baixo custo, testar soluções e comparar indicadores antes e depois das intervenções, criando um ciclo contínuo de medir, ouvir, transformar e reavaliar. Como professora, espero transformar a escola em um laboratório vivo de aprendizagem STEM: dados reais poderão ser trabalhados em Matemática, Tecnologia e outras disciplinas, envolvendo estatística, programação, investigação e acessibilidade. Mais que adaptar a escola, queremos identificá-la antes que ela limite alguém e usar ciência, tecnologia e escuta para construir uma escola em que mais pessoas possam aprender e participar.",
   "enviado_em": "2026-09-14 02:03:01",
   "elegibilidade": {
-   "status": "elegivel",
-   "motivo": ""
+   "status": "nao_selecionada",
+   "motivo": "Não selecionada: múltiplas inscrições submetidas pela mesma professora."
   }
  },
  {

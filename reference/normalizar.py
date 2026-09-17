@@ -47,6 +47,9 @@ CIDADES = {
 
 PARTICULAS = {"da", "das", "de", "do", "dos", "e"}
 
+EQUIPES_GOIAS = {"Cloves", "PawSave"}
+EQUIPES_NAO_SELECIONADAS = {"Capeem", "Carpe Diem", "Frugalis", "QuickSilvers", "The Lookers"}
+
 def espacos(valor):
     return re.sub(r"\s+", " ", (valor or "")).strip()
 
@@ -72,6 +75,16 @@ for item in dados:
     item["municipio"] = CIDADES_POR_ESCOLA.get(item["escola"], CIDADES.get(espacos(item.get("municipio")), espacos(item.get("municipio"))))
     for estudante in item.get("estudantes", []):
         estudante["escola"] = escola(estudante.get("escola"))
+    if item.get("equipe") in EQUIPES_GOIAS:
+        item["elegibilidade"] = {
+            "status": "fora_categoria",
+            "motivo": "Não elegível: unidade localizada em Goiás, fora da categoria CPS.",
+        }
+    elif item.get("equipe") in EQUIPES_NAO_SELECIONADAS:
+        item["elegibilidade"] = {
+            "status": "nao_selecionada",
+            "motivo": "Não selecionada: múltiplas inscrições submetidas pela mesma professora.",
+        }
 
 ARQUIVO.write_text(json.dumps(dados, ensure_ascii=False, indent=1) + "\n", encoding="utf-8")
 print(f"{len(dados)} inscrições normalizadas")

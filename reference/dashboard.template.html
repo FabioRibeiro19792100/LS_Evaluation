@@ -364,7 +364,8 @@ function render(){
     (filtrosRanking.tag==="completa" && r.elegivel && pareceristasOficiais.length>0 && r.n>=pareceristasOficiais.length) ||
     (filtrosRanking.tag==="parcial" && r.elegivel && r.n>0 && r.n<pareceristasOficiais.length) ||
     (filtrosRanking.tag==="sem_avaliacao" && r.elegivel && r.n===0) ||
-    (filtrosRanking.tag==="fora" && !r.elegivel);
+    (filtrosRanking.tag==="fora_categoria" && r.ins.elegibilidade.status==="fora_categoria") ||
+    (filtrosRanking.tag==="nao_selecionada" && r.ins.elegibilidade.status==="nao_selecionada");
   const rows = consolidado.filter(r => (!filtrosRanking.escola || r.ins.escola===filtrosRanking.escola) && (!filtrosRanking.cidade || r.ins.municipio===filtrosRanking.cidade) && (!filtrosRanking.lider || r.ins.professor===filtrosRanking.lider) && atendeTag(r));
   const avaliacoesAtuais = todas.filter(a=>a.atual).length;
 
@@ -384,7 +385,8 @@ function render(){
       <option value="completa" ${filtrosRanking.tag==='completa'?'selected':''}>Avaliação completa</option>
       <option value="parcial" ${filtrosRanking.tag==='parcial'?'selected':''}>Avaliação parcial</option>
       <option value="sem_avaliacao" ${filtrosRanking.tag==='sem_avaliacao'?'selected':''}>Sem avaliação</option>
-      <option value="fora" ${filtrosRanking.tag==='fora'?'selected':''}>Fora da categoria</option>
+      <option value="fora_categoria" ${filtrosRanking.tag==='fora_categoria'?'selected':''}>Não elegível · Goiás</option>
+      <option value="nao_selecionada" ${filtrosRanking.tag==='nao_selecionada'?'selected':''}>Não selecionada</option>
     </select></div>
     <button class="btn limpar" id="limpar-filtros" type="button">Limpar filtros</button>
   </div>
@@ -440,8 +442,10 @@ function linha(r){
   const cls = [ "linha", r.elegivel ? "" : "fora", dentro ? "dentro" : "", (r.pos === CORTE) ? "corte" : "" ].join(" ");
   const tags = [];
   if (r.empate) tags.push(`<span class="tag alerta" title="Mesma nota final e mesmas médias por critério; o regulamento não define o desempate além disso">empate</span>`);
-  const status = !r.elegivel
-    ? {classe:"fora", texto:"Fora da categoria"}
+  const status = r.ins.elegibilidade.status === "fora_categoria"
+    ? {classe:"fora", texto:"Não elegível · Goiás"}
+    : r.ins.elegibilidade.status === "nao_selecionada"
+      ? {classe:"fora", texto:"Não selecionada"}
     : r.n===0
       ? {classe:"pendente", texto:"Não iniciada"}
       : (pareceristasOficiais.length && r.n>=pareceristasOficiais.length)

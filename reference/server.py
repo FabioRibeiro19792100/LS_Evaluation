@@ -112,9 +112,13 @@ def executar_rpc(nome: str, p: dict):
             if not u:
                 raise ValueError("token inválido")
             inscricao_id = str(p.get("p_inscricao_id") or "")
-            ids = {x["id"] for x in json.loads((ROOT / "inscricoes.json").read_text())}
+            inscricoes = json.loads((ROOT / "inscricoes.json").read_text())
+            ids = {x["id"] for x in inscricoes}
+            elegiveis = {x["id"] for x in inscricoes if x.get("elegibilidade", {}).get("status") == "elegivel"}
             if inscricao_id not in ids:
                 raise ValueError("inscrição inválida")
+            if inscricao_id not in elegiveis:
+                raise ValueError("inscrição não disponível para avaliação")
             notas = [int(p.get("p_" + c, 0)) for c in CRITERIOS]
             if any(n < 1 or n > 5 for n in notas):
                 raise ValueError("as notas devem estar entre 1 e 5")
