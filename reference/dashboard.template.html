@@ -20,8 +20,9 @@ button{font:inherit;cursor:pointer}
 .topo{min-height:104px;border-bottom:1px solid rgba(43,10,90,.18);padding:22px 32px;display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start;background:linear-gradient(90deg,#260760 0%,rgba(38,7,96,.97) 38%,rgba(38,7,96,.84) 62%,rgba(38,7,96,.54) 82%,rgba(38,7,96,.26) 100%),url("assets/learning-sectors-racing.png") center 70%/cover no-repeat;box-shadow:0 4px 16px rgba(43,10,90,.08)}
 .topo .marca{display:flex;flex-direction:column;gap:5px}
 .topo h1{margin:0;font-size:23px;font-weight:600;line-height:1.15;letter-spacing:-.015em;color:#fff}
-.topo .subtitulo{display:flex;align-items:center;gap:6px;color:#D9D2E7;font-size:13px}
-.topo .subtitulo .ambiente{color:#F0EBF8;font-weight:600;text-transform:uppercase;letter-spacing:.055em;font-size:11px}
+.topo .subtitulo{display:block;color:#D9D2E7;font-size:13px}
+.topo .subtitulo .ambiente{display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:#E3DDED;font-weight:500;text-transform:uppercase;letter-spacing:.07em;font-size:9px}
+.topo .subtitulo .ambiente::after{content:"";width:34px;height:1px;background:rgba(255,255,255,.52)}
 .topo .quem{color:#fff;font-weight:500}
 .topo .acoes{margin-left:auto;display:flex;align-items:flex-start;gap:7px}
 .topo .acoes[hidden]{display:none}
@@ -49,8 +50,8 @@ h2{font-size:13px;font-weight:600;color:var(--roxo);margin:28px 0 10px}
 .info-btn:focus-visible{outline:2px solid var(--roxo);outline-offset:2px}
 .tabela-wrap{height:360px;min-height:220px;overflow:auto;border-top:0}
 .tabela-interior{min-width:1120px}
-.faixa-criterios{position:sticky;z-index:10;top:0;height:26px;background:#fff}
-.marcador-criterios{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:44.628%;height:26px;margin-left:46.446%;color:#77737E;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.faixa-criterios{position:sticky;z-index:10;top:0;height:21px;background:#fff}
+.marcador-criterios{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:44.628%;height:21px;margin-left:46.446%;color:#77737E;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
 .marcador-criterios::before,.marcador-criterios::after{content:"";height:1px;background:#C9C7CE}
 table{border-collapse:collapse;width:100%;min-width:900px}
 th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha);vertical-align:top}
@@ -71,7 +72,7 @@ tr.linha:hover{background:var(--leve)}
 .ranking-table tr.linha:hover td:nth-child(4){background:#F2EEF6}
 .ranking-table th:nth-child(n+5):nth-child(-n+9),.ranking-table td:nth-child(n+5):nth-child(-n+9){width:108px;text-align:center;border-left:1px solid #E1D9EB}
 .ranking-table th:nth-child(n+5):nth-child(-n+9){background:#E9EBEF;color:#4F4C5D;font-weight:600;border-top:0}
-.ranking-table thead th,.ranking-table thead th.num{position:sticky;z-index:8;top:26px;padding-top:10px;padding-bottom:10px;border-bottom:2px solid #BFC1C8;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:13px;line-height:18px;box-shadow:0 2px 4px rgba(26,21,51,.06)}
+.ranking-table thead th,.ranking-table thead th.num{position:sticky;z-index:8;top:21px;padding-top:10px;padding-bottom:10px;border-bottom:2px solid #BFC1C8;font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:13px;line-height:18px;box-shadow:0 2px 4px rgba(26,21,51,.06)}
 .criterio-cab{display:block;font-family:inherit;font-size:13px;font-weight:600;line-height:18px}
 .peso-cab{display:block;margin-top:4px;color:#85818C;font-family:inherit;font-size:10px;font-weight:500;line-height:14px;letter-spacing:.01em}
 .ranking-table td:nth-child(n+5):nth-child(-n+9){background:#F7F8FA}
@@ -158,12 +159,12 @@ tr.inicio-inaptas td{border-top:2px solid var(--vermelho)}
 .links td{font-family:"IBM Plex Mono",monospace;font-size:12px;word-break:break-all}
 .filtros{display:flex;gap:16px;align-items:center;flex-wrap:wrap;margin-bottom:10px;color:var(--cinza)}
 .filtros label{display:flex;gap:6px;align-items:center}
-.filtros-ranking{display:grid;grid-template-columns:minmax(180px,1.25fr) minmax(150px,.85fr) minmax(190px,1.1fr) minmax(150px,.85fr) auto;gap:8px;align-items:end;margin:0 0 10px;padding:9px 12px 10px;border:1px solid var(--linha);border-radius:7px;background:var(--leve)}
+.filtros-ranking{display:grid;grid-template-columns:minmax(180px,1.25fr) minmax(150px,.85fr) minmax(190px,1.1fr) minmax(150px,.85fr) auto;gap:8px;align-items:end;margin:0 0 5px;padding:9px 12px 10px;border:1px solid var(--linha);border-radius:7px;background:var(--leve)}
 .filtro-campo label{display:block;margin-bottom:2px;color:var(--cinza);font-size:9px;font-weight:600;line-height:12px;text-transform:uppercase;letter-spacing:.055em}
 .filtro-campo select{width:100%;height:33px;padding:0 28px 0 9px;border:1px solid var(--linha);border-radius:4px;background:#fff;color:var(--tinta);font:inherit;font-size:12px}
 .filtro-campo select:focus{outline:2px solid var(--roxo);outline-offset:1px}
 .filtros-ranking .limpar{height:33px;padding-top:5px;padding-bottom:5px;white-space:nowrap;font-size:12px}
-.resultado-filtro{margin:-2px 0 7px;color:var(--cinza);font-size:11px}
+.resultado-filtro{margin:0 0 2px;color:var(--cinza);font-size:10px;line-height:14px}
 .andamento{max-width:760px;margin-bottom:32px;border:1px solid var(--linha);border-radius:8px;overflow:hidden}
 .andamento-linha{display:grid;grid-template-columns:minmax(140px,1fr) minmax(180px,2fr) 100px;gap:18px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--linha)}
 .andamento-linha:last-child{border-bottom:0}
@@ -233,7 +234,7 @@ const CRITERIOS = [
 <header class="topo">
   <div class="marca">
     <h1>Learning Sectors 2026 · Consolidação das avaliações</h1>
-    <div class="subtitulo"><span class="ambiente">Painel de controle</span><span aria-hidden="true">·</span><span class="quem" id="quem"></span></div>
+    <div class="subtitulo"><span class="ambiente">Painel de controle</span></div>
   </div>
   <div class="acoes" id="acoes-admin" hidden>
     <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
@@ -307,7 +308,7 @@ async function iniciar(){
   cliente = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const v = await cliente.rpc("validar_token", {p_token: token});
   if (v.error || !v.data || v.data.papel !== "admin") return vazio("Acesso não reconhecido", "Este link não corresponde a um administrador ativo.");
-  eu = v.data; $("#quem").textContent = eu.nome; $("#acoes-admin").hidden = false;
+  eu = v.data; $("#acoes-admin").hidden = false;
   $("#abrir-auditoria").href = `auditoria.html?token=${encodeURIComponent(token)}`;
   await carregar();
   clearInterval(timerAtualizacao);
