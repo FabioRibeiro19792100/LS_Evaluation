@@ -71,7 +71,7 @@ begin
     '63lswf3o8fr62voawekjue63lswf3jex', 'rqv39hekverfaqv9rqv39he0mri42wal',
     '4meflmc02tfnt10dc4mefl7voyhx839k', 'xx1wrvtcjb17f1o6ytkwxexx1wrv9ov1',
     'anm2vi5i4iwf5v4p5panm66xm6wn983x', '2ur9sr3djtwyxpg3av2ur9srl94xktcg',
-    '100a8vobf7c6lpnxd100a8ve05sv0vu5'
+    '100a8vobf7c6lpnxd100a8ve05sv0vu5', 'f94a0vnpde0ttlt1sxf94a0vz50f5z76'
   ]) then raise exception 'inscrição não disponível para avaliação'; end if;
   insert into avaliacoes (avaliador_id, inscricao_id, edi, originalidade, qualidade, viabilidade, impacto, comentario)
   values (v_id, p_inscricao_id, p_edi, p_originalidade, p_qualidade, p_viabilidade, p_impacto, nullif(trim(p_comentario), ''))

@@ -49,6 +49,7 @@ PARTICULAS = {"da", "das", "de", "do", "dos", "e"}
 
 EQUIPES_GOIAS = {"Cloves", "PawSave"}
 EQUIPES_NAO_SELECIONADAS = {"Capeem", "Carpe Diem", "Frugalis", "QuickSilvers", "The Lookers"}
+CODIGOS_DUPLICADOS_ANTERIORES = {"LS-34"}
 
 def espacos(valor):
     return re.sub(r"\s+", " ", (valor or "")).strip()
@@ -75,7 +76,12 @@ for item in dados:
     item["municipio"] = CIDADES_POR_ESCOLA.get(item["escola"], CIDADES.get(espacos(item.get("municipio")), espacos(item.get("municipio"))))
     for estudante in item.get("estudantes", []):
         estudante["escola"] = escola(estudante.get("escola"))
-    if item.get("equipe") in EQUIPES_GOIAS:
+    if item.get("codigo") in CODIGOS_DUPLICADOS_ANTERIORES:
+        item["elegibilidade"] = {
+            "status": "nao_selecionada",
+            "motivo": "Não selecionada: inscrição anterior duplicada; considerada a submissão mais recente (LS-40).",
+        }
+    elif item.get("equipe") in EQUIPES_GOIAS:
         item["elegibilidade"] = {
             "status": "fora_categoria",
             "motivo": "Não elegível: unidade localizada em Goiás, fora da categoria CPS.",
