@@ -265,7 +265,7 @@ const paragrafosTexto = s => String(s ?? "").split(/\n\s*\n|\n/).map(x=>x.trim()
 const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"});
 const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
 const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
-let token = new URLSearchParams(location.search).get("token");
+const token = new URLSearchParams(location.search).get("token") || "admin-demo";
 let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
@@ -281,18 +281,17 @@ async function descriptografarInscricoes(senha){
 }
 
 function solicitarAcesso(){
-  $("#raiz").innerHTML = `<section class="acesso-dados"><h2>Acesso ao painel</h2><p>Digite ${token?'a senha':'o código administrativo e a senha'} para continuar.</p><form id="form-acesso">${token?'':`<input id="token-admin" type="password" autocomplete="off" placeholder="Código administrativo" aria-label="Código administrativo" required>`}<input id="senha-dados" type="password" autocomplete="current-password" placeholder="Senha de acesso" aria-label="Senha de acesso" required><button class="btn" type="submit">Acessar</button></form><p class="erro-acesso" id="erro-acesso" role="alert"></p></section>`;
+  $("#raiz").innerHTML = `<section class="acesso-dados"><h2>Acesso ao painel</h2><p>Digite a senha para continuar.</p><form id="form-acesso"><input id="senha-dados" type="password" autocomplete="current-password" placeholder="Senha de acesso" aria-label="Senha de acesso" required><button class="btn" type="submit">Acessar</button></form><p class="erro-acesso" id="erro-acesso" role="alert"></p></section>`;
   $("#form-acesso").onsubmit = async e => {
     e.preventDefault(); const erro = $("#erro-acesso"), botao = e.currentTarget.querySelector("button");
     erro.textContent = ""; botao.disabled = true;
-    try { if(!token) token=$("#token-admin").value.trim(); INSCRICOES = await descriptografarInscricoes($("#senha-dados").value); await iniciar(); }
+    try { INSCRICOES = await descriptografarInscricoes($("#senha-dados").value); await iniciar(); }
     catch { erro.textContent = "Senha incorreta."; botao.disabled = false; $("#senha-dados").select(); }
   };
 }
 
 async function prepararAcesso(){
   if (!AMBIENTE_LOCAL) return solicitarAcesso();
-  if (!token) token="admin-demo";
   try {
     INSCRICOES = await fetch("inscricoes.json", {cache:"no-store"}).then(r => { if (!r.ok) throw new Error("base local indisponível"); return r.json(); });
     await iniciar();
