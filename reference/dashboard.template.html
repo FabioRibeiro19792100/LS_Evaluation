@@ -463,10 +463,10 @@ function linha(r){
     <td class="num pos">${r.pos ?? "—"}</td>
     <td>${esc(i.codigo)}</td>
     <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(i.escola)}</div><div class="professor">Prof. ${esc(i.professor)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
-    <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span><button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button></div></td>
-    ${CRITERIOS.map(c=>`<td class="num">${n2(r.medias[c.k])}</td>`).join("")}
-    <td class="num"><b>${n2(r.final)}</b></td>
-  </tr>${avaliacoes}`;
+    <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span>${r.elegivel?`<button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button>`:""}</div></td>
+    ${CRITERIOS.map(c=>`<td class="num">${r.elegivel?n2(r.medias[c.k]):"—"}</td>`).join("")}
+    <td class="num"><b>${r.elegivel?n2(r.final):"—"}</b></td>
+  </tr>${r.elegivel?avaliacoes:""}`;
 }
 
 function abrir(id){
@@ -508,7 +508,7 @@ function baixar(nome, linhas){
 }
 $("#csv-consol").onclick = () => baixar("ranking-learning-sectors.csv", [
   ["posicao","codigo","id_typeform","equipe","escola","municipio","uf","elegibilidade","motivo","n_avaliacoes","media_ponderada_1_a_5", ...pareceristas.map(p=>"media_1_a_5_"+p.nome), ...CRITERIOS.map(c=>"media_"+c.k), "selecionada"],
-  ...consolidado.map(r => [r.pos, r.ins.codigo, r.ins.id, r.ins.equipe, r.ins.escola, r.ins.municipio, r.ins.uf, r.ins.elegibilidade.status, r.ins.elegibilidade.motivo, r.n, r.final?.toFixed(2), ...pareceristas.map(p=>r.porAv[p.id]!=null?r.porAv[p.id].toFixed(2):""), ...CRITERIOS.map(c=>r.medias[c.k]?.toFixed(2)), r.pos && r.pos<=CORTE ? "sim" : "não"])
+  ...consolidado.map(r => [r.pos, r.ins.codigo, r.ins.id, r.ins.equipe, r.ins.escola, r.ins.municipio, r.ins.uf, r.ins.elegibilidade.status, r.ins.elegibilidade.motivo, r.elegivel?r.n:0, r.elegivel?r.final?.toFixed(2):"", ...pareceristas.map(p=>r.elegivel&&r.porAv[p.id]!=null?r.porAv[p.id].toFixed(2):""), ...CRITERIOS.map(c=>r.elegivel?r.medias[c.k]?.toFixed(2):""), r.pos && r.pos<=CORTE ? "sim" : "não"])
 ]);
 $("#csv-audit").onclick = () => baixar("auditoria-learning-sectors.csv", [
   ["id_avaliacao","codigo","id_typeform","equipe","parecerista","versao","atual","edi","originalidade","qualidade","viabilidade","impacto","media_ponderada_1_a_5","comentario","registrado_em"],
