@@ -92,6 +92,7 @@ tr.fora td{color:var(--cinza)}
 .tag.parcial{border-color:#C98A00;color:#8A5E00}
 .equipe{font-weight:500;text-transform:uppercase}
 .escola{color:var(--cinza);font-size:12px}
+.professor{color:#777386;font-size:11px;margin-top:1px}
 .cidade{color:#8A8798;font-size:11px;margin-top:1px}
 .vazio{padding:48px 24px;max-width:60ch}
 .vazio h2{font-size:20px;margin:0 0 8px}
@@ -456,7 +457,7 @@ function linha(r){
   return `<tr class="${cls}" data-id="${esc(i.id)}">
     <td class="num pos">${r.pos ?? "—"}</td>
     <td>${esc(i.codigo)}</td>
-    <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(i.escola)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
+    <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(i.escola)}</div><div class="professor">Prof. ${esc(i.professor)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
     <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span><button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button></div></td>
     ${CRITERIOS.map(c=>`<td class="num">${n2(r.medias[c.k])}</td>`).join("")}
     <td class="num"><b>${n2(r.final)}</b></td>
