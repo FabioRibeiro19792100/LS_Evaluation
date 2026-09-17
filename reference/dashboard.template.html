@@ -17,7 +17,7 @@
 html,body{margin:0;background:var(--fundo);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:14px;line-height:1.5}
 a{color:var(--roxo)}
 button{font:inherit;cursor:pointer}
-.topo{min-height:104px;border-bottom:3px solid var(--vermelho);padding:22px 32px;display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start;background:linear-gradient(90deg,rgba(32,5,79,.96) 0%,rgba(32,5,79,.88) 58%,rgba(32,5,79,.38) 100%),url("assets/learning-sectors-racing.png") center 70%/cover no-repeat}
+.topo{min-height:104px;border-bottom:1px solid rgba(43,10,90,.18);padding:22px 32px;display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start;background:linear-gradient(90deg,#260760 0%,rgba(38,7,96,.97) 38%,rgba(38,7,96,.84) 62%,rgba(38,7,96,.54) 82%,rgba(38,7,96,.26) 100%),url("assets/learning-sectors-racing.png") center 70%/cover no-repeat;box-shadow:0 4px 16px rgba(43,10,90,.08)}
 .topo .marca{display:flex;flex-direction:column;gap:5px}
 .topo h1{margin:0;font-size:23px;font-weight:600;line-height:1.15;letter-spacing:-.015em;color:#fff}
 .topo .subtitulo{display:flex;align-items:center;gap:6px;color:#D9D2E7;font-size:13px}
@@ -30,7 +30,7 @@ button{font:inherit;cursor:pointer}
 .btn{padding:8px 14px;border-radius:4px;border:1.5px solid var(--roxo);background:#fff;color:var(--roxo);font-weight:500}
 .topo a.btn{text-decoration:none}
 .btn.pri{background:var(--roxo);color:#fff}
-main{width:100%;max-width:none;padding:20px 32px 66px}
+main{width:100%;max-width:none;padding:20px 32px 48px}
 .resumo{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:28px}
 .resumo>div{border:1px solid var(--linha);border-radius:8px;padding:16px 18px;background:#fff}
 .resumo>div.destaque{background:var(--roxo);border-color:var(--roxo)}
@@ -106,7 +106,7 @@ tr.inicio-inaptas td{border-top:2px solid var(--vermelho)}
 .acesso-dados h2{margin:0 0 7px;color:var(--roxo);font-size:22px}.acesso-dados p{margin:0 0 16px;color:var(--cinza)}
 .acesso-dados form{display:flex;gap:8px}.acesso-dados input{min-width:0;flex:1;padding:10px 12px;border:1px solid var(--linha);font:inherit}
 .acesso-dados .erro-acesso{min-height:20px;margin:8px 0 0;color:var(--vermelho);font-size:13px}
-.rodape{position:fixed;z-index:18;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;height:58px;border-top:3px solid var(--vermelho);background:linear-gradient(90deg,rgba(32,5,79,.97),rgba(32,5,79,.82) 64%,rgba(32,5,79,.45)),url("assets/learning-sectors-racing.png") center 72%/cover no-repeat;color:#fff;font-size:11px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.28)}
+.rodape{position:fixed;z-index:18;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;height:40px;border-top:1px solid rgba(43,10,90,.2);background:linear-gradient(90deg,#260760 0%,rgba(38,7,96,.97) 42%,rgba(38,7,96,.82) 66%,rgba(38,7,96,.48) 86%,rgba(38,7,96,.24) 100%),url("assets/learning-sectors-racing.png") center 72%/cover no-repeat;color:#fff;font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.28);box-shadow:0 -3px 12px rgba(43,10,90,.06)}
 /* painel lateral */
 .painel{position:fixed;z-index:25;top:0;right:0;width:min(720px,100vw);height:100vh;background:#fff;border-left:1px solid var(--linha);box-shadow:-12px 0 36px rgba(43,10,90,.14);overflow-y:auto;padding:0 28px 28px;transform:translateX(100%);transition:transform .2s}
 .painel.aberto{transform:none}
