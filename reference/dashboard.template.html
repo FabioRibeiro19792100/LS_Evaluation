@@ -24,6 +24,7 @@ button{font:inherit;cursor:pointer}
 .topo .subtitulo .ambiente{color:var(--vermelho);font-weight:600;text-transform:uppercase;letter-spacing:.045em;font-size:11px}
 .topo .quem{color:var(--cinza);font-weight:500}
 .topo .acoes{margin-left:auto;display:flex;gap:8px}
+.topo .acoes[hidden]{display:none}
 .btn{padding:8px 14px;border-radius:4px;border:1.5px solid var(--roxo);background:#fff;color:var(--roxo);font-weight:500}
 .topo a.btn{text-decoration:none}
 .btn.pri{background:var(--roxo);color:#fff}
@@ -232,7 +233,7 @@ const CRITERIOS = [
     <h1>Learning Sectors 2026 · Consolidação das avaliações</h1>
     <div class="subtitulo"><span class="ambiente">Painel de controle</span><span aria-hidden="true">·</span><span class="quem" id="quem"></span></div>
   </div>
-  <div class="acoes">
+  <div class="acoes" id="acoes-admin" hidden>
     <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
     <a class="btn" id="abrir-auditoria" href="#">Planilha de auditoria</a>
     <button class="btn" id="csv-consol">Exportar ranking (CSV)</button>
@@ -304,7 +305,7 @@ async function iniciar(){
   cliente = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
   const v = await cliente.rpc("validar_token", {p_token: token});
   if (v.error || !v.data || v.data.papel !== "admin") return vazio("Acesso não reconhecido", "Este link não corresponde a um administrador ativo.");
-  eu = v.data; $("#quem").textContent = eu.nome;
+  eu = v.data; $("#quem").textContent = eu.nome; $("#acoes-admin").hidden = false;
   $("#abrir-auditoria").href = `auditoria.html?token=${encodeURIComponent(token)}`;
   await carregar();
   clearInterval(timerAtualizacao);
