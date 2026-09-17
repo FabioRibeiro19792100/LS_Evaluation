@@ -387,7 +387,7 @@ function render(){
     <p>Acompanhe a posição, a nota final e o desempenho de cada equipe nos cinco critérios de avaliação.</p>
   </div>
   <div class="filtros-ranking" aria-label="Filtros do ranking">
-    <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(nomeEscola(x))}</option>`).join('')}</select></div>
+    <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
     <div class="filtro-campo"><label for="filtro-cidade">Cidade</label><select id="filtro-cidade"><option value="">Todas as cidades</option>${cidades.map(x=>`<option value="${esc(x)}" ${filtrosRanking.cidade===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
     <div class="filtro-campo"><label for="filtro-lider">Professor(a)-líder</label><select id="filtro-lider"><option value="">Todos os líderes</option>${lideres.map(x=>`<option value="${esc(x)}" ${filtrosRanking.lider===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
     <div class="filtro-campo"><label for="filtro-tag">Situação</label><select id="filtro-tag">
