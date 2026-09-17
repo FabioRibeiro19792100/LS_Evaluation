@@ -265,6 +265,7 @@ const CRITERIOS = [
 <script>
 const $ = (s, el=document) => el.querySelector(s);
 const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const nomeEscola = s => /^etec\b/i.test(String(s??"")) ? String(s) : `ETEC ${String(s??"")}`;
 const paragrafosTexto = s => String(s ?? "").split(/\n\s*\n|\n/).map(x=>x.trim()).filter(Boolean).map(x=>`<p>${esc(x)}</p>`).join("");
 const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"});
 const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
@@ -386,7 +387,7 @@ function render(){
     <p>Acompanhe a posição, a nota final e o desempenho de cada equipe nos cinco critérios de avaliação.</p>
   </div>
   <div class="filtros-ranking" aria-label="Filtros do ranking">
-    <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
+    <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(nomeEscola(x))}</option>`).join('')}</select></div>
     <div class="filtro-campo"><label for="filtro-cidade">Cidade</label><select id="filtro-cidade"><option value="">Todas as cidades</option>${cidades.map(x=>`<option value="${esc(x)}" ${filtrosRanking.cidade===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
     <div class="filtro-campo"><label for="filtro-lider">Professor(a)-líder</label><select id="filtro-lider"><option value="">Todos os líderes</option>${lideres.map(x=>`<option value="${esc(x)}" ${filtrosRanking.lider===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
     <div class="filtro-campo"><label for="filtro-tag">Situação</label><select id="filtro-tag">
@@ -466,7 +467,7 @@ function linha(r){
   return `<tr class="${cls}" data-id="${esc(i.id)}">
     <td class="num pos">${r.pos ?? "—"}</td>
     <td>${esc(i.codigo)}</td>
-    <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(i.escola)}</div><div class="professor">Prof. ${esc(i.professor)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
+    <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(nomeEscola(i.escola))}</div><div class="professor">Prof. ${esc(i.professor)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
     <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span>${r.elegivel?`<button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button>`:""}</div></td>
     ${CRITERIOS.map(c=>`<td class="num">${r.elegivel?n2(r.medias[c.k]):"—"}</td>`).join("")}
     <td class="num"><b>${r.elegivel?n2(r.final):"—"}</b></td>
@@ -481,7 +482,7 @@ function abrir(id){
     <header class="painel-topo">
       <h3>${esc(i.equipe)}</h3>
       <div class="painel-resumo"><span class="painel-codigo">${esc(i.codigo)}</span>${r.pos ? `<span class="painel-posicao">${r.pos}ª posição · média ${n2(r.final)} / 5</span>` : ""}</div>
-      <div class="painel-meta"><div><b>Escola:</b> ${esc(i.escola)}</div><div><b>Local:</b> ${esc(i.municipio)} · ${esc(i.uf)}</div><div><b>Professor(a)-líder:</b> ${esc(i.professor)}</div>${i.colider_nome?`<div><b>Co-líder:</b> ${esc(i.colider_nome)}</div>`:""}${!r.elegivel ? `<div style="color:var(--vermelho)">${esc(i.elegibilidade.motivo)}</div>` : ""}</div>
+      <div class="painel-meta"><div><b>Escola:</b> ${esc(nomeEscola(i.escola))}</div><div><b>Local:</b> ${esc(i.municipio)} · ${esc(i.uf)}</div><div><b>Professor(a)-líder:</b> ${esc(i.professor)}</div>${i.colider_nome?`<div><b>Co-líder:</b> ${esc(i.colider_nome)}</div>`:""}${!r.elegivel ? `<div style="color:var(--vermelho)">${esc(i.elegibilidade.motivo)}</div>` : ""}</div>
     </header>
     <details class="narr-detalhe" open><summary>Narrativa da proposta</summary><div class="narr">${paragrafosTexto(i.narrativa)}</div></details>`;
   painel.classList.add("aberto"); painel.setAttribute("aria-hidden","false");
