@@ -87,6 +87,7 @@ tr.linha:hover{background:var(--leve)}
 tr.dentro td.pos{color:var(--vermelho);font-weight:600}
 tr.corte td{border-bottom:2px solid var(--vermelho)}
 tr.fora td{color:var(--cinza)}
+tr.inicio-inaptas td{border-top:2px solid var(--vermelho)}
 .tag{display:inline-block;font-size:11px;padding:1px 6px;border-radius:3px;border:1px solid var(--linha);color:var(--cinza);margin-left:6px;white-space:nowrap}
 .tag.alerta{border-color:var(--vermelho);color:var(--vermelho)}
 .tag.parcial{border-color:#C98A00;color:#8A5E00}
@@ -345,9 +346,11 @@ function consolidar(){
   };
   consolidado.sort(cmp);
   let pos = 0; consolidado.forEach(r => { r.pos = (r.elegivel && r.final!=null) ? ++pos : null; });
+  const primeiraInapta = consolidado.findIndex(r => !r.elegivel);
+  consolidado.forEach((r, ix) => r.inicioInaptas = ix === primeiraInapta);
   // empate total (mesma nota final e mesmas médias em todos os critérios) fica sinalizado: a ordem entre eles é apenas o código
   const chave = r => r.final==null ? null : [r.final, ...CRITERIOS.map(c=>r.medias[c.k])].map(x=>x.toFixed(4)).join("|");
-  consolidado.forEach((r, ix) => { const k = chave(r); r.empate = k != null && ((ix>0 && chave(consolidado[ix-1])===k) || (ix<consolidado.length-1 && chave(consolidado[ix+1])===k)); });
+  consolidado.forEach((r, ix) => { const k = chave(r); r.empate = r.elegivel && k != null && ((ix>0 && consolidado[ix-1].elegivel && chave(consolidado[ix-1])===k) || (ix<consolidado.length-1 && consolidado[ix+1].elegivel && chave(consolidado[ix+1])===k)); });
 }
 
 function render(){
@@ -440,9 +443,9 @@ function ajustarAlturaTabela(){
 function linha(r){
   const i = r.ins;
   const dentro = r.pos && r.pos <= CORTE;
-  const cls = [ "linha", r.elegivel ? "" : "fora", dentro ? "dentro" : "", (r.pos === CORTE) ? "corte" : "" ].join(" ");
+  const cls = [ "linha", r.elegivel ? "" : "fora", r.inicioInaptas ? "inicio-inaptas" : "", dentro ? "dentro" : "", (r.pos === CORTE) ? "corte" : "" ].join(" ");
   const tags = [];
-  if (r.empate) tags.push(`<span class="tag alerta" title="Mesma nota final e mesmas médias por critério; o regulamento não define o desempate além disso">empate</span>`);
+  if (r.elegivel && r.empate) tags.push(`<span class="tag alerta" title="Mesma nota final e mesmas médias por critério; o regulamento não define o desempate além disso">empate</span>`);
   const status = r.ins.elegibilidade.status === "fora_categoria"
     ? {classe:"fora", texto:"Não elegível · Goiás"}
     : r.ins.elegibilidade.status === "nao_selecionada"
