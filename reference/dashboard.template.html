@@ -17,9 +17,9 @@
 html,body{margin:0;background:var(--fundo);color:var(--tinta);font-family:"IBM Plex Sans",system-ui,sans-serif;font-size:14px;line-height:1.5}
 a{color:var(--roxo)}
 button{font:inherit;cursor:pointer}
-.topo{min-height:104px;border-bottom:1px solid rgba(43,10,90,.18);padding:22px 32px;display:flex;flex-wrap:wrap;gap:14px 32px;align-items:flex-start;background:linear-gradient(90deg,#260760 0%,rgba(38,7,96,.97) 38%,rgba(38,7,96,.84) 62%,rgba(38,7,96,.54) 82%,rgba(38,7,96,.26) 100%),url("assets/learning-sectors-racing.png") center 70%/cover no-repeat;box-shadow:0 4px 16px rgba(43,10,90,.08)}
+.topo{min-height:88px;border-bottom:1px solid rgba(43,10,90,.15);padding:18px 32px;display:flex;flex-wrap:wrap;gap:12px 32px;align-items:flex-start;background-color:#260760;background-image:linear-gradient(90deg,#260760 0%,#260760 55%,rgba(38,7,96,.96) 70%,rgba(38,7,96,.58) 87%,rgba(38,7,96,.18) 100%),url("assets/learning-sectors-racing.png");background-position:center,right 66%;background-size:100% 100%,auto 250px;background-repeat:no-repeat}
 .topo .marca{display:flex;flex-direction:column;gap:5px}
-.topo h1{margin:0;font-size:23px;font-weight:600;line-height:1.15;letter-spacing:-.015em;color:#fff}
+.topo h1{margin:0;font-size:22px;font-weight:600;line-height:1.15;letter-spacing:-.015em;color:#fff}
 .topo .subtitulo{display:block;color:#D9D2E7;font-size:13px}
 .topo .subtitulo .ambiente{display:flex;flex-direction:column;align-items:flex-start;gap:5px;color:#E3DDED;font-weight:500;text-transform:uppercase;letter-spacing:.07em;font-size:9px}
 .topo .subtitulo .ambiente::after{content:"";width:34px;height:1px;background:rgba(255,255,255,.52)}
@@ -31,7 +31,7 @@ button{font:inherit;cursor:pointer}
 .btn{padding:8px 14px;border-radius:4px;border:1.5px solid var(--roxo);background:#fff;color:var(--roxo);font-weight:500}
 .topo a.btn{text-decoration:none}
 .btn.pri{background:var(--roxo);color:#fff}
-main{width:100%;max-width:none;padding:20px 32px 48px}
+main{width:100%;max-width:none;padding:18px 32px 42px}
 .resumo{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:28px}
 .resumo>div{border:1px solid var(--linha);border-radius:8px;padding:16px 18px;background:#fff}
 .resumo>div.destaque{background:var(--roxo);border-color:var(--roxo)}
@@ -107,7 +107,7 @@ tr.inicio-inaptas td{border-top:2px solid var(--vermelho)}
 .acesso-dados h2{margin:0 0 7px;color:var(--roxo);font-size:22px}.acesso-dados p{margin:0 0 16px;color:var(--cinza)}
 .acesso-dados form{display:flex;gap:8px}.acesso-dados input{min-width:0;flex:1;padding:10px 12px;border:1px solid var(--linha);font:inherit}
 .acesso-dados .erro-acesso{min-height:20px;margin:8px 0 0;color:var(--vermelho);font-size:13px}
-.rodape{position:fixed;z-index:18;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;height:40px;border-top:1px solid rgba(43,10,90,.2);background:linear-gradient(90deg,#260760 0%,rgba(38,7,96,.97) 42%,rgba(38,7,96,.82) 66%,rgba(38,7,96,.48) 86%,rgba(38,7,96,.24) 100%),url("assets/learning-sectors-racing.png") center 72%/cover no-repeat;color:#fff;font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;text-shadow:0 1px 2px rgba(0,0,0,.28);box-shadow:0 -3px 12px rgba(43,10,90,.06)}
+.rodape{position:fixed;z-index:18;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;height:34px;border-top:1px solid rgba(255,255,255,.1);background-color:#260760;background-image:linear-gradient(90deg,#260760 0%,#260760 68%,rgba(38,7,96,.78) 88%,rgba(38,7,96,.28) 100%),url("assets/learning-sectors-racing.png");background-position:center,right 69%;background-size:100% 100%,auto 118px;background-repeat:no-repeat;color:#E9E4F1;font-size:9px;font-weight:500;letter-spacing:.075em;text-transform:uppercase}
 /* painel lateral */
 .painel{position:fixed;z-index:25;top:0;right:0;width:min(720px,100vw);height:100vh;background:#fff;border-left:1px solid var(--linha);box-shadow:-12px 0 36px rgba(43,10,90,.14);overflow-y:auto;padding:0 28px 28px;transform:translateX(100%);transition:transform .2s}
 .painel.aberto{transform:none}
