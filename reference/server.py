@@ -19,7 +19,7 @@ CRITERIOS = ("edi", "originalidade", "qualidade", "viabilidade", "impacto")
 RPCS = {"validar_token", "minhas_avaliacoes", "salvar_avaliacao", "todas_avaliacoes", "listar_avaliadores",
         "listar_rodadas", "fila_rodada", "minhas_avaliacoes_rodada", "salvar_avaliacao_rodada",
         "todas_avaliacoes_rodada", "avancar_equipes", "listar_atribuicoes", "salvar_atribuicoes",
-        "criar_parecerista", "distribuir_rodada"}
+        "criar_parecerista", "excluir_parecerista", "distribuir_rodada"}
 
 
 def agora() -> str:
@@ -256,6 +256,15 @@ def executar_rpc(nome: str, p: dict):
             con.execute("""INSERT INTO avaliadores(id,nome,email,papel,token,ativo,contabiliza,criado_em)
               VALUES(?,?,?,'parecerista',?,1,1,?)""", (identificador,nome_parecerista,email,token_novo,agora()))
             return dicionario(con.execute("SELECT id,nome,email,papel,token,ativo,contabiliza FROM avaliadores WHERE id=?",(identificador,)).fetchone())
+
+        if nome == "excluir_parecerista":
+            avaliador_id = str(p.get("p_avaliador_id") or "")
+            alvo = con.execute("SELECT id FROM avaliadores WHERE id=? AND papel='parecerista' AND ativo=1", (avaliador_id,)).fetchone()
+            if not alvo:
+                raise ValueError("parecerista não encontrado")
+            con.execute("UPDATE avaliadores SET ativo=0 WHERE id=?", (avaliador_id,))
+            con.execute("UPDATE rodada_atribuicoes SET ativa=0 WHERE avaliador_id=?", (avaliador_id,))
+            return True
 
         if nome == "listar_atribuicoes":
             rodada=int(p.get("p_rodada_id") or 1)

@@ -216,6 +216,16 @@ language sql security definer set search_path=public as $$
   where ra.rodada_id=p_rodada_id and exists(select 1 from avaliadores a where a.token=p_token and a.ativo and a.papel='admin')
 $$;
 
+create or replace function excluir_parecerista(p_token text,p_avaliador_id uuid)
+returns boolean language plpgsql security definer set search_path=public as $$
+begin
+  if not exists(select 1 from avaliadores where token=p_token and ativo and papel='admin') then raise exception 'acesso negado'; end if;
+  if not exists(select 1 from avaliadores where id=p_avaliador_id and papel='parecerista' and ativo) then raise exception 'parecerista não encontrado'; end if;
+  update avaliadores set ativo=false where id=p_avaliador_id;
+  update rodada_atribuicoes set ativa=false where avaliador_id=p_avaliador_id;
+  return true;
+end $$;
+
 create or replace function salvar_atribuicoes(p_token text,p_rodada_id smallint,p_inscricao_id text,p_avaliador_ids uuid[])
 returns integer language plpgsql security definer set search_path=public as $$
 declare v_total integer;
@@ -238,8 +248,9 @@ revoke execute on function avancar_equipes(text,smallint,smallint,text[]) from p
 revoke execute on function listar_atribuicoes(text,smallint) from public,authenticated;
 revoke execute on function salvar_atribuicoes(text,smallint,text,uuid[]) from public,authenticated;
 revoke execute on function criar_parecerista(text,text,text) from public,authenticated;
+revoke execute on function excluir_parecerista(text,uuid) from public,authenticated;
 revoke execute on function distribuir_rodada(text,smallint,text,smallint) from public,authenticated;
-grant execute on function listar_rodadas(text),fila_rodada(text,smallint),minhas_avaliacoes_rodada(text,smallint),salvar_avaliacao_rodada(text,smallint,text,jsonb,text),todas_avaliacoes_rodada(text,smallint),avancar_equipes(text,smallint,smallint,text[]),listar_atribuicoes(text,smallint),salvar_atribuicoes(text,smallint,text,uuid[]),criar_parecerista(text,text,text),distribuir_rodada(text,smallint,text,smallint) to anon;
+grant execute on function listar_rodadas(text),fila_rodada(text,smallint),minhas_avaliacoes_rodada(text,smallint),salvar_avaliacao_rodada(text,smallint,text,jsonb,text),todas_avaliacoes_rodada(text,smallint),avancar_equipes(text,smallint,smallint,text[]),listar_atribuicoes(text,smallint),salvar_atribuicoes(text,smallint,text,uuid[]),criar_parecerista(text,text,text),excluir_parecerista(text,uuid),distribuir_rodada(text,smallint,text,smallint) to anon;
 
 -- A Rodada 1 precisa conter todas as inscrições elegíveis. A aplicação local
 -- faz essa carga automaticamente. No Supabase, rode também o arquivo
