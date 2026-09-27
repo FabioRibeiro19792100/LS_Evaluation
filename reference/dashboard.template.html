@@ -284,6 +284,7 @@ const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeSty
 const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
 const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
 const token = new URLSearchParams(location.search).get("token") || "admin-demo";
+const CHAVE_SESSAO_DADOS = "ls26:senha-dados";
 let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], atribuicoes=[], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
@@ -303,13 +304,20 @@ function solicitarAcesso(){
   $("#form-acesso").onsubmit = async e => {
     e.preventDefault(); const erro = $("#erro-acesso"), botao = e.currentTarget.querySelector("button");
     erro.textContent = ""; botao.disabled = true;
-    try { INSCRICOES = await descriptografarInscricoes($("#senha-dados").value); await iniciar(); }
+    try { const senha = $("#senha-dados").value; INSCRICOES = await descriptografarInscricoes(senha); sessionStorage.setItem(CHAVE_SESSAO_DADOS, senha); await iniciar(); }
     catch { erro.textContent = "Senha incorreta."; botao.disabled = false; $("#senha-dados").select(); }
   };
 }
 
 async function prepararAcesso(){
-  if (!AMBIENTE_LOCAL) return solicitarAcesso();
+  if (!AMBIENTE_LOCAL) {
+    const senhaSalva = sessionStorage.getItem(CHAVE_SESSAO_DADOS);
+    if (senhaSalva) {
+      try { INSCRICOES = await descriptografarInscricoes(senhaSalva); return await iniciar(); }
+      catch { sessionStorage.removeItem(CHAVE_SESSAO_DADOS); }
+    }
+    return solicitarAcesso();
+  }
   try {
     INSCRICOES = await fetch("inscricoes.json", {cache:"no-store"}).then(r => { if (!r.ok) throw new Error("base local indisponível"); return r.json(); });
     await iniciar();
