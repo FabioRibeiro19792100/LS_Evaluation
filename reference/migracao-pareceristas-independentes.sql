@@ -11,9 +11,42 @@ create table if not exists rodada_pareceristas (
 alter table rodada_pareceristas enable row level security;
 revoke all on rodada_pareceristas from anon,authenticated;
 
+-- Mantém somente o cadastro canônico de cada nome, mesmo que existam registros
+-- antigos duplicados na tabela de avaliadores.
+delete from rodada_pareceristas rp
+using avaliadores atual
+where atual.id=rp.avaliador_id
+  and exists (
+    select 1 from avaliadores canon
+    where canon.papel='parecerista' and canon.ativo and canon.contabiliza
+      and lower(trim(canon.nome))=lower(trim(atual.nome))
+      and (canon.criado_em,canon.id)<(atual.criado_em,atual.id)
+  );
+
 insert into rodada_pareceristas(rodada_id,avaliador_id)
-select distinct rodada_id,avaliador_id from rodada_atribuicoes where ativa
-on conflict (rodada_id,avaliador_id) do nothing;
+select distinct ra.rodada_id,canon.id
+from rodada_atribuicoes ra
+join avaliadores usado on usado.id=ra.avaliador_id
+join lateral (
+  select a.id from avaliadores a
+  where a.papel='parecerista' and a.ativo and a.contabiliza
+    and lower(trim(a.nome))=lower(trim(usado.nome))
+  order by a.criado_em,a.id limit 1
+) canon on true
+where ra.ativa
+on conflict (rodada_id,avaliador_id) do update set ativo=true;
+
+-- Remove atribuições duplicadas antigas e deixa a redistribuição recriá-las
+-- apenas com os pareceristas canônicos de cada etapa.
+delete from rodada_atribuicoes ra
+using avaliadores atual
+where atual.id=ra.avaliador_id
+  and exists (
+    select 1 from avaliadores canon
+    where canon.papel='parecerista' and canon.ativo and canon.contabiliza
+      and lower(trim(canon.nome))=lower(trim(atual.nome))
+      and (canon.criado_em,canon.id)<(atual.criado_em,atual.id)
+  );
 
 create or replace function listar_pareceristas_rodada(p_token text,p_rodada_id smallint)
 returns table(rodada_id smallint,avaliador_id uuid,ativo boolean)
