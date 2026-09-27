@@ -49,6 +49,23 @@ Dois ambientes, um banco mínimo no Supabase, sem dado sensível fora da planilh
 
 **Cálculo.** Para cada parecerista, média ponderada dos critérios na escala de 1 a 5 (EDI 30%, Originalidade 20%, Qualidade 20%, Viabilidade 15%, Impacto 15%). A nota final é a média dessas médias ponderadas entre pareceristas, também mantida na escala de 1 a 5. Desempate na ordem do regulamento 5.1.2: EDI, Originalidade, Qualidade, Viabilidade, Impacto. Se duas equipes empatarem também em todos os critérios, aparece a marca "empate": o regulamento não prevê critério além desse, então a decisão é da organização.
 
+## Rodadas
+
+O sistema trabalha com três planilhas independentes, selecionadas no topo do dashboard:
+
+1. **Inscrições:** narrativa de ideação, cinco critérios do item 5.1.1 e pré-seleção interna de 20 equipes.
+2. **Planos de ação:** Business Model Canvas, os mesmos cinco critérios e seleção das 10 finalistas da categoria CPS.
+3. **Banca:** pitch e arguição, com Viabilidade, Inovação, Arguição e Impacto (25% cada), para escolha da vencedora.
+
+As notas, versões, filas, atribuições e auditorias são separadas por rodada. Avançar uma equipe cria sua participação na rodada seguinte sem copiar notas. A distribuição aos pareceristas pode ser alterada pelo botão **Distribuir equipes**.
+
+Para atualizar o Supabase existente, execute nesta ordem:
+
+1. `schema-rodadas.sql`
+2. `seed-rodada-1.sql`
+
+Os parâmetros completos de interface ficam em `rodadas.js`. Os valores iniciais reproduzem o regulamento de 2026; a redução de 40 para 20 foi identificada como pré-seleção interna, pois o regulamento prevê oficialmente 40 para 10 finalistas por categoria.
+
 **Auditoria.** Nenhuma nota é sobrescrita ou apagada. Cada salvamento é uma linha nova com data e hora; o dashboard mostra a versão atual e o histórico. Para revogar o acesso de alguém: `update avaliadores set ativo = false where token = '...'`.
 
 **Elegibilidade.** LS-28 (PawSave) e LS-29 (Cloves), ambas do Colégio Estadual em Período Integral Osvaldo da Costa Meireles, em Luziânia (GO), estão marcadas como fora da categoria e não entram na fila dos pareceristas. Aparecem no dashboard com o motivo. Para reverter ou marcar outra inscrição, edite o campo `elegibilidade` em `inscricoes.json` (ou em `extrair.py`) e gere as páginas de novo.

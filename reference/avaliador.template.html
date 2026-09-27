@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-shim.js"></script>
+<script src="rodadas.js"></script>
 <style>
 :root{
   --roxo:#2B0A5A; --vermelho:#D8102E; --tinta:#1A1533; --cinza:#6B6880;
@@ -217,13 +218,12 @@ dialog::backdrop{background:rgba(26,21,51,.5)}
 const AMBIENTE_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
 const SUPABASE_URL = AMBIENTE_LOCAL ? location.origin : "https://sxegrslhumunntjwzcoi.supabase.co";
 const SUPABASE_ANON_KEY = AMBIENTE_LOCAL ? "local" : "sb_publishable_PuIPOJ1YLX90a_Ig7yjEgw_EAJhP8ZH";
-const CORTE = 20; // equipes selecionadas nesta etapa
 // ------------------------------------------------------------- dados (gerados por extrair.py, sem dados sensíveis)
 const INSCRICOES_PUBLICAS = __DADOS_PUBLICOS__;
 const DADOS_PROTEGIDOS = __DADOS_CRIPTOGRAFADOS__;
 let INSCRICOES = [];
 // ------------------------------------------------------------- critérios (regulamento 5.1.1)
-const CRITERIOS = [
+let CRITERIOS = [
  {k:"edi", nome:"EDI (Equidade, Diversidade e Inclusão)", peso:30,
   desc:"Como a proposta promove a inclusão e a equidade dentro da comunidade escolar. Ponto positivo: soluções que ampliam o acesso e atendem a diferentes perfis de usuários.",
   ex:["Considera as necessidades de diferentes grupos da comunidade escolar","Incentiva a participação equitativa nas equipes","Amplia a acessibilidade e evita reforçar estereótipos ou práticas discriminatórias","Valoriza a equidade e a diversidade entre os públicos atendidos pela solução"]},
@@ -240,11 +240,13 @@ const CRITERIOS = [
   desc:"A contribuição para a educação, a transformação social e a sustentabilidade da comunidade escolar. Ponto positivo: benefícios claros e duradouros para a comunidade escolar.",
   ex:["Aborda um problema significativo e beneficia a comunidade escolar","Atende a uma necessidade real e relevante","Potencial de melhorar significativamente o ambiente educacional","Pode ser replicada ou adaptada para outros contextos"]},
 ];
+let RODADAS = [], RODADA = LS_RODADA(1);
 </script>
 
 <header class="topo">
   <div class="topo-identidade">
-    <h1>Learning Sectors 2026 · Avaliação das inscrições</h1>
+    <h1 id="titulo-aplicacao">Learning Sectors 2026 · Avaliação das inscrições</h1>
+    <select id="seletor-rodada" aria-label="Etapa da avaliação" hidden></select>
   </div>
   <span class="quem" id="quem"></span>
 </header>
@@ -253,7 +255,7 @@ const CRITERIOS = [
 <dialog id="modal-incompleta" aria-labelledby="modal-incompleta-titulo">
   <div class="modal-incompleta">
     <h2 id="modal-incompleta-titulo">Avaliação incompleta</h2>
-    <p>Preencha os cinco critérios antes de salvar a avaliação.</p>
+    <p id="mensagem-incompleta">Preencha todos os critérios antes de salvar a avaliação.</p>
     <button class="btn" id="fechar-incompleta" type="button">Entendi</button>
   </div>
 </dialog>
@@ -312,8 +314,20 @@ async function iniciar(){
   if (error || !data) return vazio("Acesso não reconhecido", "Este link não corresponde a um parecerista ativo. Confira o endereço ou fale com a organização.");
   eu = data;
   $("#quem").textContent = eu.nome;
-  const r = await cliente.rpc("minhas_avaliacoes", {p_token: token});
-  (r.data || []).forEach(a => minhas[a.inscricao_id] = a);
+  const rr = await cliente.rpc("listar_rodadas", {p_token: token});
+  RODADAS = rr.data || LS_RODADAS;
+  const solicitada = Number(new URLSearchParams(location.search).get("rodada"));
+  RODADA = RODADAS.find(x=>x.id===solicitada) || RODADAS.find(x=>x.status==="aberta") || RODADAS[0] || LS_RODADA(1);
+  const localConfig=LS_RODADA(RODADA.id); CRITERIOS=(localConfig.criterios||RODADA.criterios).map(c=>({...c,...(RODADA.criterios||[]).find(x=>x.k===c.k)}));
+  const [fr,r] = await Promise.all([
+    cliente.rpc("fila_rodada", {p_token:token,p_rodada_id:RODADA.id}),
+    cliente.rpc("minhas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id})
+  ]);
+  const ids=new Set((fr.data||[]).map(x=>x.inscricao_id)); fila=INSCRICOES.filter(i=>ids.has(i.id));
+  minhas={}; (r.data || []).forEach(a => minhas[a.inscricao_id] = {...a,...(a.notas||{})});
+  $("#titulo-aplicacao").textContent=`Learning Sectors 2026 · ${RODADA.titulo}`;
+  const seletor=$("#seletor-rodada"); seletor.hidden=false; seletor.innerHTML=RODADAS.map(x=>`<option value="${x.id}" ${x.id===RODADA.id?'selected':''}>${esc(x.nome)}</option>`).join("");
+  seletor.onchange=e=>{const u=new URL(location.href);u.searchParams.set("rodada",e.target.value);location.href=u};
   atual = Math.max(0, fila.findIndex(i => !minhas[i.id]));
   if (atual === -1) atual = 0;
   render();
@@ -377,7 +391,7 @@ function inscricaoHtml(i){
   return `
   <article class="ins">
     <div class="conteudo-ins">
-      <div class="coluna-titulo titulo-coluna">Proposta</div>
+      <div class="coluna-titulo titulo-coluna">${esc(RODADA.entrega||"Proposta")}</div>
       <div class="informacoes">
       <details class="bloco-colapsavel">
         <summary><span class="resumo-time"><span class="nome-time">${esc(i.equipe)}</span><span class="tipo-bloco">Perfil do time</span></span></summary>
@@ -399,14 +413,14 @@ function inscricaoHtml(i){
       </div>
       <section class="narr">
         <div class="narr-bloco">
-          <div class="pergunta-bloco"><h3>Narrativa de ideação</h3><p>Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?</p></div>
+          <div class="pergunta-bloco"><h3>${esc(RODADA.entrega||"Narrativa de ideação")}</h3><p>${RODADA.id===1?'Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?':esc(RODADA.orientacao)}</p></div>
           <div class="resposta-bloco"><span class="narr-rotulo">Resposta da equipe</span>${paragrafos(i.narrativa)}</div>
         </div>
       </section>
     </div>
     <aside class="avaliacao-panel" aria-label="Formulário de avaliação">
     <h2 class="titulo-coluna">Avaliação</h2>
-    <div class="intro-avaliacao"><p>Selecione uma nota para cada critério.</p><div class="referencia-escala" aria-label="Escala de 1 a 5"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><span class="ref-inicio">Não atende</span><span class="ref-fim">Atende plenamente</span></div></div>
+    <div class="intro-avaliacao"><p>${esc(RODADA.orientacao||"Selecione uma nota para cada critério.")}</p><div class="referencia-escala" aria-label="Escala de 1 a 5"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><span class="ref-inicio">Não atende</span><span class="ref-fim">Atende plenamente</span></div></div>
     ${CRITERIOS.map(c => `
     <section class="crit" data-k="${c.k}">
       <details class="explicacao"><summary class="cab"><span class="criterio-nome">${esc(c.nome)}</span><span class="seta" aria-hidden="true"></span></summary><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p><h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div></details>
@@ -465,10 +479,10 @@ async function salvar(ins){
   if (!completo()){ $("#modal-incompleta").showModal(); return; }
   const btn = $("#salvar"), av = $("#aviso");
   btn.disabled = true; av.className = "aviso"; av.textContent = "Salvando…";
-  const {data, error} = await cliente.rpc("salvar_avaliacao", {
-    p_token: token, p_inscricao_id: ins.id,
-    p_edi: rascunho.edi, p_originalidade: rascunho.originalidade, p_qualidade: rascunho.qualidade,
-    p_viabilidade: rascunho.viabilidade, p_impacto: rascunho.impacto, p_comentario: rascunho.comentario || null,
+  const notas=Object.fromEntries(CRITERIOS.map(c=>[c.k,rascunho[c.k]]));
+  const {data, error} = await cliente.rpc("salvar_avaliacao_rodada", {
+    p_token: token, p_rodada_id:RODADA.id, p_inscricao_id: ins.id,
+    p_notas:notas, p_comentario: rascunho.comentario || null,
   });
   if (error){ av.className = "aviso erro"; av.textContent = "Não foi possível salvar (" + error.message + "). Tente de novo; se persistir, avise a organização."; btn.disabled = false; return; }
   minhas[ins.id] = data;

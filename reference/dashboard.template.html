@@ -8,6 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="supabase-shim.js"></script>
+<script src="rodadas.js"></script>
 <style>
 :root{
   --roxo:#2B0A5A; --vermelho:#D8102E; --tinta:#1A1533; --cinza:#6B6880;
@@ -82,6 +83,7 @@ tr.linha:hover{background:var(--leve)}
 .ranking-table th:nth-child(10){background:#C9CDD4;color:#2F2B3E;font-weight:600}
 .ranking-table td:nth-child(10){background:#E1E3E7;font-size:14px;color:#2F2B3E}
 .ranking-table tr.linha:hover td:nth-child(10){background:#D5D8DE}
+.ranking-table th.media-final,.ranking-table td.media-final{width:108px!important;border-left:1px solid #C7CAD1!important;text-align:center!important}.ranking-table th.media-final{background:#C9CDD4!important;color:#2F2B3E!important;font-weight:600}.ranking-table td.media-final{background:#E1E3E7!important;font-size:14px;color:#2F2B3E}
 .status-avaliacao{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
 .status-avaliacao::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .status-avaliacao.concluida{background:#E7F5ED;color:#176B43}
@@ -165,6 +167,7 @@ tr.inicio-inaptas td{border-top:2px solid var(--vermelho)}
 .filtro-campo select:focus{outline:2px solid var(--roxo);outline-offset:1px}
 .filtros-ranking .limpar{height:33px;padding-top:5px;padding-bottom:5px;white-space:nowrap;font-size:12px}
 .resultado-filtro{margin:0 0 2px;color:var(--cinza);font-size:10px;line-height:14px}
+.controle-selecao{display:flex;align-items:center;justify-content:flex-end;gap:14px;margin:0 0 8px;color:var(--cinza);font-size:12px}.controle-selecao strong{font-weight:600}.selecao-pos{display:inline-flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}.selecao-pos input{width:15px;height:15px;accent-color:var(--roxo)}
 .andamento{max-width:760px;margin-bottom:32px;border:1px solid var(--linha);border-radius:8px;overflow:hidden}
 .andamento-linha{display:grid;grid-template-columns:minmax(140px,1fr) minmax(180px,2fr) 100px;gap:18px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--linha)}
 .andamento-linha:last-child{border-bottom:0}
@@ -217,17 +220,17 @@ dialog::backdrop{background:rgba(26,21,51,.52)}
 const AMBIENTE_LOCAL = ["localhost", "127.0.0.1"].includes(location.hostname);
 const SUPABASE_URL = AMBIENTE_LOCAL ? location.origin : "https://sxegrslhumunntjwzcoi.supabase.co";
 const SUPABASE_ANON_KEY = AMBIENTE_LOCAL ? "local" : "sb_publishable_PuIPOJ1YLX90a_Ig7yjEgw_EAJhP8ZH";
-const CORTE = 20; // equipes selecionadas nesta etapa
 const INSCRICOES_PUBLICAS = __DADOS_PUBLICOS__;
 const DADOS_PROTEGIDOS = __DADOS_CRIPTOGRAFADOS__;
 let INSCRICOES = [];
-const CRITERIOS = [
+let CRITERIOS = [
  {k:"edi", nome:"EDI", peso:.30},
  {k:"originalidade", nome:"Originalidade", peso:.20},
  {k:"qualidade", nome:"Qualidade", peso:.20},
  {k:"viabilidade", nome:"Viabilidade", peso:.15},
  {k:"impacto", nome:"Impacto", peso:.15},
 ];
+let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionadas=new Set();
 // Ordem de desempate (regulamento 5.1.2): EDI, Originalidade, Qualidade, Viabilidade, Impacto
 </script>
 
@@ -237,6 +240,8 @@ const CRITERIOS = [
     <div class="subtitulo"><span class="ambiente">Painel de controle</span></div>
   </div>
   <div class="acoes" id="acoes-admin" hidden>
+    <select id="seletor-rodada" class="btn" aria-label="Etapa dos resultados"></select>
+    <button class="btn" id="abrir-atribuicoes" type="button">Distribuir equipes</button>
     <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
     <a class="btn" id="abrir-auditoria" href="#">Planilha de auditoria</a>
     <button class="btn" id="csv-consol">Exportar ranking (CSV)</button>
@@ -258,7 +263,15 @@ const CRITERIOS = [
   <div class="modal-conteudo">
     <button class="modal-fechar" type="button" aria-label="Fechar explicação">×</button>
     <h2 id="modal-ranking-titulo">Como o ranking é calculado</h2>
-    <p>A nota final é a média ponderada dos cinco critérios de cada parecerista e, depois, a média entre os pareceristas, mantida na escala de 1 a 5. Em caso de empate, a ordem de desempate é: EDI, Originalidade, Qualidade, Viabilidade e Impacto. Clique em uma equipe no ranking para consultar a proposta.</p>
+    <p id="texto-calculo-ranking">A nota final é a média ponderada dos critérios de cada avaliador e, depois, a média entre os avaliadores, mantida na escala de 1 a 5.</p>
+  </div>
+</dialog>
+<dialog id="modal-atribuicoes" aria-labelledby="modal-atribuicoes-titulo">
+  <div class="modal-conteudo" style="width:min(920px,90vw)">
+    <button class="modal-fechar" type="button" aria-label="Fechar distribuição">×</button>
+    <h2 id="modal-atribuicoes-titulo">Distribuição aos pareceristas</h2>
+    <p>Marque quem avaliará cada equipe nesta rodada. As alterações são salvas imediatamente.</p>
+    <div id="grade-atribuicoes" style="max-height:60vh;overflow:auto"></div>
   </div>
 </dialog>
 
@@ -271,7 +284,7 @@ const fmt = d => new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeSty
 const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
 const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
 const token = new URLSearchParams(location.search).get("token") || "admin-demo";
-let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
+let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], atribuicoes=[], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
 function vazio(t, sub){ $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`; }
@@ -317,13 +330,22 @@ async function iniciar(){
 }
 
 async function carregar(){
-  const [a, p] = await Promise.all([cliente.rpc("todas_avaliacoes", {p_token: token}), cliente.rpc("listar_avaliadores", {p_token: token})]);
+  if(!RODADAS.length){
+    const rr=await cliente.rpc("listar_rodadas",{p_token:token}); RODADAS=rr.data||LS_RODADAS;
+    const solicitada=Number(new URLSearchParams(location.search).get("rodada"));
+    RODADA=RODADAS.find(x=>x.id===solicitada)||RODADAS.find(x=>x.status==="aberta")||RODADAS[0];
+    const local=LS_RODADA(RODADA.id); CRITERIOS=(local.criterios||RODADA.criterios).map(c=>({...c,...(RODADA.criterios||[]).find(x=>x.k===c.k),peso:Number((RODADA.criterios||[]).find(x=>x.k===c.k)?.peso??c.peso)/100}));
+    CORTE=Number(RODADA.corte); const s=$("#seletor-rodada");s.innerHTML=RODADAS.map(x=>`<option value="${x.id}" ${x.id===RODADA.id?'selected':''}>${esc(x.nome)}</option>`).join("");s.onchange=e=>{const u=new URL(location.href);u.searchParams.set("rodada",e.target.value);location.href=u};
+  }
+  const [a, p, f, atr] = await Promise.all([cliente.rpc("todas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id}), cliente.rpc("listar_avaliadores", {p_token: token}),cliente.rpc("fila_rodada",{p_token:token,p_rodada_id:RODADA.id}),cliente.rpc("listar_atribuicoes",{p_token:token,p_rodada_id:RODADA.id})]);
   if (a.error) return vazio("Erro ao carregar", a.error.message);
   const tokensOficiais = new Set(["parecerista-1", "parecerista-2", "parecerista-3"]);
   pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo && x.contabiliza !== false && tokensOficiais.has(x.token));
   pareceristasOficiais = pareceristas;
   const oficiaisIds = new Set(pareceristas.map(x => x.id));
-  todas = (a.data || []).filter(x => oficiaisIds.has(x.avaliador_id));
+  IDS_RODADA=new Set((f.data||[]).map(x=>x.inscricao_id));
+  atribuicoes=atr.data||[];
+  todas = (a.data || []).filter(x => oficiaisIds.has(x.avaliador_id)).map(x=>({...x,...(x.notas||{})}));
   consolidar(); render();
 }
 
@@ -332,7 +354,8 @@ function pontos(av){ return CRITERIOS.reduce((s,c) => s + av[c.k]*c.peso, 0); } 
 function consolidar(){
   const atuais = todas.filter(a => a.atual);
   const oficiaisIds = new Set(pareceristasOficiais.map(p=>p.id));
-  consolidado = INSCRICOES.map(i => {
+  const base=RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id));
+  consolidado = base.map(i => {
     const avsTodas = atuais.filter(a => a.inscricao_id === i.id);
     const avs = avsTodas.filter(a => oficiaisIds.has(a.avaliador_id));
     const medias = {};
@@ -340,7 +363,7 @@ function consolidar(){
     const porAv = {}; avsTodas.forEach(a => porAv[a.avaliador_id] = pontos(a));
     const final = avs.length ? avs.reduce((s,a)=>s+pontos(a),0)/avs.length : null;
     return {ins:i, avs, medias, porAv, n:avs.length, final,
-            elegivel: i.elegibilidade.status === "elegivel"};
+            elegivel: RODADA.id===1 ? i.elegibilidade.status === "elegivel" : IDS_RODADA.has(i.id)};
   });
   // ranking: elegíveis com nota, por nota final e desempate; depois elegíveis sem nota; depois fora
   const cmp = (x,y) => {
@@ -364,7 +387,7 @@ function render(){
   const rolagemAnterior = $(".tabela-wrap")?.scrollTop || 0;
   const rolagemHorizontalAnterior = $(".tabela-wrap")?.scrollLeft || 0;
   const expandidas = new Set([...document.querySelectorAll(".ver-avaliacoes[aria-expanded='true']")].map(x=>x.dataset.id));
-  const total = INSCRICOES.length, eleg = consolidado.filter(r=>r.elegivel).length;
+  const total = consolidado.length, eleg = consolidado.filter(r=>r.elegivel).length;
   const completas = consolidado.filter(r => r.elegivel && r.n >= pareceristasOficiais.length && pareceristasOficiais.length).length;
   const progAv = pareceristas.map(p => ({p, n: todas.filter(a => a.atual && a.avaliador_id === p.id && INSCRICOES.find(i=>i.id===a.inscricao_id)?.elegibilidade.status==="elegivel").length}));
   const escolas = [...new Set(consolidado.map(r=>r.ins.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
@@ -383,8 +406,8 @@ function render(){
   $("#raiz").innerHTML = `
 
   <div class="ranking-cabecalho">
-    <h2 class="titulo-secao">Classificação consolidada das inscrições <button class="info-btn" id="info-ranking" type="button" aria-label="Entenda como a classificação é calculada" aria-haspopup="dialog">i</button></h2>
-    <p>Acompanhe a posição, a nota final e o desempenho de cada equipe nos cinco critérios de avaliação.</p>
+    <h2 class="titulo-secao">${esc(RODADA.titulo)} <button class="info-btn" id="info-ranking" type="button" aria-label="Entenda como a classificação é calculada" aria-haspopup="dialog">i</button></h2>
+    <p>${esc(RODADA.orientacao)} Selecione exatamente ${CORTE} ${CORTE===1?'equipe':'equipes'} para avançar.</p>
   </div>
   <div class="filtros-ranking" aria-label="Filtros do ranking">
     <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
@@ -402,14 +425,15 @@ function render(){
     <button class="btn limpar" id="limpar-filtros" type="button">Limpar filtros</button>
   </div>
   <div class="resultado-filtro">${rows.length} ${rows.length===1?'inscrição encontrada':'inscrições encontradas'}</div>
+  ${RODADA.id<RODADAS.length?`<div class="controle-selecao"><strong><span id="total-selecionadas">${selecionadas.size}</span> de ${CORTE} selecionadas</strong><button class="btn" id="avancar-rodada" type="button">Criar ${esc(RODADAS.find(x=>x.ordem===RODADA.ordem+1)?.nome||'próxima rodada')}</button></div>`:""}
   <div class="tabela-wrap"><div class="tabela-interior"><div class="faixa-criterios"><div class="marcador-criterios"><span>Critérios de avaliação</span></div></div><table class="ranking-table">
     <thead><tr>
       <th data-c="pos">Posição</th>
       <th data-c="codigo">Código</th>
       <th data-c="equipe">Equipe</th>
       <th>Situação</th>
-      ${CRITERIOS.map(c=>`<th class="num" data-c="${c.k}"><span class="criterio-cab">${c.nome}</span><span class="peso-cab">peso ${Math.round(c.peso*100)}%</span></th>`).join("")}
-      <th class="num" data-c="final"><span class="criterio-cab">Média ponderada</span><span class="peso-cab">escala 1–5</span></th>
+      ${CRITERIOS.map(c=>`<th class="num criterio-col" data-c="${c.k}"><span class="criterio-cab">${c.nome}</span><span class="peso-cab">peso ${Math.round(c.peso*100)}%</span></th>`).join("")}
+      <th class="num media-final" data-c="final"><span class="criterio-cab">Média ponderada</span><span class="peso-cab">escala 1–5</span></th>
     </tr></thead>
     <tbody>${rows.map(r => linha(r)).join("")}</tbody>
   </table></div></div>`;
@@ -432,11 +456,14 @@ function render(){
   const tabelaAtual=$(".tabela-wrap");
   if(tabelaAtual){ tabelaAtual.scrollTop=rolagemAnterior; tabelaAtual.scrollLeft=rolagemHorizontalAnterior; }
   $("#info-ranking").onclick = () => $("#modal-ranking").showModal();
+  $("#texto-calculo-ranking").textContent=`A nota final é a média ponderada de ${CRITERIOS.map(c=>`${c.curto||c.nome} (${Math.round(c.peso*100)}%)`).join(", ")} por avaliador e, depois, a média entre os avaliadores, na escala de 1 a 5.`;
   $("#filtro-escola").onchange = e => { filtrosRanking.escola=e.target.value; render(); };
   $("#filtro-cidade").onchange = e => { filtrosRanking.cidade=e.target.value; render(); };
   $("#filtro-lider").onchange = e => { filtrosRanking.lider=e.target.value; render(); };
   $("#filtro-tag").onchange = e => { filtrosRanking.tag=e.target.value; render(); };
   $("#limpar-filtros").onclick = () => { filtrosRanking={escola:"",cidade:"",lider:"",tag:""}; render(); };
+  document.querySelectorAll(".selecionar-equipe").forEach(c=>c.onchange=()=>{c.checked?selecionadas.add(c.value):selecionadas.delete(c.value);const n=$("#total-selecionadas");if(n)n.textContent=selecionadas.size});
+  const avancar=$("#avancar-rodada"); if(avancar)avancar.onclick=async()=>{if(selecionadas.size!==CORTE){alert(`Selecione exatamente ${CORTE} equipes.`);return}if(!confirm(`Confirmar ${CORTE} equipes e abrir a próxima rodada? As notas desta rodada serão preservadas e a nova rodada começará zerada.`))return;avancar.disabled=true;const proxima=RODADAS.find(x=>x.ordem===RODADA.ordem+1);const r=await cliente.rpc("avancar_equipes",{p_token:token,p_origem:RODADA.id,p_destino:proxima.id,p_inscricoes:[...selecionadas]});if(r.error){alert(r.error.message);avancar.disabled=false;return}const u=new URL(location.href);u.searchParams.set("rodada",proxima.id);location.href=u};
   $("#drawer-conteudo").innerHTML = `<div class="andamento">${progAv.map(x=>{const pct=eleg?Math.round(100*x.n/eleg):0,status=x.n===0?'Não iniciado':x.n>=eleg?'Concluído':'Em andamento',apoio=x.p.contabiliza===false?' · apoio, não contabiliza':'';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}${apoio?`<small>${apoio}</small>`:''}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${eleg}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${eleg}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`;
   requestAnimationFrame(ajustarAlturaTabela);
 }
@@ -463,14 +490,14 @@ function linha(r){
         ? {classe:"concluida", texto:"Concluída"}
         : {classe:"em-andamento", texto:"Em andamento"};
   const atuais = todas.filter(a=>a.inscricao_id===i.id && a.atual);
-  const avaliacoes = pareceristas.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id),apoio=p.contabiliza===false;return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}${apoio?' · apoio':''}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${apoio?'Não contabiliza · ':''}${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num">—</td>`).join("")}<td class="num"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
+  const avaliacoes = pareceristas.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id),apoio=p.contabiliza===false;return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}${apoio?' · apoio':''}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${apoio?'Não contabiliza · ':''}${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num criterio-col">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num criterio-col">—</td>`).join("")}<td class="num media-final"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
   return `<tr class="${cls}" data-id="${esc(i.id)}">
-    <td class="num pos">${r.pos ?? "—"}</td>
+    <td class="num pos">${r.elegivel&&RODADA.id<RODADAS.length?`<label class="selecao-pos"><input class="selecionar-equipe" type="checkbox" value="${esc(i.id)}" ${selecionadas.has(i.id)?'checked':''}><span>${r.pos??'—'}</span></label>`:(r.pos??'—')}</td>
     <td>${esc(i.codigo)}</td>
     <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(nomeEscola(i.escola))}</div><div class="professor">Líder: Prof(a) ${esc(i.professor)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
     <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span>${r.elegivel?`<button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button>`:""}</div></td>
-    ${CRITERIOS.map(c=>`<td class="num">${r.elegivel?n2(r.medias[c.k]):"—"}</td>`).join("")}
-    <td class="num"><b>${r.elegivel?n2(r.final):"—"}</b></td>
+    ${CRITERIOS.map(c=>`<td class="num criterio-col">${r.elegivel?n2(r.medias[c.k]):"—"}</td>`).join("")}
+    <td class="num media-final"><b>${r.elegivel?n2(r.final):"—"}</b></td>
   </tr>${r.elegivel?avaliacoes:""}`;
 }
 
@@ -505,6 +532,15 @@ document.addEventListener("keydown", e => { if (e.key === "Escape"){ fechar(); i
 const modalRanking = $("#modal-ranking");
 $(".modal-fechar", modalRanking).onclick = () => modalRanking.close();
 modalRanking.onclick = e => { if (e.target === modalRanking) modalRanking.close(); };
+const modalAtribuicoes=$("#modal-atribuicoes");
+$("#abrir-atribuicoes").onclick=()=>{renderAtribuicoes();modalAtribuicoes.showModal()};
+$(".modal-fechar",modalAtribuicoes).onclick=()=>modalAtribuicoes.close();
+modalAtribuicoes.onclick=e=>{if(e.target===modalAtribuicoes)modalAtribuicoes.close()};
+function renderAtribuicoes(){
+  const equipes=consolidado.filter(r=>r.elegivel).map(r=>r.ins);
+  $("#grade-atribuicoes").innerHTML=`<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left">Equipe</th>${pareceristas.map(p=>`<th>${esc(p.nome)}</th>`).join("")}</tr></thead><tbody>${equipes.map(i=>`<tr><td><b>${esc(i.codigo)} · ${esc(i.equipe)}</b></td>${pareceristas.map(p=>`<td style="text-align:center"><input class="atribuicao-check" data-equipe="${esc(i.id)}" data-avaliador="${p.id}" type="checkbox" ${atribuicoes.some(a=>a.inscricao_id===i.id&&a.avaliador_id===p.id&&a.ativa!==false)?'checked':''}></td>`).join("")}</tr>`).join("")}</tbody></table>`;
+  document.querySelectorAll(".atribuicao-check").forEach(c=>c.onchange=async()=>{const equipe=c.dataset.equipe,checks=[...document.querySelectorAll(`.atribuicao-check[data-equipe="${equipe}"]`)],ids=checks.filter(x=>x.checked).map(x=>x.dataset.avaliador);checks.forEach(x=>x.disabled=true);const r=await cliente.rpc("salvar_atribuicoes",{p_token:token,p_rodada_id:RODADA.id,p_inscricao_id:equipe,p_avaliador_ids:ids});if(r.error){alert(r.error.message);c.checked=!c.checked}checks.forEach(x=>x.disabled=false);if(!r.error)atribuicoes=atribuicoes.filter(a=>a.inscricao_id!==equipe).concat(ids.map(id=>({inscricao_id:equipe,avaliador_id:id,ativa:true})))})
+}
 
 function baixar(nome, linhas){
   const csv = linhas.map(l => l.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(";")).join("\r\n");
