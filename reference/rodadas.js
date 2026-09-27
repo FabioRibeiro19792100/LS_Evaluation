@@ -16,13 +16,13 @@ window.LS_RODADAS = [
   {
     id: 2, slug: "planos", nome: "Planos de ação", titulo: "Seleção dos planos de ação",
     entrega: "Business Model Canvas", corte: 10,
-    orientacao: "Avalie o plano de ação no formato Business Model Canvas.",
+    orientacao: "Avalie o plano de ação apresentado no formato Business Model Canvas, aplicando os mesmos critérios e pesos da seleção das inscrições.",
     criterios: null
   },
   {
     id: 3, slug: "banca", nome: "Banca", titulo: "Avaliação da banca final",
     entrega: "Pitch e arguição", corte: 1,
-    orientacao: "Avalie a apresentação ao vivo e as respostas da equipe à banca.",
+    orientacao: "Avalie o pitch de até 3 minutos e a arguição de até 5 minutos realizada pela banca.",
     criterios: [
       {k:"viabilidade", nome:"Viabilidade", curto:"Viabilidade", peso:25, desc:"Consistência do caminho de implementação apresentado.", ex:[]},
       {k:"inovacao", nome:"Inovação", curto:"Inovação", peso:25, desc:"Originalidade da solução e da abordagem apresentada no pitch.", ex:[]},

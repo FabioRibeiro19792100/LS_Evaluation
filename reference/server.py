@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import secrets
 import sqlite3
 import uuid
 from datetime import datetime, timezone
@@ -17,7 +18,8 @@ DB_PATH = ROOT / "learning_sectors.db"
 CRITERIOS = ("edi", "originalidade", "qualidade", "viabilidade", "impacto")
 RPCS = {"validar_token", "minhas_avaliacoes", "salvar_avaliacao", "todas_avaliacoes", "listar_avaliadores",
         "listar_rodadas", "fila_rodada", "minhas_avaliacoes_rodada", "salvar_avaliacao_rodada",
-        "todas_avaliacoes_rodada", "avancar_equipes", "listar_atribuicoes", "salvar_atribuicoes"}
+        "todas_avaliacoes_rodada", "avancar_equipes", "listar_atribuicoes", "salvar_atribuicoes",
+        "criar_parecerista", "distribuir_rodada"}
 
 
 def agora() -> str:
@@ -58,7 +60,8 @@ def inicializar() -> None:
           id INTEGER PRIMARY KEY, slug TEXT NOT NULL UNIQUE, nome TEXT NOT NULL,
           titulo TEXT NOT NULL, entrega TEXT NOT NULL, orientacao TEXT NOT NULL,
           corte INTEGER NOT NULL, criterios TEXT NOT NULL, ordem INTEGER NOT NULL UNIQUE,
-          status TEXT NOT NULL DEFAULT 'configuracao', oficial INTEGER NOT NULL DEFAULT 1
+          status TEXT NOT NULL DEFAULT 'configuracao', oficial INTEGER NOT NULL DEFAULT 1,
+          modo_atribuicao TEXT NOT NULL DEFAULT 'todos', avaliacoes_por_equipe INTEGER
         );
         CREATE TABLE IF NOT EXISTS rodada_equipes (
           rodada_id INTEGER NOT NULL REFERENCES rodadas(id), inscricao_id TEXT NOT NULL,
@@ -80,6 +83,11 @@ def inicializar() -> None:
         """)
         if "contabiliza" not in {r[1] for r in con.execute("PRAGMA table_info(avaliadores)")}:
             con.execute("ALTER TABLE avaliadores ADD COLUMN contabiliza INTEGER NOT NULL DEFAULT 1")
+        colunas_rodadas={r[1] for r in con.execute("PRAGMA table_info(rodadas)")}
+        if "modo_atribuicao" not in colunas_rodadas:
+            con.execute("ALTER TABLE rodadas ADD COLUMN modo_atribuicao TEXT NOT NULL DEFAULT 'todos'")
+        if "avaliacoes_por_equipe" not in colunas_rodadas:
+            con.execute("ALTER TABLE rodadas ADD COLUMN avaliacoes_por_equipe INTEGER")
         if con.execute("SELECT COUNT(*) FROM avaliadores").fetchone()[0] == 0:
             contas = [
                 ("Administração", "admin@local", "admin", "admin-demo", 1),
@@ -110,8 +118,8 @@ def inicializar() -> None:
             {"k":"impacto","nome":"Impacto","curto":"Impacto","peso":25}], ensure_ascii=False)
         rodadas = [
             (1,"inscricoes","Inscrições","Seleção das inscrições","Narrativa de ideação","Avalie a narrativa de ideação enviada pela equipe.",19,criterios_1,1,"aberta",0),
-            (2,"planos","Planos de ação","Seleção dos planos de ação","Business Model Canvas","Avalie o plano de ação no formato Business Model Canvas.",10,criterios_1,2,"configuracao",1),
-            (3,"banca","Banca","Avaliação da banca final","Pitch e arguição","Avalie a apresentação e as respostas da equipe à banca.",1,criterios_3,3,"configuracao",1)]
+            (2,"planos","Planos de ação","Seleção dos planos de ação","Business Model Canvas","Avalie o plano de ação apresentado no formato Business Model Canvas, aplicando os mesmos critérios e pesos da seleção das inscrições.",10,criterios_1,2,"configuracao",1),
+            (3,"banca","Banca","Avaliação da banca final","Pitch e arguição","Avalie o pitch de até 3 minutos e a arguição de até 5 minutos realizada pela banca.",1,criterios_3,3,"configuracao",1)]
         con.executemany("""INSERT INTO rodadas(id,slug,nome,titulo,entrega,orientacao,corte,criterios,ordem,status,oficial)
           VALUES(?,?,?,?,?,?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET nome=excluded.nome,titulo=excluded.titulo,
           entrega=excluded.entrega,orientacao=excluded.orientacao,corte=excluded.corte,criterios=excluded.criterios,
@@ -119,7 +127,7 @@ def inicializar() -> None:
         inscricoes = json.loads((ROOT / "inscricoes.json").read_text())
         elegiveis = [x["id"] for x in inscricoes if x.get("elegibilidade", {}).get("status") == "elegivel"]
         con.executemany("INSERT OR IGNORE INTO rodada_equipes(rodada_id,inscricao_id) VALUES(1,?)", [(x,) for x in elegiveis])
-        oficiais = con.execute("SELECT id FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1").fetchall()
+        oficiais = con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1").fetchall()
         con.executemany("INSERT OR IGNORE INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(1,?,?,?)",
                         [(x, a["id"], agora()) for x in elegiveis for a in oficiais])
         con.execute("""INSERT OR IGNORE INTO avaliacoes_rodada(id,rodada_id,avaliador_id,inscricao_id,notas,comentario,criado_em)
@@ -236,6 +244,19 @@ def executar_rpc(nome: str, p: dict):
             rows = con.execute("SELECT id,nome,email,papel,token,ativo,contabiliza FROM avaliadores ORDER BY papel,nome").fetchall()
             return [{**dicionario(r), "ativo": bool(r["ativo"]), "contabiliza": bool(r["contabiliza"])} for r in rows]
 
+        if nome == "criar_parecerista":
+            nome_parecerista = str(p.get("p_nome") or "").strip()
+            email = str(p.get("p_email") or "").strip() or None
+            if len(nome_parecerista) < 3:
+                raise ValueError("informe o nome completo do parecerista")
+            if con.execute("SELECT 1 FROM avaliadores WHERE papel='parecerista' AND lower(trim(nome))=lower(trim(?)) AND ativo=1",(nome_parecerista,)).fetchone():
+                raise ValueError("este parecerista já está cadastrado")
+            token_novo = "parecerista-" + secrets.token_urlsafe(12)
+            identificador = str(uuid.uuid4())
+            con.execute("""INSERT INTO avaliadores(id,nome,email,papel,token,ativo,contabiliza,criado_em)
+              VALUES(?,?,?,'parecerista',?,1,1,?)""", (identificador,nome_parecerista,email,token_novo,agora()))
+            return dicionario(con.execute("SELECT id,nome,email,papel,token,ativo,contabiliza FROM avaliadores WHERE id=?",(identificador,)).fetchone())
+
         if nome == "listar_atribuicoes":
             rodada=int(p.get("p_rodada_id") or 1)
             return [dicionario(r) for r in con.execute("SELECT rodada_id,inscricao_id,avaliador_id,ativa FROM rodada_atribuicoes WHERE rodada_id=?",(rodada,)).fetchall()]
@@ -245,10 +266,27 @@ def executar_rpc(nome: str, p: dict):
             if not con.execute("SELECT 1 FROM rodada_equipes WHERE rodada_id=? AND inscricao_id=?",(rodada,inscricao)).fetchone():
                 raise ValueError("equipe não pertence a esta rodada")
             con.execute("DELETE FROM rodada_atribuicoes WHERE rodada_id=? AND inscricao_id=?",(rodada,inscricao))
-            validos=con.execute("SELECT id FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1").fetchall(); validos={x["id"] for x in validos}
+            validos=con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1").fetchall(); validos={x["id"] for x in validos}
             if any(x not in validos for x in ids): raise ValueError("parecerista inválido")
             con.executemany("INSERT INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(?,?,?,?)",[(rodada,inscricao,x,agora()) for x in ids])
             return len(ids)
+
+        if nome == "distribuir_rodada":
+            rodada=int(p.get("p_rodada_id") or 1); modo=str(p.get("p_modo") or "todos")
+            quantidade=int(p.get("p_quantidade") or 0) if modo=="aleatoria" else None
+            if modo not in ("todos","aleatoria"): raise ValueError("modo de distribuição inválido")
+            avaliadores=[x["id"] for x in con.execute("SELECT id FROM (SELECT id,nome,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1 ORDER BY nome").fetchall()]
+            if modo=="aleatoria" and (quantidade<1 or quantidade>len(avaliadores)):
+                raise ValueError(f"informe uma quantidade entre 1 e {len(avaliadores)}")
+            equipes=[x["inscricao_id"] for x in con.execute("SELECT inscricao_id FROM rodada_equipes WHERE rodada_id=?",(rodada,)).fetchall()]
+            con.execute("UPDATE rodadas SET modo_atribuicao=?,avaliacoes_por_equipe=? WHERE id=?",(modo,quantidade,rodada))
+            con.execute("DELETE FROM rodada_atribuicoes WHERE rodada_id=?",(rodada,))
+            pares=[]
+            for equipe in equipes:
+                escolhidos=avaliadores if modo=="todos" else [x["id"] for x in con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1 ORDER BY random() LIMIT ?",(quantidade,)).fetchall()]
+                pares.extend((rodada,equipe,a,agora()) for a in escolhidos)
+            con.executemany("INSERT INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(?,?,?,?)",pares)
+            return len(pares)
 
         if nome == "todas_avaliacoes_rodada":
             rodada = int(p.get("p_rodada_id") or 1)
@@ -266,8 +304,13 @@ def executar_rpc(nome: str, p: dict):
                 raise ValueError(f"selecione exatamente {corte['corte'] if corte else 0} equipes")
             con.execute("DELETE FROM rodada_equipes WHERE rodada_id=?",(destino,)); con.execute("DELETE FROM rodada_atribuicoes WHERE rodada_id=?",(destino,))
             con.executemany("INSERT INTO rodada_equipes(rodada_id,inscricao_id,origem_rodada_id) VALUES(?,?,?)",[(destino,x,origem) for x in ids])
-            avs=con.execute("SELECT id FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1").fetchall()
-            con.executemany("INSERT INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(?,?,?,?)",[(destino,x,a["id"],agora()) for x in ids for a in avs])
+            config=con.execute("SELECT modo_atribuicao,avaliacoes_por_equipe FROM rodadas WHERE id=?",(destino,)).fetchone()
+            avaliadores=[x["id"] for x in con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1").fetchall()]
+            pares=[]
+            for equipe in ids:
+                escolhidos=avaliadores if config["modo_atribuicao"]=="todos" else [x["id"] for x in con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1 ORDER BY random() LIMIT ?",(config["avaliacoes_por_equipe"] or len(avaliadores),)).fetchall()]
+                pares.extend((destino,equipe,a,agora()) for a in escolhidos)
+            con.executemany("INSERT INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(?,?,?,?)",pares)
             con.execute("UPDATE rodada_equipes SET selecionada=0,selecionada_em=NULL WHERE rodada_id=?",(origem,))
             con.executemany("UPDATE rodada_equipes SET selecionada=1,selecionada_em=? WHERE rodada_id=? AND inscricao_id=?",[(agora(),origem,x) for x in ids])
             con.execute("UPDATE rodadas SET status='fechada' WHERE id=?",(origem,)); con.execute("UPDATE rodadas SET status='aberta' WHERE id=?",(destino,))

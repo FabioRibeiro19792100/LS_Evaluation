@@ -142,6 +142,7 @@ main{padding:24px;width:100%;max-width:none;min-width:0}
 .pergunta-bloco p{color:#45424C;font-size:15px;font-weight:600;line-height:1.55}
 .resposta-bloco p{color:var(--tinta);font-size:15px;font-weight:400;line-height:1.7}
 .resposta-bloco p+p{margin-top:14px}
+.canvas{padding-bottom:28px}.canvas-cab{margin:0 0 14px;padding:14px 16px;background:#F1F1F3;border-top:1px solid #D8D6DC;border-bottom:1px solid #D8D6DC}.canvas-cab h3{margin:0 0 3px;font-size:17px;color:#44414B}.canvas-cab p{margin:0;color:#696572;font-size:13px}.canvas-projeto{margin:0 0 12px;padding:12px 14px;border-left:3px solid #55515E;background:#FAFAFB}.canvas-projeto span{display:block;color:#6D6875;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}.canvas-projeto strong{display:block;margin-top:2px;color:#302C39;font-size:16px}.canvas-secao{margin:18px 0 8px;color:#5D5766;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em}.canvas-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.canvas-card{min-width:0;padding:12px 13px;border:1px solid #DEDBE3;background:#fff}.canvas-card h4{margin:0 0 6px;color:#423B4D;font-size:12px;font-weight:600}.canvas-card p{margin:0;color:#282334;font-size:13px;line-height:1.55;white-space:pre-wrap}.canvas-card p+p{margin-top:9px}.canvas-card.larga{grid-column:1/-1}.canvas-stem{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}.canvas-stem span{padding:3px 7px;border-radius:999px;background:#EEE9F4;color:#51386E;font-size:10px;font-weight:600}@media(max-width:1050px){.canvas-grid{grid-template-columns:1fr}.canvas-card.larga{grid-column:auto}}
 .crit{border-top:1px solid var(--linha);padding-top:18px;margin-bottom:18px}
 .crit[data-k]{padding-left:0}
 .crit .cab{display:grid;grid-template-columns:minmax(0,1fr) 16px;gap:8px;align-items:center;width:100%;list-style:none}
@@ -419,12 +420,7 @@ function inscricaoHtml(i){
         <div class="perfil-linha"><div class="perfil-rotulo">Pessoas com deficiência</div><div class="perfil-valor">${respostaAuto(auto.deficiencia)}</div></div>
       </details>
       </div>
-      <section class="narr">
-        <div class="narr-bloco">
-          <div class="pergunta-bloco"><h3>${esc(RODADA.entrega||"Narrativa de ideação")}</h3><p>${RODADA.id===1?'Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?':esc(RODADA.orientacao)}</p></div>
-          <div class="resposta-bloco"><span class="narr-rotulo">Resposta da equipe</span>${paragrafos(i.narrativa)}</div>
-        </div>
-      </section>
+      ${conteudoProposta(i)}
     </div>
     <aside class="avaliacao-panel" aria-label="Formulário de avaliação">
     <h2 class="titulo-coluna">Avaliação</h2>
@@ -449,6 +445,14 @@ function inscricaoHtml(i){
     </div>
     </aside>
   </article>`;
+}
+
+function cartaoCanvas(titulo,valor,larga=false){return `<article class="canvas-card ${larga?'larga':''}"><h4>${esc(titulo)}</h4>${paragrafos(valor||"Não informado")}</article>`}
+function conteudoProposta(i){
+  if(RODADA.id!==2)return `<section class="narr"><div class="narr-bloco"><div class="pergunta-bloco"><h3>${esc(RODADA.entrega||"Narrativa de ideação")}</h3><p>Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?</p></div><div class="resposta-bloco"><span class="narr-rotulo">Resposta da equipe</span>${paragrafos(i.narrativa)}</div></div></section>`;
+  const p=i.plano_acao;
+  if(!p)return `<section class="canvas"><div class="canvas-cab"><h3>Business Model Canvas</h3><p>O plano de ação desta equipe não foi localizado na base importada.</p></div></section>`;
+  return `<section class="canvas"><div class="canvas-cab"><h3>Business Model Canvas</h3><p>Plano de ação submetido pela equipe para esta etapa.</p></div><div class="canvas-projeto"><span>Projeto</span><strong>${esc(p.projeto||i.equipe)}</strong></div><div class="canvas-secao">Contexto e solução</div><div class="canvas-grid">${cartaoCanvas("Problema",p.problema)}${cartaoCanvas("Públicos beneficiados",p.beneficiarios)}${cartaoCanvas("Solução proposta",p.solucao,true)}${cartaoCanvas("Originalidade e criatividade",p.originalidade)}${cartaoCanvas("Diversidade e impacto social",p.diversidade_impacto)}</div><div class="canvas-secao">Modelo de ação</div><div class="canvas-grid">${cartaoCanvas("Proposta de valor",p.proposta_valor)}${cartaoCanvas("Segmentos de públicos",p.segmentos)}${cartaoCanvas("Canais",p.canais)}${cartaoCanvas("Relacionamento com usuários",p.relacionamento)}${cartaoCanvas("Sustentação e perenidade",p.sustentacao)}${cartaoCanvas("Recursos principais",p.recursos)}${cartaoCanvas("Atividades-chave",p.atividades)}${cartaoCanvas("Parcerias-chave",p.parcerias)}${cartaoCanvas("Estrutura de custos",p.custos,true)}</div><div class="canvas-secao">Aplicação STEM</div><article class="canvas-card larga"><div class="canvas-stem">${(p.stem||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>${paragrafos(p.stem_aplicacao||"Não informado")}</article></section>`;
 }
 
 function fmt(d){ return new Date(d).toLocaleString("pt-BR", {dateStyle:"short", timeStyle:"short"}); }

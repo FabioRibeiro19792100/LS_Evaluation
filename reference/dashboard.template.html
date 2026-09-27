@@ -29,8 +29,10 @@ button{font:inherit;cursor:pointer}
 .topo .acoes[hidden]{display:none}
 .topo .acoes .btn{min-height:32px;padding:6px 12px;border-color:#fff;background:rgba(255,255,255,.94);color:var(--roxo);font-size:12px;line-height:1.2;box-shadow:0 3px 12px rgba(20,0,55,.16)}
 .topo .acoes .btn:hover{background:#fff}
+.topo .acoes .btn[aria-disabled="true"]{opacity:.48;pointer-events:none}
 .btn{padding:8px 14px;border-radius:4px;border:1.5px solid var(--roxo);background:#fff;color:var(--roxo);font-weight:500}
 .topo a.btn{text-decoration:none}
+.etapas{display:flex;align-items:flex-end;gap:4px;padding:0 32px;background:#F1EEF5;border-bottom:1px solid #D8D2E1}.etapas[hidden]{display:none}.etapa-aba{position:relative;min-width:138px;margin-top:8px;padding:10px 18px 9px;border:1px solid #D8D2E1;border-bottom:0;border-radius:8px 8px 0 0;background:#E7E2EC;color:#655E72;font-size:12px;font-weight:600;text-align:left;cursor:pointer}.etapa-aba:hover{background:#F5F2F8;color:var(--roxo)}.etapa-aba.ativa{padding-top:12px;background:#fff;color:var(--roxo);box-shadow:0 -3px 10px rgba(43,10,90,.07)}.etapa-aba.ativa::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#fff}.etapa-numero{display:block;margin-bottom:1px;color:#8A8493;font-size:9px;letter-spacing:.08em;text-transform:uppercase}.etapa-aba.ativa .etapa-numero{color:#6E548E}
 .btn.pri{background:var(--roxo);color:#fff}
 main{width:100%;max-width:none;padding:18px 32px 42px}
 .resumo{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr));gap:12px;margin-bottom:28px}
@@ -46,6 +48,7 @@ h2{font-size:13px;font-weight:600;color:var(--roxo);margin:28px 0 10px}
 .ranking-cabecalho{margin:0 0 14px}
 .ranking-cabecalho .titulo-secao{margin:0 0 4px;font-size:24px;line-height:1.2;letter-spacing:-.02em;color:var(--roxo)}
 .ranking-cabecalho p{margin:0;color:var(--cinza);font-size:14px}
+.etapa-bloqueada{min-height:360px;display:grid;place-items:center;padding:48px 24px}.etapa-bloqueada-conteudo{width:min(620px,100%);padding:42px;border:1px solid #DDD7E5;border-radius:12px;background:linear-gradient(145deg,#FAF9FC,#F2EFF6);text-align:center;box-shadow:0 12px 34px rgba(43,10,90,.06)}.etapa-bloqueada-icone{display:grid;place-items:center;width:52px;height:52px;margin:0 auto 18px;border-radius:50%;background:#E7E1EE;color:var(--roxo);font-size:25px}.etapa-bloqueada h2{margin:0 0 8px;color:var(--roxo);font-size:23px}.etapa-bloqueada p{max-width:500px;margin:0 auto;color:var(--cinza);font-size:14px;line-height:1.65}.etapa-bloqueada .proxima-acao{display:inline-block;margin-top:20px;padding:7px 11px;border-radius:999px;background:#E7E1EE;color:#5C4774;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
 .info-btn{display:inline-grid;place-items:center;flex:none;width:27px;height:27px;padding:0;border:0;border-radius:50%;background:var(--roxo);color:#fff;font-family:Georgia,serif;font-size:17px;font-weight:700;font-style:italic;line-height:1;box-shadow:0 2px 7px rgba(43,10,90,.24)}
 .info-btn:hover{background:#421379;transform:translateY(-1px);box-shadow:0 4px 10px rgba(43,10,90,.3)}
 .info-btn:focus-visible{outline:2px solid var(--roxo);outline-offset:2px}
@@ -200,13 +203,15 @@ tr.inicio-inaptas td{border-top:2px solid var(--vermelho)}
 .drawer .andamento-meta{text-align:left;display:flex;align-items:baseline;gap:7px}
 .drawer .andamento-meta b,.drawer .andamento-meta span{display:inline}
 dialog{width:min(520px,calc(100vw - 32px));border:0;border-radius:10px;padding:0;color:var(--tinta);box-shadow:0 18px 60px rgba(26,21,51,.25)}
+#modal-atribuicoes{width:min(900px,calc(100vw - 32px));max-height:calc(100vh - 40px)}
 dialog::backdrop{background:rgba(26,21,51,.52)}
 .modal-conteudo{padding:24px}
 .modal-conteudo h2{font-size:19px;margin:0 36px 10px 0}
 .modal-conteudo p{margin:0;color:var(--cinza);line-height:1.65}
+.cadastro-parecerista,.config-distribuicao{display:grid;grid-template-columns:1.2fr 1fr auto;gap:8px;margin:10px 0 0;padding:14px;background:#F7F6F9;border:1px solid #E2DFE7;border-radius:8px}.cadastro-parecerista input,.config-distribuicao input,.config-distribuicao select{min-width:0;padding:9px 10px;border:1px solid #CBC7D4;border-radius:5px;background:#fff;font:inherit}.gestao-bloco{margin-top:22px}.gestao-bloco h3{margin:0 0 3px;color:#40384D;font-size:13px}.gestao-bloco>p{font-size:12px!important;line-height:1.45!important}.atribuicoes-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.parecerista-link{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;min-height:52px;padding:9px 11px;background:#F7F6F9;border:1px solid #E4E1E8;border-radius:7px;font-size:13px}.parecerista-identificacao{min-width:0}.parecerista-identificacao strong,.parecerista-identificacao small{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.parecerista-identificacao strong{font-weight:600;color:#322A40}.parecerista-identificacao small{margin-top:1px;color:#817B8C;font-size:10px}.parecerista-link button{padding:5px 7px;border:1px solid #D6CEE0;border-radius:4px;background:#fff;color:var(--roxo);font-size:10px;font-weight:600;cursor:pointer}.resumo-distribuicao{padding:9px 11px;border-radius:6px;background:#EEEAF3;color:#62586E;font-size:11px;margin-top:10px}@media(max-width:720px){.cadastro-parecerista,.config-distribuicao{grid-template-columns:1fr}.atribuicoes-links{grid-template-columns:1fr}.modal-conteudo{padding:18px}}
 .modal-fechar{position:absolute;top:14px;right:14px;display:grid;place-items:center;width:32px;height:32px;border:0;border-radius:50%;background:var(--leve);color:var(--tinta);font-size:22px}
 .modal-fechar:hover{background:var(--linha)}
-@media (max-width:820px){ main{padding:16px} .topo{padding-left:16px;padding-right:16px} .topo .acoes{margin-left:0} .resumo{grid-template-columns:repeat(2,1fr)} .tabela-wrap{height:calc(100vh - 320px);min-height:320px;overflow:auto} }
+@media (max-width:820px){ main{padding:16px} .topo{padding-left:16px;padding-right:16px} .topo .acoes{margin-left:0} .etapas{padding:0 16px;overflow-x:auto}.etapa-aba{min-width:122px;padding-left:13px;padding-right:13px}.resumo{grid-template-columns:repeat(2,1fr)} .tabela-wrap{height:calc(100vh - 320px);min-height:320px;overflow:auto} }
 @media (max-width:760px){ .filtros-ranking{grid-template-columns:1fr 1fr}.filtros-ranking .limpar{width:100%} }
 @media (max-width:560px){ .andamento-linha{grid-template-columns:1fr auto;gap:7px 12px}.andamento-linha .barra{grid-column:1/-1;grid-row:2}.andamento-meta{grid-column:2;grid-row:1} }
 @media (max-width:480px){ .resumo,.filtros-ranking{grid-template-columns:1fr} }
@@ -240,7 +245,6 @@ let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionada
     <div class="subtitulo"><span class="ambiente">Painel de controle</span></div>
   </div>
   <div class="acoes" id="acoes-admin" hidden>
-    <select id="seletor-rodada" class="btn" aria-label="Etapa dos resultados"></select>
     <button class="btn" id="abrir-atribuicoes" type="button">Distribuir equipes</button>
     <button class="btn" id="abrir-andamento" type="button" aria-haspopup="dialog" aria-controls="drawer-andamento" aria-expanded="false">Andamento dos pareceristas</button>
     <a class="btn" id="abrir-auditoria" href="#">Planilha de auditoria</a>
@@ -248,6 +252,7 @@ let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionada
     <button class="btn" id="csv-audit">Exportar auditoria (CSV)</button>
   </div>
 </header>
+<nav class="etapas" id="navegacao-etapas" aria-label="Etapas da avaliação" hidden></nav>
 <main id="raiz"></main>
 <footer class="rodape">Mastertech&nbsp; · &nbsp;Processo de avaliação&nbsp; · &nbsp;Learning Sectors 2026</footer>
 <aside class="painel" id="painel" aria-hidden="true"></aside>
@@ -267,11 +272,21 @@ let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionada
   </div>
 </dialog>
 <dialog id="modal-atribuicoes" aria-labelledby="modal-atribuicoes-titulo">
-  <div class="modal-conteudo" style="width:min(920px,90vw)">
+  <div class="modal-conteudo">
     <button class="modal-fechar" type="button" aria-label="Fechar distribuição">×</button>
     <h2 id="modal-atribuicoes-titulo">Distribuição aos pareceristas</h2>
-    <p>Marque quem avaliará cada equipe nesta rodada. As alterações são salvas imediatamente.</p>
-    <div id="grade-atribuicoes" style="max-height:60vh;overflow:auto"></div>
+    <p>Cadastre os pareceristas e escolha como os projetos desta etapa serão distribuídos automaticamente.</p>
+    <section class="gestao-bloco"><h3>Distribuição desta etapa</h3><p>Escolha uma regra única; o sistema distribui os projetos automaticamente.</p><form id="form-distribuicao" class="config-distribuicao">
+        <select id="modo-distribuicao" aria-label="Modo de distribuição"><option value="todos">Todos avaliam todos</option><option value="aleatoria">Distribuição aleatória</option></select>
+        <input id="quantidade-avaliacoes" type="number" min="1" placeholder="Avaliações por projeto" aria-label="Avaliações por projeto" hidden>
+        <button class="btn" type="submit">Aplicar</button>
+      </form><div id="grade-atribuicoes" class="resumo-distribuicao"></div></section>
+    <section class="gestao-bloco"><h3>Pareceristas cadastrados</h3><p id="total-pareceristas"></p><div id="links-pareceristas" class="atribuicoes-links"></div></section>
+    <section class="gestao-bloco"><h3>Adicionar parecerista</h3><form id="form-parecerista" class="cadastro-parecerista">
+        <input id="novo-parecerista-nome" required minlength="3" placeholder="Nome completo" aria-label="Nome completo">
+        <input id="novo-parecerista-email" type="email" placeholder="E-mail (opcional)" aria-label="E-mail">
+        <button class="btn" type="submit">Cadastrar</button>
+      </form></section>
   </div>
 </dialog>
 
@@ -331,6 +346,7 @@ async function iniciar(){
   const v = await cliente.rpc("validar_token", {p_token: token});
   if (v.error || !v.data || v.data.papel !== "admin") return vazio("Acesso não reconhecido", "Este link não corresponde a um administrador ativo.");
   eu = v.data; $("#acoes-admin").hidden = false;
+  $("#navegacao-etapas").hidden = false;
   $("#abrir-auditoria").href = `auditoria.html?token=${encodeURIComponent(token)}`;
   await carregar();
   clearInterval(timerAtualizacao);
@@ -343,17 +359,18 @@ async function carregar(){
     const solicitada=Number(new URLSearchParams(location.search).get("rodada"));
     RODADA=RODADAS.find(x=>x.id===solicitada)||RODADAS.find(x=>x.status==="aberta")||RODADAS[0];
     const local=LS_RODADA(RODADA.id); CRITERIOS=(local.criterios||RODADA.criterios).map(c=>({...c,...(RODADA.criterios||[]).find(x=>x.k===c.k),peso:Number((RODADA.criterios||[]).find(x=>x.k===c.k)?.peso??c.peso)/100}));
-    CORTE=Number(RODADA.corte); const s=$("#seletor-rodada");s.innerHTML=RODADAS.map(x=>`<option value="${x.id}" ${x.id===RODADA.id?'selected':''}>${esc(x.nome)}</option>`).join("");s.onchange=e=>{const u=new URL(location.href);u.searchParams.set("rodada",e.target.value);location.href=u};
+    CORTE=Number(RODADA.corte); const n=$("#navegacao-etapas");n.innerHTML=RODADAS.map((x,i)=>`<button class="etapa-aba ${x.id===RODADA.id?'ativa':''}" type="button" data-rodada="${x.id}" ${x.id===RODADA.id?'aria-current="page"':''}><span class="etapa-numero">Etapa ${i+1}</span>${esc(x.nome)}</button>`).join("");n.querySelectorAll(".etapa-aba").forEach(b=>b.onclick=()=>{if(Number(b.dataset.rodada)===RODADA.id)return;const u=new URL(location.href);u.searchParams.set("rodada",b.dataset.rodada);location.href=u});
   }
   const [a, p, f, atr] = await Promise.all([cliente.rpc("todas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id}), cliente.rpc("listar_avaliadores", {p_token: token}),cliente.rpc("fila_rodada",{p_token:token,p_rodada_id:RODADA.id}),cliente.rpc("listar_atribuicoes",{p_token:token,p_rodada_id:RODADA.id})]);
   if (a.error) return vazio("Erro ao carregar", a.error.message);
-  const tokensOficiais = new Set(["parecerista-1", "parecerista-2", "parecerista-3"]);
-  pareceristas = (p.data || []).filter(x => x.papel === "parecerista" && x.ativo && x.contabiliza !== false && tokensOficiais.has(x.token));
-  pareceristasOficiais = pareceristas;
-  const oficiaisIds = new Set(pareceristas.map(x => x.id));
+  const candidatos=(p.data || []).filter(x => x.papel === "parecerista" && x.ativo && x.contabiliza !== false);
+  const unicos=new Map();candidatos.forEach(x=>{const chave=x.nome.normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR");if(!unicos.has(chave))unicos.set(chave,x)});pareceristas=[...unicos.values()].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
   IDS_RODADA=new Set((f.data||[]).map(x=>x.inscricao_id));
   selecionadas=new Set((f.data||[]).filter(x=>x.selecionada===true||x.selecionada===1).map(x=>x.inscricao_id));
   atribuicoes=atr.data||[];
+  const idsDaEtapa=new Set(atribuicoes.filter(x=>x.ativa!==false).map(x=>x.avaliador_id));
+  pareceristasOficiais=pareceristas.filter(x=>idsDaEtapa.has(x.id));
+  const oficiaisIds = new Set(pareceristasOficiais.map(x => x.id));
   todas = (a.data || []).filter(x => oficiaisIds.has(x.avaliador_id)).map(x=>({...x,...(x.notas||{})}));
   consolidar(); render();
 }
@@ -366,12 +383,13 @@ function consolidar(){
   const base=RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id));
   consolidado = base.map(i => {
     const avsTodas = atuais.filter(a => a.inscricao_id === i.id);
-    const avs = avsTodas.filter(a => oficiaisIds.has(a.avaliador_id));
+    const idsAtribuidos = new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false).map(x=>x.avaliador_id));
+    const avs = avsTodas.filter(a => oficiaisIds.has(a.avaliador_id) && idsAtribuidos.has(a.avaliador_id));
     const medias = {};
     CRITERIOS.forEach(c => medias[c.k] = avs.length ? avs.reduce((s,a)=>s+a[c.k],0)/avs.length : null);
     const porAv = {}; avsTodas.forEach(a => porAv[a.avaliador_id] = pontos(a));
     const final = avs.length ? avs.reduce((s,a)=>s+pontos(a),0)/avs.length : null;
-    return {ins:i, avs, medias, porAv, n:avs.length, final,
+    return {ins:i, avs, medias, porAv, n:avs.length, esperadas:idsAtribuidos.size, final,
             elegivel: RODADA.id===1 ? i.elegibilidade.status === "elegivel" : IDS_RODADA.has(i.id)};
   });
   // ranking: elegíveis com nota, por nota final e desempate; depois elegíveis sem nota; depois fora
@@ -397,15 +415,18 @@ function render(){
   const rolagemHorizontalAnterior = $(".tabela-wrap")?.scrollLeft || 0;
   const expandidas = new Set([...document.querySelectorAll(".ver-avaliacoes[aria-expanded='true']")].map(x=>x.dataset.id));
   const total = consolidado.length, eleg = consolidado.filter(r=>r.elegivel).length;
-  const completas = consolidado.filter(r => r.elegivel && r.n >= pareceristasOficiais.length && pareceristasOficiais.length).length;
-  const progAv = pareceristas.map(p => ({p, n: todas.filter(a => a.atual && a.avaliador_id === p.id && INSCRICOES.find(i=>i.id===a.inscricao_id)?.elegibilidade.status==="elegivel").length}));
+  const etapaBloqueada=RODADA.status==="configuracao"||(RODADA.id>1&&IDS_RODADA.size===0);
+  const controlesEtapa=[$("#abrir-atribuicoes"),$("#abrir-andamento"),$("#csv-consol"),$("#csv-audit")];controlesEtapa.forEach(x=>{if(x)x.disabled=etapaBloqueada});const auditoria=$("#abrir-auditoria");auditoria.setAttribute("aria-disabled",String(etapaBloqueada));auditoria.tabIndex=etapaBloqueada?-1:0;
+  if(etapaBloqueada){const anterior=RODADAS.find(x=>x.ordem===RODADA.ordem-1),quantidade=anterior?.corte||"as";$("#raiz").innerHTML=`<section class="etapa-bloqueada" aria-labelledby="etapa-bloqueada-titulo"><div class="etapa-bloqueada-conteudo"><div class="etapa-bloqueada-icone" aria-hidden="true">⌁</div><h2 id="etapa-bloqueada-titulo">${esc(RODADA.nome)} ainda não liberada</h2><p>Esta etapa será aberta depois que <strong>${quantidade} ${Number(quantidade)===1?'equipe for selecionada':'equipes forem selecionadas'}</strong> em ${esc(anterior?.nome||'etapa anterior')}. A navegação continua disponível para você consultar as etapas já abertas.</p><span class="proxima-acao">Conclua ${esc(anterior?.nome||'a etapa anterior')}</span></div></section>`;return}
+  const completas = consolidado.filter(r => {const esperadas=atribuicoes.filter(a=>a.inscricao_id===r.ins.id&&a.ativa!==false).length;return r.elegivel&&esperadas>0&&r.n>=esperadas}).length;
+  const progAv = pareceristasOficiais.map(p => ({p, n: todas.filter(a => a.atual && a.avaliador_id === p.id).length,total:new Set(atribuicoes.filter(a=>a.avaliador_id===p.id&&a.ativa!==false).map(a=>a.inscricao_id)).size}));
   const escolas = [...new Set(consolidado.map(r=>r.ins.escola).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   const cidades = [...new Set(consolidado.map(r=>r.ins.municipio).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   const lideres = [...new Set(consolidado.map(r=>r.ins.professor).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"pt-BR"));
   const atendeTag = r => !filtrosRanking.tag ||
     (filtrosRanking.tag==="selecionada" && r.pos && r.pos<=CORTE) ||
-    (filtrosRanking.tag==="completa" && r.elegivel && pareceristasOficiais.length>0 && r.n>=pareceristasOficiais.length) ||
-    (filtrosRanking.tag==="parcial" && r.elegivel && r.n>0 && r.n<pareceristasOficiais.length) ||
+    (filtrosRanking.tag==="completa" && r.elegivel && r.esperadas>0 && r.n>=r.esperadas) ||
+    (filtrosRanking.tag==="parcial" && r.elegivel && r.n>0 && r.n<r.esperadas) ||
     (filtrosRanking.tag==="sem_avaliacao" && r.elegivel && r.n===0) ||
     (filtrosRanking.tag==="fora_categoria" && r.ins.elegibilidade.status==="fora_categoria") ||
     (filtrosRanking.tag==="nao_selecionada" && r.ins.elegibilidade.status==="nao_selecionada");
@@ -416,7 +437,7 @@ function render(){
 
   <div class="ranking-cabecalho">
     <h2 class="titulo-secao">${esc(RODADA.titulo)} <button class="info-btn" id="info-ranking" type="button" aria-label="Entenda como a classificação é calculada" aria-haspopup="dialog">i</button></h2>
-    <p>${esc(RODADA.orientacao)} Selecione exatamente ${CORTE} ${CORTE===1?'equipe':'equipes'} para avançar.</p>
+    <p>${esc(RODADA.orientacao)}${RODADA.id<RODADAS.length?` Selecione exatamente ${CORTE} ${CORTE===1?'equipe':'equipes'} para avançar.`:""}</p>
   </div>
   <div class="filtros-ranking" aria-label="Filtros do ranking">
     <div class="filtro-campo"><label for="filtro-escola">Escola</label><select id="filtro-escola"><option value="">Todas as escolas</option>${escolas.map(x=>`<option value="${esc(x)}" ${filtrosRanking.escola===x?'selected':''}>${esc(x)}</option>`).join('')}</select></div>
@@ -473,7 +494,7 @@ function render(){
   $("#limpar-filtros").onclick = () => { filtrosRanking={escola:"",cidade:"",lider:"",tag:""}; render(); };
   document.querySelectorAll(".selecionar-equipe").forEach(c=>c.onchange=()=>{c.checked?selecionadas.add(c.value):selecionadas.delete(c.value);const n=$("#total-selecionadas");if(n)n.textContent=selecionadas.size});
   const avancar=$("#avancar-rodada"); if(avancar)avancar.onclick=async()=>{if(selecionadas.size!==CORTE){alert(`Selecione exatamente ${CORTE} equipes.`);return}if(!confirm(`Confirmar ${CORTE} equipes e abrir a próxima rodada? As notas desta rodada serão preservadas e a nova rodada começará zerada.`))return;avancar.disabled=true;const proxima=RODADAS.find(x=>x.ordem===RODADA.ordem+1);const r=await cliente.rpc("avancar_equipes",{p_token:token,p_origem:RODADA.id,p_destino:proxima.id,p_inscricoes:[...selecionadas]});if(r.error){alert(r.error.message);avancar.disabled=false;return}const u=new URL(location.href);u.searchParams.set("rodada",proxima.id);location.href=u};
-  $("#drawer-conteudo").innerHTML = `<div class="andamento">${progAv.map(x=>{const pct=eleg?Math.round(100*x.n/eleg):0,status=x.n===0?'Não iniciado':x.n>=eleg?'Concluído':'Em andamento',apoio=x.p.contabiliza===false?' · apoio, não contabiliza':'';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}${apoio?`<small>${apoio}</small>`:''}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${eleg}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${eleg}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`;
+  $("#drawer-conteudo").innerHTML = progAv.length?`<div class="andamento">${progAv.map(x=>{const pct=x.total?Math.round(100*x.n/x.total):0,status=x.n===0?'Não iniciado':x.n>=x.total?'Concluído':'Em andamento';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${x.total}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`:'<p>Nenhum parecerista foi atribuído nesta etapa.</p>';
   requestAnimationFrame(ajustarAlturaTabela);
 }
 
@@ -494,12 +515,14 @@ function linha(r){
     : r.ins.elegibilidade.status === "nao_selecionada"
       ? {classe:"fora", texto:"Não selecionada"}
     : r.n===0
-      ? {classe:"pendente", texto:"Não iniciada"}
-      : (pareceristasOficiais.length && r.n>=pareceristasOficiais.length)
+      ? (r.esperadas ? {classe:"pendente", texto:"Não iniciada"} : {classe:"pendente", texto:"Aguardando atribuição"})
+      : (r.esperadas && r.n>=r.esperadas)
         ? {classe:"concluida", texto:"Concluída"}
         : {classe:"em-andamento", texto:"Em andamento"};
   const atuais = todas.filter(a=>a.inscricao_id===i.id && a.atual);
-  const avaliacoes = pareceristas.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id),apoio=p.contabiliza===false;return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}${apoio?' · apoio':''}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${apoio?'Não contabiliza · ':''}${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num criterio-col">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num criterio-col">—</td>`).join("")}<td class="num media-final"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
+  const atribuidosEquipe=new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false).map(x=>x.avaliador_id));
+  const avaliadoresEquipe=pareceristas.filter(p=>atribuidosEquipe.has(p.id));
+  const avaliacoes = avaliadoresEquipe.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id);return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num criterio-col">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num criterio-col">—</td>`).join("")}<td class="num media-final"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
   return `<tr class="${cls}" data-id="${esc(i.id)}">
     <td class="num pos">${r.elegivel&&RODADA.id<RODADAS.length?`<label class="selecao-pos"><input class="selecionar-equipe" type="checkbox" value="${esc(i.id)}" ${selecionadas.has(i.id)?'checked':''}><span>${r.pos??'—'}</span></label>`:(r.pos??'—')}</td>
     <td>${esc(i.codigo)}</td>
@@ -547,9 +570,16 @@ $(".modal-fechar",modalAtribuicoes).onclick=()=>modalAtribuicoes.close();
 modalAtribuicoes.onclick=e=>{if(e.target===modalAtribuicoes)modalAtribuicoes.close()};
 function renderAtribuicoes(){
   const equipes=consolidado.filter(r=>r.elegivel).map(r=>r.ins);
-  $("#grade-atribuicoes").innerHTML=`<table style="width:100%;border-collapse:collapse"><thead><tr><th style="text-align:left">Equipe</th>${pareceristas.map(p=>`<th>${esc(p.nome)}</th>`).join("")}</tr></thead><tbody>${equipes.map(i=>`<tr><td><b>${esc(i.codigo)} · ${esc(i.equipe)}</b></td>${pareceristas.map(p=>`<td style="text-align:center"><input class="atribuicao-check" data-equipe="${esc(i.id)}" data-avaliador="${p.id}" type="checkbox" ${atribuicoes.some(a=>a.inscricao_id===i.id&&a.avaliador_id===p.id&&a.ativa!==false)?'checked':''}></td>`).join("")}</tr>`).join("")}</tbody></table>`;
-  document.querySelectorAll(".atribuicao-check").forEach(c=>c.onchange=async()=>{const equipe=c.dataset.equipe,checks=[...document.querySelectorAll(`.atribuicao-check[data-equipe="${equipe}"]`)],ids=checks.filter(x=>x.checked).map(x=>x.dataset.avaliador);checks.forEach(x=>x.disabled=true);const r=await cliente.rpc("salvar_atribuicoes",{p_token:token,p_rodada_id:RODADA.id,p_inscricao_id:equipe,p_avaliador_ids:ids});if(r.error){alert(r.error.message);c.checked=!c.checked}checks.forEach(x=>x.disabled=false);if(!r.error)atribuicoes=atribuicoes.filter(a=>a.inscricao_id!==equipe).concat(ids.map(id=>({inscricao_id:equipe,avaliador_id:id,ativa:true})))})
+  $("#total-pareceristas").textContent=`${pareceristas.length} ${pareceristas.length===1?'parecerista ativo':'pareceristas ativos'}, sem nomes repetidos.`;
+  $("#links-pareceristas").innerHTML=pareceristas.map(p=>`<div class="parecerista-link"><div class="parecerista-identificacao"><strong>${esc(p.nome)}</strong><small>${esc(p.email||'E-mail não informado')}</small></div><button type="button" data-token="${esc(p.token)}">Copiar link</button></div>`).join("")||'<span>Nenhum parecerista cadastrado.</span>';
+  $("#modo-distribuicao").value=RODADA.modo_atribuicao||"todos";$("#quantidade-avaliacoes").hidden=$("#modo-distribuicao").value!=="aleatoria";$("#quantidade-avaliacoes").value=RODADA.avaliacoes_por_equipe||"";
+  $("#grade-atribuicoes").textContent=atribuicoes.length?`${atribuicoes.length} atribuições ativas para ${equipes.length} projetos nesta etapa.`:"A etapa ainda não tem atribuições.";
+  document.querySelectorAll(".parecerista-link button").forEach(b=>b.onclick=async()=>{const u=new URL("avaliador.html",location.href);u.searchParams.set("token",b.dataset.token);u.searchParams.set("rodada",RODADA.id);await navigator.clipboard.writeText(u.href);const antes=b.textContent;b.textContent="Copiado";setTimeout(()=>b.textContent=antes,1400)});
 }
+$("#modo-distribuicao").onchange=e=>$("#quantidade-avaliacoes").hidden=e.target.value!=="aleatoria";
+async function aplicarDistribuicao(){const modo=$("#modo-distribuicao").value,qtd=modo==="aleatoria"?Number($("#quantidade-avaliacoes").value):null;const r=await cliente.rpc("distribuir_rodada",{p_token:token,p_rodada_id:RODADA.id,p_modo:modo,p_quantidade:qtd});if(r.error){alert(r.error.message);return false}RODADA.modo_atribuicao=modo;RODADA.avaliacoes_por_equipe=qtd;await carregar();renderAtribuicoes();return true}
+$("#form-distribuicao").onsubmit=async e=>{e.preventDefault();const b=e.currentTarget.querySelector("button");b.disabled=true;await aplicarDistribuicao();b.disabled=false};
+$("#form-parecerista").onsubmit=async e=>{e.preventDefault();const botao=e.currentTarget.querySelector("button"),nome=$("#novo-parecerista-nome").value.trim(),email=$("#novo-parecerista-email").value.trim();botao.disabled=true;const r=await cliente.rpc("criar_parecerista",{p_token:token,p_nome:nome,p_email:email||null});if(r.error){alert(r.error.message);botao.disabled=false;return}e.currentTarget.reset();await aplicarDistribuicao();botao.disabled=false};
 
 function baixar(nome, linhas){
   const csv = linhas.map(l => l.map(v => `"${String(v ?? "").replace(/"/g,'""')}"`).join(";")).join("\r\n");

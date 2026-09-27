@@ -14,6 +14,8 @@ create table if not exists rodadas (
   ordem smallint not null unique,
   status text not null default 'configuracao' check (status in ('configuracao','aberta','fechada')),
   oficial boolean not null default true,
+  modo_atribuicao text not null default 'todos' check (modo_atribuicao in ('todos','aleatoria')),
+  avaliacoes_por_equipe smallint check (avaliacoes_por_equipe is null or avaliacoes_por_equipe > 0),
   criado_em timestamptz not null default now()
 );
 
@@ -52,14 +54,16 @@ alter table rodadas enable row level security;
 alter table rodada_equipes enable row level security;
 alter table rodada_atribuicoes enable row level security;
 alter table avaliacoes_rodada enable row level security;
+alter table rodadas add column if not exists modo_atribuicao text not null default 'todos';
+alter table rodadas add column if not exists avaliacoes_por_equipe smallint;
 revoke all on rodadas, rodada_equipes, rodada_atribuicoes, avaliacoes_rodada from anon, authenticated;
 
 insert into rodadas (id,slug,nome,titulo,entrega,orientacao,corte,criterios,ordem,status,oficial) values
 (1,'inscricoes','Inscrições','Seleção das inscrições','Narrativa de ideação','Avalie a narrativa de ideação enviada pela equipe.',19,
  '[{"k":"edi","nome":"EDI (Equidade, Diversidade e Inclusão)","curto":"EDI","peso":30},{"k":"originalidade","nome":"Originalidade e Criatividade","curto":"Originalidade","peso":20},{"k":"qualidade","nome":"Qualidade da Proposta","curto":"Qualidade","peso":20},{"k":"viabilidade","nome":"Viabilidade","curto":"Viabilidade","peso":15},{"k":"impacto","nome":"Impacto Social","curto":"Impacto","peso":15}]',1,'aberta',false),
-(2,'planos','Planos de ação','Seleção dos planos de ação','Business Model Canvas','Avalie o plano de ação no formato Business Model Canvas.',10,
+(2,'planos','Planos de ação','Seleção dos planos de ação','Business Model Canvas','Avalie o plano de ação apresentado no formato Business Model Canvas, aplicando os mesmos critérios e pesos da seleção das inscrições.',10,
  '[{"k":"edi","nome":"EDI (Equidade, Diversidade e Inclusão)","curto":"EDI","peso":30},{"k":"originalidade","nome":"Originalidade e Criatividade","curto":"Originalidade","peso":20},{"k":"qualidade","nome":"Qualidade da Proposta","curto":"Qualidade","peso":20},{"k":"viabilidade","nome":"Viabilidade","curto":"Viabilidade","peso":15},{"k":"impacto","nome":"Impacto Social","curto":"Impacto","peso":15}]',2,'configuracao',true),
-(3,'banca','Banca','Avaliação da banca final','Pitch e arguição','Avalie a apresentação e as respostas da equipe à banca.',1,
+(3,'banca','Banca','Avaliação da banca final','Pitch e arguição','Avalie o pitch de até 3 minutos e a arguição de até 5 minutos realizada pela banca.',1,
  '[{"k":"viabilidade","nome":"Viabilidade","curto":"Viabilidade","peso":25},{"k":"inovacao","nome":"Inovação","curto":"Inovação","peso":25},{"k":"arguicao","nome":"Arguição","curto":"Arguição","peso":25},{"k":"impacto","nome":"Impacto","curto":"Impacto","peso":25}]',3,'configuracao',true)
 on conflict (id) do update set
   nome=excluded.nome,titulo=excluded.titulo,entrega=excluded.entrega,
@@ -152,12 +156,57 @@ begin
   select p_destino,unnest(p_inscricoes),p_origem;
   delete from rodada_atribuicoes where rodada_id=p_destino;
   insert into rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id)
-  select p_destino,i,a.id from unnest(p_inscricoes) i cross join avaliadores a
-  where a.papel='parecerista' and a.ativo and a.contabiliza;
+  select p_destino,e.inscricao_id,a.id
+  from rodada_equipes e
+  cross join lateral (
+    select d.id from (select distinct on (lower(trim(v.nome))) v.id,v.nome
+      from avaliadores v where v.papel='parecerista' and v.ativo and v.contabiliza
+      order by lower(trim(v.nome)),v.criado_em,v.id) d
+    order by case when (select modo_atribuicao from rodadas where id=p_destino)='aleatoria' then random() else 0 end, d.nome
+    limit case when (select modo_atribuicao from rodadas where id=p_destino)='aleatoria'
+      then (select avaliacoes_por_equipe from rodadas where id=p_destino) else 2147483647 end
+  ) a
+  where e.rodada_id=p_destino;
   update rodada_equipes set selecionada=inscricao_id=any(p_inscricoes),selecionada_em=case when inscricao_id=any(p_inscricoes) then now() else null end where rodada_id=p_origem;
   update rodadas set status='fechada' where id=p_origem;
   update rodadas set status='aberta' where id=p_destino;
   return v_total;
+end $$;
+
+create or replace function distribuir_rodada(p_token text,p_rodada_id smallint,p_modo text,p_quantidade smallint default null)
+returns integer language plpgsql security definer set search_path=public as $$
+declare v_total integer; v_avaliadores integer;
+begin
+  if not exists(select 1 from avaliadores where token=p_token and ativo and papel='admin') then raise exception 'acesso negado'; end if;
+  if p_modo not in ('todos','aleatoria') then raise exception 'modo de distribuição inválido'; end if;
+  select count(distinct lower(trim(nome))) into v_avaliadores from avaliadores where papel='parecerista' and ativo and contabiliza;
+  if p_modo='aleatoria' and (p_quantidade is null or p_quantidade<1 or p_quantidade>v_avaliadores) then
+    raise exception 'informe uma quantidade entre 1 e %',v_avaliadores;
+  end if;
+  update rodadas set modo_atribuicao=p_modo,avaliacoes_por_equipe=case when p_modo='aleatoria' then p_quantidade else null end where id=p_rodada_id;
+  delete from rodada_atribuicoes where rodada_id=p_rodada_id;
+  insert into rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id)
+  select p_rodada_id,e.inscricao_id,a.id from rodada_equipes e
+  cross join lateral (
+    select d.id from (select distinct on (lower(trim(v.nome))) v.id,v.nome
+      from avaliadores v where v.papel='parecerista' and v.ativo and v.contabiliza
+      order by lower(trim(v.nome)),v.criado_em,v.id) d
+    order by case when p_modo='aleatoria' then random() else 0 end,d.nome
+    limit case when p_modo='aleatoria' then p_quantidade else 2147483647 end
+  ) a where e.rodada_id=p_rodada_id;
+  get diagnostics v_total=row_count; return v_total;
+end $$;
+
+create or replace function criar_parecerista(p_token text,p_nome text,p_email text default null)
+returns table(id uuid,nome text,email text,papel text,token text,ativo boolean,contabiliza boolean)
+language plpgsql security definer set search_path=public as $$
+begin
+  if not exists(select 1 from avaliadores where avaliadores.token=p_token and avaliadores.ativo and avaliadores.papel='admin') then raise exception 'acesso negado'; end if;
+  if length(trim(coalesce(p_nome,'')))<3 then raise exception 'informe o nome completo do parecerista'; end if;
+  if exists(select 1 from avaliadores a where a.papel='parecerista' and a.ativo and lower(trim(a.nome))=lower(trim(p_nome))) then raise exception 'este parecerista já está cadastrado'; end if;
+  return query insert into avaliadores(nome,email,papel,token,ativo,contabiliza)
+    values(trim(p_nome),nullif(trim(coalesce(p_email,'')),''),'parecerista','parecerista-'||encode(gen_random_bytes(12),'hex'),true,true)
+    returning avaliadores.id,avaliadores.nome,avaliadores.email,avaliadores.papel,avaliadores.token,avaliadores.ativo,avaliadores.contabiliza;
 end $$;
 
 create or replace function listar_atribuicoes(p_token text,p_rodada_id smallint)
@@ -188,7 +237,9 @@ revoke execute on function todas_avaliacoes_rodada(text,smallint) from public,au
 revoke execute on function avancar_equipes(text,smallint,smallint,text[]) from public,authenticated;
 revoke execute on function listar_atribuicoes(text,smallint) from public,authenticated;
 revoke execute on function salvar_atribuicoes(text,smallint,text,uuid[]) from public,authenticated;
-grant execute on function listar_rodadas(text),fila_rodada(text,smallint),minhas_avaliacoes_rodada(text,smallint),salvar_avaliacao_rodada(text,smallint,text,jsonb,text),todas_avaliacoes_rodada(text,smallint),avancar_equipes(text,smallint,smallint,text[]),listar_atribuicoes(text,smallint),salvar_atribuicoes(text,smallint,text,uuid[]) to anon;
+revoke execute on function criar_parecerista(text,text,text) from public,authenticated;
+revoke execute on function distribuir_rodada(text,smallint,text,smallint) from public,authenticated;
+grant execute on function listar_rodadas(text),fila_rodada(text,smallint),minhas_avaliacoes_rodada(text,smallint),salvar_avaliacao_rodada(text,smallint,text,jsonb,text),todas_avaliacoes_rodada(text,smallint),avancar_equipes(text,smallint,smallint,text[]),listar_atribuicoes(text,smallint),salvar_atribuicoes(text,smallint,text,uuid[]),criar_parecerista(text,text,text),distribuir_rodada(text,smallint,text,smallint) to anon;
 
 -- A Rodada 1 precisa conter todas as inscrições elegíveis. A aplicação local
 -- faz essa carga automaticamente. No Supabase, rode também o arquivo
