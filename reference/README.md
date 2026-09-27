@@ -53,7 +53,7 @@ Dois ambientes, um banco mínimo no Supabase, sem dado sensível fora da planilh
 
 O sistema trabalha com três planilhas independentes, selecionadas no topo do dashboard:
 
-1. **Inscrições:** narrativa de ideação, cinco critérios do item 5.1.1 e pré-seleção interna de 20 equipes.
+1. **Inscrições:** narrativa de ideação, cinco critérios do item 5.1.1 e seleção das 19 equipes que entregaram o Plano de Ação.
 2. **Planos de ação:** Business Model Canvas, os mesmos cinco critérios e seleção das 10 finalistas da categoria CPS.
 3. **Banca:** pitch e arguição, com Viabilidade, Inovação, Arguição e Impacto (25% cada), para escolha da vencedora.
 
@@ -63,8 +63,9 @@ Para atualizar o Supabase existente, execute nesta ordem:
 
 1. `schema-rodadas.sql`
 2. `seed-rodada-1.sql`
+3. `selecionar-planos-acao-19.sql`
 
-Os parâmetros completos de interface ficam em `rodadas.js`. Os valores iniciais reproduzem o regulamento de 2026; a redução de 40 para 20 foi identificada como pré-seleção interna, pois o regulamento prevê oficialmente 40 para 10 finalistas por categoria.
+Os parâmetros completos de interface ficam em `rodadas.js`. Os valores iniciais reproduzem o regulamento de 2026; a etapa intermediária usa as 19 equipes que efetivamente entregaram o Plano de Ação, pois o regulamento prevê oficialmente 40 para 10 finalistas por categoria.
 
 **Auditoria.** Nenhuma nota é sobrescrita ou apagada. Cada salvamento é uma linha nova com data e hora; o dashboard mostra a versão atual e o histórico. Para revogar o acesso de alguém: `update avaliadores set ativo = false where token = '...'`.
 

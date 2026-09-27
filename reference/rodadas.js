@@ -3,7 +3,7 @@
 window.LS_RODADAS = [
   {
     id: 1, slug: "inscricoes", nome: "Inscrições", titulo: "Seleção das inscrições",
-    entrega: "Narrativa de ideação", corte: 20,
+    entrega: "Narrativa de ideação", corte: 19,
     orientacao: "Avalie a narrativa de ideação enviada pela equipe.",
     criterios: [
       {k:"edi", nome:"EDI (Equidade, Diversidade e Inclusão)", curto:"EDI", peso:30, desc:"Como a proposta promove a inclusão e a equidade dentro da comunidade escolar. Ponto positivo: soluções que ampliam o acesso e atendem a diferentes perfis de usuários.", ex:["Considera as necessidades de diferentes grupos da comunidade escolar","Incentiva a participação equitativa nas equipes","Amplia a acessibilidade e evita reforçar estereótipos ou práticas discriminatórias","Valoriza a equidade e a diversidade entre os públicos atendidos pela solução"]},

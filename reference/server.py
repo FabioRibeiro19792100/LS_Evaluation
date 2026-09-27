@@ -109,7 +109,7 @@ def inicializar() -> None:
             {"k":"arguicao","nome":"Arguição","curto":"Arguição","peso":25},
             {"k":"impacto","nome":"Impacto","curto":"Impacto","peso":25}], ensure_ascii=False)
         rodadas = [
-            (1,"inscricoes","Inscrições","Seleção das inscrições","Narrativa de ideação","Avalie a narrativa de ideação enviada pela equipe.",20,criterios_1,1,"aberta",0),
+            (1,"inscricoes","Inscrições","Seleção das inscrições","Narrativa de ideação","Avalie a narrativa de ideação enviada pela equipe.",19,criterios_1,1,"aberta",0),
             (2,"planos","Planos de ação","Seleção dos planos de ação","Business Model Canvas","Avalie o plano de ação no formato Business Model Canvas.",10,criterios_1,2,"configuracao",1),
             (3,"banca","Banca","Avaliação da banca final","Pitch e arguição","Avalie a apresentação e as respostas da equipe à banca.",1,criterios_3,3,"configuracao",1)]
         con.executemany("""INSERT INTO rodadas(id,slug,nome,titulo,entrega,orientacao,corte,criterios,ordem,status,oficial)

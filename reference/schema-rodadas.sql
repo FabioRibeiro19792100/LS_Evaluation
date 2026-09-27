@@ -55,7 +55,7 @@ alter table avaliacoes_rodada enable row level security;
 revoke all on rodadas, rodada_equipes, rodada_atribuicoes, avaliacoes_rodada from anon, authenticated;
 
 insert into rodadas (id,slug,nome,titulo,entrega,orientacao,corte,criterios,ordem,status,oficial) values
-(1,'inscricoes','Inscrições','Seleção das inscrições','Narrativa de ideação','Avalie a narrativa de ideação enviada pela equipe.',20,
+(1,'inscricoes','Inscrições','Seleção das inscrições','Narrativa de ideação','Avalie a narrativa de ideação enviada pela equipe.',19,
  '[{"k":"edi","nome":"EDI (Equidade, Diversidade e Inclusão)","curto":"EDI","peso":30},{"k":"originalidade","nome":"Originalidade e Criatividade","curto":"Originalidade","peso":20},{"k":"qualidade","nome":"Qualidade da Proposta","curto":"Qualidade","peso":20},{"k":"viabilidade","nome":"Viabilidade","curto":"Viabilidade","peso":15},{"k":"impacto","nome":"Impacto Social","curto":"Impacto","peso":15}]',1,'aberta',false),
 (2,'planos','Planos de ação','Seleção dos planos de ação','Business Model Canvas','Avalie o plano de ação no formato Business Model Canvas.',10,
  '[{"k":"edi","nome":"EDI (Equidade, Diversidade e Inclusão)","curto":"EDI","peso":30},{"k":"originalidade","nome":"Originalidade e Criatividade","curto":"Originalidade","peso":20},{"k":"qualidade","nome":"Qualidade da Proposta","curto":"Qualidade","peso":20},{"k":"viabilidade","nome":"Viabilidade","curto":"Viabilidade","peso":15},{"k":"impacto","nome":"Impacto Social","curto":"Impacto","peso":15}]',2,'configuracao',true),
