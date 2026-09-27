@@ -352,6 +352,7 @@ async function carregar(){
   pareceristasOficiais = pareceristas;
   const oficiaisIds = new Set(pareceristas.map(x => x.id));
   IDS_RODADA=new Set((f.data||[]).map(x=>x.inscricao_id));
+  selecionadas=new Set((f.data||[]).filter(x=>x.selecionada===true||x.selecionada===1).map(x=>x.inscricao_id));
   atribuicoes=atr.data||[];
   todas = (a.data || []).filter(x => oficiaisIds.has(x.avaliador_id)).map(x=>({...x,...(x.notas||{})}));
   consolidar(); render();

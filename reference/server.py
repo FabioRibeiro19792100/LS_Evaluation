@@ -158,10 +158,11 @@ def executar_rpc(nome: str, p: dict):
                 return []
             rodada = int(p.get("p_rodada_id") or 1)
             if u["papel"] == "admin":
-                rows = con.execute("SELECT inscricao_id FROM rodada_equipes WHERE rodada_id=? ORDER BY inscricao_id", (rodada,)).fetchall()
+                rows = con.execute("SELECT inscricao_id, selecionada FROM rodada_equipes WHERE rodada_id=? ORDER BY inscricao_id", (rodada,)).fetchall()
             else:
-                rows = con.execute("""SELECT inscricao_id FROM rodada_atribuicoes
-                  WHERE rodada_id=? AND avaliador_id=? AND ativa=1 ORDER BY inscricao_id""", (rodada,u["id"])).fetchall()
+                rows = con.execute("""SELECT re.inscricao_id, re.selecionada FROM rodada_equipes re
+                  JOIN rodada_atribuicoes ra ON ra.rodada_id=re.rodada_id AND ra.inscricao_id=re.inscricao_id
+                  WHERE re.rodada_id=? AND ra.avaliador_id=? AND ra.ativa=1 ORDER BY re.inscricao_id""", (rodada,u["id"])).fetchall()
             return [dicionario(r) for r in rows]
 
         if nome == "minhas_avaliacoes_rodada":

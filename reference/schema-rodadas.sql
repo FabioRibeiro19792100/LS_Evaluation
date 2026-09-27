@@ -92,9 +92,10 @@ returns setof rodadas language sql security definer set search_path=public as $$
   order by r.ordem
 $$;
 
-create or replace function fila_rodada(p_token text,p_rodada_id smallint)
-returns table(inscricao_id text) language sql security definer set search_path=public as $$
-  select re.inscricao_id from rodada_equipes re
+drop function if exists fila_rodada(text,smallint);
+create function fila_rodada(p_token text,p_rodada_id smallint)
+returns table(inscricao_id text,selecionada boolean) language sql security definer set search_path=public as $$
+  select re.inscricao_id,re.selecionada from rodada_equipes re
   join avaliadores a on a.token=p_token and a.ativo
   where re.rodada_id=p_rodada_id
     and (a.papel='admin' or exists(
