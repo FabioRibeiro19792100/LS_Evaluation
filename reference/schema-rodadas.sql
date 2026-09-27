@@ -36,6 +36,10 @@ create table if not exists rodada_atribuicoes (
   criado_em timestamptz not null default now(),
   primary key (rodada_id, inscricao_id, avaliador_id)
 );
+create table if not exists rodada_pareceristas (
+  rodada_id smallint not null references rodadas(id), avaliador_id uuid not null references avaliadores(id),
+  ativo boolean not null default true, criado_em timestamptz not null default now(), primary key(rodada_id,avaliador_id)
+);
 
 create table if not exists avaliacoes_rodada (
   id uuid primary key default gen_random_uuid(),
@@ -53,10 +57,11 @@ create index if not exists avaliacoes_rodada_lookup
 alter table rodadas enable row level security;
 alter table rodada_equipes enable row level security;
 alter table rodada_atribuicoes enable row level security;
+alter table rodada_pareceristas enable row level security;
 alter table avaliacoes_rodada enable row level security;
 alter table rodadas add column if not exists modo_atribuicao text not null default 'todos';
 alter table rodadas add column if not exists avaliacoes_por_equipe smallint;
-revoke all on rodadas, rodada_equipes, rodada_atribuicoes, avaliacoes_rodada from anon, authenticated;
+revoke all on rodadas, rodada_equipes, rodada_atribuicoes, rodada_pareceristas, avaliacoes_rodada from anon, authenticated;
 
 insert into rodadas (id,slug,nome,titulo,entrega,orientacao,corte,criterios,ordem,status,oficial) values
 (1,'inscricoes','Inscrições','Seleção das inscrições','Narrativa de ideação','Avalie a narrativa de ideação enviada pela equipe.',19,

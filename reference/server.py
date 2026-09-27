@@ -19,7 +19,8 @@ CRITERIOS = ("edi", "originalidade", "qualidade", "viabilidade", "impacto")
 RPCS = {"validar_token", "minhas_avaliacoes", "salvar_avaliacao", "todas_avaliacoes", "listar_avaliadores",
         "listar_rodadas", "fila_rodada", "minhas_avaliacoes_rodada", "salvar_avaliacao_rodada",
         "todas_avaliacoes_rodada", "avancar_equipes", "listar_atribuicoes", "salvar_atribuicoes",
-        "criar_parecerista", "excluir_parecerista", "distribuir_rodada"}
+        "criar_parecerista", "excluir_parecerista", "listar_pareceristas_rodada",
+        "definir_parecerista_rodada", "distribuir_rodada"}
 
 
 def agora() -> str:
@@ -72,6 +73,13 @@ def inicializar() -> None:
           rodada_id INTEGER NOT NULL REFERENCES rodadas(id), inscricao_id TEXT NOT NULL,
           avaliador_id TEXT NOT NULL REFERENCES avaliadores(id), ativa INTEGER NOT NULL DEFAULT 1,
           criado_em TEXT NOT NULL, PRIMARY KEY(rodada_id,inscricao_id,avaliador_id)
+        );
+        CREATE TABLE IF NOT EXISTS rodada_pareceristas (
+          rodada_id INTEGER NOT NULL REFERENCES rodadas(id),
+          avaliador_id TEXT NOT NULL REFERENCES avaliadores(id),
+          ativo INTEGER NOT NULL DEFAULT 1,
+          criado_em TEXT NOT NULL,
+          PRIMARY KEY(rodada_id,avaliador_id)
         );
         CREATE TABLE IF NOT EXISTS avaliacoes_rodada (
           id TEXT PRIMARY KEY, rodada_id INTEGER NOT NULL REFERENCES rodadas(id),
@@ -130,6 +138,8 @@ def inicializar() -> None:
         oficiais = con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1").fetchall()
         con.executemany("INSERT OR IGNORE INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(1,?,?,?)",
                         [(x, a["id"], agora()) for x in elegiveis for a in oficiais])
+        con.execute("""INSERT OR IGNORE INTO rodada_pareceristas(rodada_id,avaliador_id,criado_em)
+          SELECT DISTINCT rodada_id,avaliador_id,? FROM rodada_atribuicoes WHERE ativa=1""", (agora(),))
         con.execute("""INSERT OR IGNORE INTO avaliacoes_rodada(id,rodada_id,avaliador_id,inscricao_id,notas,comentario,criado_em)
           SELECT id,1,avaliador_id,inscricao_id,json_object('edi',edi,'originalidade',originalidade,'qualidade',qualidade,'viabilidade',viabilidade,'impacto',impacto),comentario,criado_em FROM avaliacoes""")
 
@@ -270,6 +280,20 @@ def executar_rpc(nome: str, p: dict):
             rodada=int(p.get("p_rodada_id") or 1)
             return [dicionario(r) for r in con.execute("SELECT rodada_id,inscricao_id,avaliador_id,ativa FROM rodada_atribuicoes WHERE rodada_id=?",(rodada,)).fetchall()]
 
+        if nome == "listar_pareceristas_rodada":
+            rodada=int(p.get("p_rodada_id") or 1)
+            return [dicionario(r) for r in con.execute("SELECT rodada_id,avaliador_id,ativo FROM rodada_pareceristas WHERE rodada_id=?",(rodada,)).fetchall()]
+
+        if nome == "definir_parecerista_rodada":
+            rodada=int(p.get("p_rodada_id") or 1); avaliador_id=str(p.get("p_avaliador_id") or ""); ativo=bool(p.get("p_ativo"))
+            if not con.execute("SELECT 1 FROM avaliadores WHERE id=? AND papel='parecerista' AND ativo=1 AND contabiliza=1",(avaliador_id,)).fetchone():
+                raise ValueError("parecerista inválido")
+            con.execute("""INSERT INTO rodada_pareceristas(rodada_id,avaliador_id,ativo,criado_em) VALUES(?,?,?,?)
+              ON CONFLICT(rodada_id,avaliador_id) DO UPDATE SET ativo=excluded.ativo""",(rodada,avaliador_id,int(ativo),agora()))
+            if not ativo:
+                con.execute("UPDATE rodada_atribuicoes SET ativa=0 WHERE rodada_id=? AND avaliador_id=?",(rodada,avaliador_id))
+            return True
+
         if nome == "salvar_atribuicoes":
             rodada=int(p.get("p_rodada_id") or 1); inscricao=str(p.get("p_inscricao_id") or ""); ids=list(dict.fromkeys(p.get("p_avaliador_ids") or []))
             if not con.execute("SELECT 1 FROM rodada_equipes WHERE rodada_id=? AND inscricao_id=?",(rodada,inscricao)).fetchone():
@@ -284,7 +308,9 @@ def executar_rpc(nome: str, p: dict):
             rodada=int(p.get("p_rodada_id") or 1); modo=str(p.get("p_modo") or "todos")
             quantidade=int(p.get("p_quantidade") or 0) if modo=="aleatoria" else None
             if modo not in ("todos","aleatoria"): raise ValueError("modo de distribuição inválido")
-            avaliadores=[x["id"] for x in con.execute("SELECT id FROM (SELECT id,nome,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1 ORDER BY nome").fetchall()]
+            avaliadores=[x["id"] for x in con.execute("""SELECT a.id FROM rodada_pareceristas rp JOIN avaliadores a ON a.id=rp.avaliador_id
+              WHERE rp.rodada_id=? AND rp.ativo=1 AND a.ativo=1 AND a.contabiliza=1 ORDER BY a.nome""",(rodada,)).fetchall()]
+            if not avaliadores: raise ValueError("selecione pelo menos um parecerista para esta etapa")
             if modo=="aleatoria" and (quantidade<1 or quantidade>len(avaliadores)):
                 raise ValueError(f"informe uma quantidade entre 1 e {len(avaliadores)}")
             equipes=[x["inscricao_id"] for x in con.execute("SELECT inscricao_id FROM rodada_equipes WHERE rodada_id=?",(rodada,)).fetchall()]
@@ -292,7 +318,8 @@ def executar_rpc(nome: str, p: dict):
             con.execute("DELETE FROM rodada_atribuicoes WHERE rodada_id=?",(rodada,))
             pares=[]
             for equipe in equipes:
-                escolhidos=avaliadores if modo=="todos" else [x["id"] for x in con.execute("SELECT id FROM (SELECT id,row_number() OVER(PARTITION BY lower(trim(nome)) ORDER BY criado_em,id) rn FROM avaliadores WHERE papel='parecerista' AND ativo=1 AND contabiliza=1) WHERE rn=1 ORDER BY random() LIMIT ?",(quantidade,)).fetchall()]
+                escolhidos=avaliadores if modo=="todos" else [x["id"] for x in con.execute("""SELECT a.id FROM rodada_pareceristas rp JOIN avaliadores a ON a.id=rp.avaliador_id
+                  WHERE rp.rodada_id=? AND rp.ativo=1 AND a.ativo=1 AND a.contabiliza=1 ORDER BY random() LIMIT ?""",(rodada,quantidade)).fetchall()]
                 pares.extend((rodada,equipe,a,agora()) for a in escolhidos)
             con.executemany("INSERT INTO rodada_atribuicoes(rodada_id,inscricao_id,avaliador_id,criado_em) VALUES(?,?,?,?)",pares)
             return len(pares)

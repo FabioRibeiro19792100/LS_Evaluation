@@ -281,7 +281,7 @@ let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionada
         <input id="quantidade-avaliacoes" type="number" min="1" placeholder="Avaliações por projeto" aria-label="Avaliações por projeto" hidden>
         <button class="btn" type="submit">Aplicar</button>
       </form><div id="grade-atribuicoes" class="resumo-distribuicao"></div></section>
-    <section class="gestao-bloco"><h3>Pareceristas cadastrados</h3><p id="total-pareceristas"></p><div id="links-pareceristas" class="atribuicoes-links"></div></section>
+    <section class="gestao-bloco"><h3>Pareceristas desta etapa</h3><p id="total-pareceristas"></p><div id="links-pareceristas" class="atribuicoes-links"></div></section>
     <section class="gestao-bloco"><h3>Adicionar parecerista</h3><form id="form-parecerista" class="cadastro-parecerista">
         <input id="novo-parecerista-nome" required minlength="3" placeholder="Nome completo" aria-label="Nome completo">
         <input id="novo-parecerista-email" type="email" placeholder="E-mail (opcional)" aria-label="E-mail">
@@ -300,7 +300,7 @@ const n1 = x => x == null ? "" : x.toFixed(1).replace(".", ",");
 const n2 = x => x == null ? "" : x.toFixed(2).replace(".", ",");
 const token = new URLSearchParams(location.search).get("token") || "admin-demo";
 const CHAVE_SESSAO_DADOS = "ls26:senha-dados";
-let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], atribuicoes=[], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
+let cliente, eu, todas = [], pareceristas = [], pareceristasOficiais = [], pareceristasEtapaIds=new Set(), atribuicoes=[], consolidado = [], ordem = {col:"pos", asc:true}, timerAtualizacao;
 let filtrosRanking = {escola:"", cidade:"", lider:"", tag:""};
 
 function vazio(t, sub){ $("#raiz").innerHTML = `<div class="vazio"><h2>${esc(t)}</h2><p>${esc(sub)}</p></div>`; }
@@ -361,15 +361,15 @@ async function carregar(){
     const local=LS_RODADA(RODADA.id); CRITERIOS=(local.criterios||RODADA.criterios).map(c=>({...c,...(RODADA.criterios||[]).find(x=>x.k===c.k),peso:Number((RODADA.criterios||[]).find(x=>x.k===c.k)?.peso??c.peso)/100}));
     CORTE=Number(RODADA.corte); const n=$("#navegacao-etapas");n.innerHTML=RODADAS.map((x,i)=>`<button class="etapa-aba ${x.id===RODADA.id?'ativa':''}" type="button" data-rodada="${x.id}" ${x.id===RODADA.id?'aria-current="page"':''}><span class="etapa-numero">Etapa ${i+1}</span>${esc(x.nome)}</button>`).join("");n.querySelectorAll(".etapa-aba").forEach(b=>b.onclick=()=>{if(Number(b.dataset.rodada)===RODADA.id)return;const u=new URL(location.href);u.searchParams.set("rodada",b.dataset.rodada);location.href=u});
   }
-  const [a, p, f, atr] = await Promise.all([cliente.rpc("todas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id}), cliente.rpc("listar_avaliadores", {p_token: token}),cliente.rpc("fila_rodada",{p_token:token,p_rodada_id:RODADA.id}),cliente.rpc("listar_atribuicoes",{p_token:token,p_rodada_id:RODADA.id})]);
+  const [a, p, f, atr, pr] = await Promise.all([cliente.rpc("todas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id}), cliente.rpc("listar_avaliadores", {p_token: token}),cliente.rpc("fila_rodada",{p_token:token,p_rodada_id:RODADA.id}),cliente.rpc("listar_atribuicoes",{p_token:token,p_rodada_id:RODADA.id}),cliente.rpc("listar_pareceristas_rodada",{p_token:token,p_rodada_id:RODADA.id})]);
   if (a.error) return vazio("Erro ao carregar", a.error.message);
   const candidatos=(p.data || []).filter(x => x.papel === "parecerista" && x.ativo && x.contabiliza !== false);
   const unicos=new Map();candidatos.forEach(x=>{const chave=x.nome.normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR");if(!unicos.has(chave))unicos.set(chave,x)});pareceristas=[...unicos.values()].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
   IDS_RODADA=new Set((f.data||[]).map(x=>x.inscricao_id));
   selecionadas=new Set((f.data||[]).filter(x=>x.selecionada===true||x.selecionada===1).map(x=>x.inscricao_id));
   atribuicoes=atr.data||[];
-  const idsDaEtapa=new Set(atribuicoes.filter(x=>x.ativa!==false).map(x=>x.avaliador_id));
-  pareceristasOficiais=pareceristas.filter(x=>idsDaEtapa.has(x.id));
+  pareceristasEtapaIds=new Set((pr.data||[]).filter(x=>x.ativo!==false).map(x=>x.avaliador_id));
+  pareceristasOficiais=pareceristas.filter(x=>pareceristasEtapaIds.has(x.id));
   const oficiaisIds = new Set(pareceristasOficiais.map(x => x.id));
   todas = (a.data || []).filter(x => oficiaisIds.has(x.avaliador_id)).map(x=>({...x,...(x.notas||{})}));
   consolidar(); render();
@@ -570,17 +570,19 @@ $(".modal-fechar",modalAtribuicoes).onclick=()=>modalAtribuicoes.close();
 modalAtribuicoes.onclick=e=>{if(e.target===modalAtribuicoes)modalAtribuicoes.close()};
 function renderAtribuicoes(){
   const equipes=consolidado.filter(r=>r.elegivel).map(r=>r.ins);
-  $("#total-pareceristas").textContent=`${pareceristas.length} ${pareceristas.length===1?'parecerista ativo':'pareceristas ativos'}, sem nomes repetidos.`;
-  $("#links-pareceristas").innerHTML=pareceristas.map(p=>`<div class="parecerista-link"><div class="parecerista-identificacao"><strong>${esc(p.nome)}</strong><small>${esc(p.email||'E-mail não informado')}</small></div><div class="parecerista-acoes"><button type="button" class="copiar-link" data-token="${esc(p.token)}">Copiar link</button><button type="button" class="excluir-parecerista" data-id="${esc(p.id)}" data-nome="${esc(p.nome)}">Excluir</button></div></div>`).join("")||'<span>Nenhum parecerista cadastrado.</span>';
+  $("#total-pareceristas").textContent=`${pareceristasOficiais.length} nesta etapa · ${pareceristas.length} cadastrados no sistema.`;
+  $("#links-pareceristas").innerHTML=pareceristas.map(p=>{const nesta=pareceristasEtapaIds.has(p.id);return `<div class="parecerista-link"><div class="parecerista-identificacao"><strong>${esc(p.nome)}</strong><small>${nesta?'Participa desta etapa':esc(p.email||'E-mail não informado')}</small></div><div class="parecerista-acoes">${nesta?`<button type="button" class="copiar-link" data-token="${esc(p.token)}">Copiar link</button>`:''}<button type="button" class="alternar-etapa" data-id="${esc(p.id)}" data-ativo="${nesta?'0':'1'}">${nesta?'Remover da etapa':'Adicionar à etapa'}</button><button type="button" class="excluir-parecerista" data-id="${esc(p.id)}" data-nome="${esc(p.nome)}">Excluir cadastro</button></div></div>`}).join("")||'<span>Nenhum parecerista cadastrado.</span>';
   $("#modo-distribuicao").value=RODADA.modo_atribuicao||"todos";$("#quantidade-avaliacoes").hidden=$("#modo-distribuicao").value!=="aleatoria";$("#quantidade-avaliacoes").value=RODADA.avaliacoes_por_equipe||"";
   $("#grade-atribuicoes").textContent=atribuicoes.length?`${atribuicoes.length} atribuições ativas para ${equipes.length} projetos nesta etapa.`:"A etapa ainda não tem atribuições.";
   document.querySelectorAll(".copiar-link").forEach(b=>b.onclick=async()=>{const u=new URL("avaliador.html",location.href);u.searchParams.set("token",b.dataset.token);u.searchParams.set("rodada",RODADA.id);await navigator.clipboard.writeText(u.href);const antes=b.textContent;b.textContent="Copiado";setTimeout(()=>b.textContent=antes,1400)});
+  document.querySelectorAll(".alternar-etapa").forEach(b=>b.onclick=()=>alternarPareceristaEtapa(b.dataset.id,b.dataset.ativo==="1",b));
   document.querySelectorAll(".excluir-parecerista").forEach(b=>b.onclick=()=>excluirParecerista(b.dataset.id,b.dataset.nome,b));
 }
 $("#modo-distribuicao").onchange=e=>$("#quantidade-avaliacoes").hidden=e.target.value!=="aleatoria";
-async function aplicarDistribuicao(){const modo=$("#modo-distribuicao").value,qtd=modo==="aleatoria"?Math.min(Number($("#quantidade-avaliacoes").value),pareceristas.length):null;const r=await cliente.rpc("distribuir_rodada",{p_token:token,p_rodada_id:RODADA.id,p_modo:modo,p_quantidade:qtd});if(r.error){alert(r.error.message);return false}RODADA.modo_atribuicao=modo;RODADA.avaliacoes_por_equipe=qtd;await carregar();renderAtribuicoes();return true}
+async function aplicarDistribuicao(){const modo=$("#modo-distribuicao").value,qtd=modo==="aleatoria"?Math.min(Number($("#quantidade-avaliacoes").value),pareceristasOficiais.length):null;const r=await cliente.rpc("distribuir_rodada",{p_token:token,p_rodada_id:RODADA.id,p_modo:modo,p_quantidade:qtd});if(r.error){alert(r.error.message);return false}RODADA.modo_atribuicao=modo;RODADA.avaliacoes_por_equipe=qtd;await carregar();renderAtribuicoes();return true}
 $("#form-distribuicao").onsubmit=async e=>{e.preventDefault();const b=e.currentTarget.querySelector("button");b.disabled=true;await aplicarDistribuicao();b.disabled=false};
-$("#form-parecerista").onsubmit=async e=>{e.preventDefault();const botao=e.currentTarget.querySelector("button"),nome=$("#novo-parecerista-nome").value.trim(),email=$("#novo-parecerista-email").value.trim();botao.disabled=true;const r=await cliente.rpc("criar_parecerista",{p_token:token,p_nome:nome,p_email:email||null});if(r.error){alert(r.error.message);botao.disabled=false;return}e.currentTarget.reset();await aplicarDistribuicao();botao.disabled=false};
+$("#form-parecerista").onsubmit=async e=>{e.preventDefault();const botao=e.currentTarget.querySelector("button"),nome=$("#novo-parecerista-nome").value.trim(),email=$("#novo-parecerista-email").value.trim();botao.disabled=true;const r=await cliente.rpc("criar_parecerista",{p_token:token,p_nome:nome,p_email:email||null});if(r.error){alert(r.error.message);botao.disabled=false;return}e.currentTarget.reset();const novo=Array.isArray(r.data)?r.data[0]:r.data;await cliente.rpc("definir_parecerista_rodada",{p_token:token,p_rodada_id:RODADA.id,p_avaliador_id:novo.id,p_ativo:true});await carregar();await aplicarDistribuicao();botao.disabled=false};
+async function alternarPareceristaEtapa(id,ativo,botao){botao.disabled=true;const r=await cliente.rpc("definir_parecerista_rodada",{p_token:token,p_rodada_id:RODADA.id,p_avaliador_id:id,p_ativo:ativo});if(r.error){alert(r.error.message);botao.disabled=false;return}await carregar();if(pareceristasOficiais.length)await aplicarDistribuicao();else renderAtribuicoes()}
 async function excluirParecerista(id,nome,botao){if(!confirm(`Excluir ${nome}? O acesso será desativado e as equipes desta etapa serão redistribuídas.`))return;botao.disabled=true;const r=await cliente.rpc("excluir_parecerista",{p_token:token,p_avaliador_id:id});if(r.error){alert(r.error.message);botao.disabled=false;return}await carregar();if(!pareceristas.length){renderAtribuicoes();return}const ok=await aplicarDistribuicao();if(!ok)botao.disabled=false}
 
 function baixar(nome, linhas){
