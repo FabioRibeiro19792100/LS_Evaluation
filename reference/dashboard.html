@@ -236,6 +236,7 @@ let CRITERIOS = [
  {k:"impacto", nome:"Impacto", peso:.15},
 ];
 let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionadas=new Set();
+const CODIGOS_OCULTOS = new Set(["LS-32"]);
 // Ordem de desempate (regulamento 5.1.2): EDI, Originalidade, Qualidade, Viabilidade, Impacto
 </script>
 
@@ -380,7 +381,7 @@ function pontos(av){ return CRITERIOS.reduce((s,c) => s + av[c.k]*c.peso, 0); } 
 function consolidar(){
   const atuais = todas.filter(a => a.atual);
   const oficiaisIds = new Set(pareceristasOficiais.map(p=>p.id));
-  const base=RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id));
+  const base=(RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id))).filter(i=>!CODIGOS_OCULTOS.has(i.codigo));
   consolidado = base.map(i => {
     const avsTodas = atuais.filter(a => a.inscricao_id === i.id);
     const idsAtribuidos = new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false).map(x=>x.avaliador_id));

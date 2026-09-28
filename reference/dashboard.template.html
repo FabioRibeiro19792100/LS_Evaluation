@@ -228,6 +228,7 @@ const SUPABASE_ANON_KEY = AMBIENTE_LOCAL ? "local" : "sb_publishable_PuIPOJ1YLX9
 const INSCRICOES_PUBLICAS = __DADOS_PUBLICOS__;
 const DADOS_PROTEGIDOS = __DADOS_CRIPTOGRAFADOS__;
 let INSCRICOES = [];
+const CODIGOS_OCULTOS = new Set(["LS-32"]);
 let CRITERIOS = [
  {k:"edi", nome:"EDI", peso:.30},
  {k:"originalidade", nome:"Originalidade", peso:.20},
@@ -380,7 +381,7 @@ function pontos(av){ return CRITERIOS.reduce((s,c) => s + av[c.k]*c.peso, 0); } 
 function consolidar(){
   const atuais = todas.filter(a => a.atual);
   const oficiaisIds = new Set(pareceristasOficiais.map(p=>p.id));
-  const base=RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id));
+  const base=(RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id))).filter(i=>!CODIGOS_OCULTOS.has(i.codigo));
   consolidado = base.map(i => {
     const avsTodas = atuais.filter(a => a.inscricao_id === i.id);
     const idsAtribuidos = new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false).map(x=>x.avaliador_id));

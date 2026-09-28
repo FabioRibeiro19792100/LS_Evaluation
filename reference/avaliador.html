@@ -242,6 +242,7 @@ let CRITERIOS = [
   ex:["Aborda um problema significativo e beneficia a comunidade escolar","Atende a uma necessidade real e relevante","Potencial de melhorar significativamente o ambiente educacional","Pode ser replicada ou adaptada para outros contextos"]},
 ];
 let RODADAS = [], RODADA = LS_RODADA(1);
+const CODIGOS_OCULTOS = new Set(["LS-32"]);
 </script>
 
 <header class="topo">
@@ -331,7 +332,7 @@ async function iniciar(){
     cliente.rpc("fila_rodada", {p_token:token,p_rodada_id:RODADA.id}),
     cliente.rpc("minhas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id})
   ]);
-  const ids=new Set((fr.data||[]).map(x=>x.inscricao_id)); fila=INSCRICOES.filter(i=>ids.has(i.id));
+  const ids=new Set((fr.data||[]).map(x=>x.inscricao_id)); fila=INSCRICOES.filter(i=>ids.has(i.id)&&!CODIGOS_OCULTOS.has(i.codigo));
   minhas={}; (r.data || []).forEach(a => minhas[a.inscricao_id] = {...a,...(a.notas||{})});
   $("#titulo-aplicacao").textContent=`Learning Sectors 2026 · ${RODADA.titulo}`;
   atual = Math.max(0, fila.findIndex(i => !minhas[i.id]));
