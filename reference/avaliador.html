@@ -333,7 +333,7 @@ async function iniciar(){
     cliente.rpc("minhas_avaliacoes_rodada", {p_token: token,p_rodada_id:RODADA.id})
   ]);
   const ids=new Set((fr.data||[]).map(x=>x.inscricao_id)); fila=INSCRICOES.filter(i=>ids.has(i.id)&&!CODIGOS_OCULTOS.has(i.codigo));
-  minhas={}; (r.data || []).forEach(a => minhas[a.inscricao_id] = {...a,...(a.notas||{})});
+  minhas={}; (r.data || []).forEach(a => minhas[a.inscricao_id] = normalizarAvaliacao(a));
   $("#titulo-aplicacao").textContent=`Learning Sectors 2026 · ${RODADA.titulo}`;
   atual = Math.max(0, fila.findIndex(i => !minhas[i.id]));
   if (atual === -1) atual = 0;
@@ -344,6 +344,12 @@ function progresso(){
   const n = fila.filter(i => minhas[i.id]).length;
   const el = $("#prog");
   if (el) el.textContent = `${n} de ${fila.length} avaliadas`;
+}
+
+function normalizarAvaliacao(a){
+  if (!a) return null;
+  const registro = Array.isArray(a) ? a[0] : a;
+  return registro ? {...registro,...(registro.notas||{})} : null;
 }
 
 function mediaPonderada(a){
@@ -495,8 +501,8 @@ async function salvar(ins){
     p_notas:notas, p_comentario: rascunho.comentario || null,
   });
   if (error){ av.className = "aviso erro"; av.textContent = "Não foi possível salvar (" + error.message + "). Tente de novo; se persistir, avise a organização."; btn.disabled = false; return; }
-  minhas[ins.id] = data;
-  av.className = "aviso ok"; av.textContent = "Avaliação salva às " + fmt(data.criado_em) + ".";
+  minhas[ins.id] = normalizarAvaliacao(data);
+  av.className = "aviso ok"; av.textContent = "Avaliação salva às " + fmt(minhas[ins.id].criado_em) + ".";
   progresso();
   const pend = fila.findIndex((i,x) => x>atual && !minhas[i.id]);
   const qualquer = fila.findIndex(i => !minhas[i.id]);
