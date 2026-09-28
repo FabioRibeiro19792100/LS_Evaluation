@@ -247,7 +247,6 @@ let RODADAS = [], RODADA = LS_RODADA(1);
 <header class="topo">
   <div class="topo-identidade">
     <h1 id="titulo-aplicacao">Learning Sectors 2026 · Avaliação das inscrições</h1>
-    <select id="seletor-rodada" aria-label="Etapa da avaliação" hidden></select>
   </div>
   <span class="quem" id="quem"></span>
 </header>
@@ -335,8 +334,6 @@ async function iniciar(){
   const ids=new Set((fr.data||[]).map(x=>x.inscricao_id)); fila=INSCRICOES.filter(i=>ids.has(i.id));
   minhas={}; (r.data || []).forEach(a => minhas[a.inscricao_id] = {...a,...(a.notas||{})});
   $("#titulo-aplicacao").textContent=`Learning Sectors 2026 · ${RODADA.titulo}`;
-  const seletor=$("#seletor-rodada"); seletor.hidden=false; seletor.innerHTML=RODADAS.map(x=>`<option value="${x.id}" ${x.id===RODADA.id?'selected':''}>${esc(x.nome)}</option>`).join("");
-  seletor.onchange=e=>{const u=new URL(location.href);u.searchParams.set("rodada",e.target.value);location.href=u};
   atual = Math.max(0, fila.findIndex(i => !minhas[i.id]));
   if (atual === -1) atual = 0;
   render();
