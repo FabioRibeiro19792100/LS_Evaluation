@@ -574,7 +574,33 @@ function renderAtribuicoes(){
   $("#links-pareceristas").innerHTML=pareceristas.map(p=>{const nesta=pareceristasEtapaIds.has(p.id);return `<div class="parecerista-link"><div class="parecerista-identificacao"><strong>${esc(p.nome)}</strong><small>${nesta?'Participa desta etapa':esc(p.email||'E-mail não informado')}</small></div><div class="parecerista-acoes">${nesta?`<button type="button" class="copiar-link" data-token="${esc(p.token)}">Copiar link</button>`:''}<button type="button" class="alternar-etapa" data-id="${esc(p.id)}" data-ativo="${nesta?'0':'1'}">${nesta?'Remover da etapa':'Adicionar à etapa'}</button><button type="button" class="excluir-parecerista" data-id="${esc(p.id)}" data-nome="${esc(p.nome)}">Excluir cadastro</button></div></div>`}).join("")||'<span>Nenhum parecerista cadastrado.</span>';
   $("#modo-distribuicao").value=RODADA.modo_atribuicao||"todos";$("#quantidade-avaliacoes").hidden=$("#modo-distribuicao").value!=="aleatoria";$("#quantidade-avaliacoes").value=RODADA.avaliacoes_por_equipe||"";
   $("#grade-atribuicoes").textContent=atribuicoes.length?`${atribuicoes.length} atribuições ativas para ${equipes.length} projetos nesta etapa.`:"A etapa ainda não tem atribuições.";
-  document.querySelectorAll(".copiar-link").forEach(b=>b.onclick=async()=>{const u=new URL("avaliador.html",location.href);u.searchParams.set("token",b.dataset.token);u.searchParams.set("rodada",RODADA.id);await navigator.clipboard.writeText(u.href);const antes=b.textContent;b.textContent="Copiado";setTimeout(()=>b.textContent=antes,1400)});
+  document.querySelectorAll(".copiar-link").forEach(b=>b.onclick=async()=>{
+    const u=new URL("./avaliador.html",location.href);
+    u.search="";
+    u.searchParams.set("token",b.dataset.token);
+    u.searchParams.set("rodada",RODADA.id);
+    const antes=b.textContent;
+    try{
+      if(navigator.clipboard?.writeText && window.isSecureContext){
+        await navigator.clipboard.writeText(u.href);
+      }else{
+        const campo=document.createElement("textarea");
+        campo.value=u.href;
+        campo.setAttribute("readonly","");
+        campo.style.cssText="position:fixed;left:-9999px;top:0;opacity:0";
+        document.body.appendChild(campo);
+        campo.select();
+        campo.setSelectionRange(0,campo.value.length);
+        if(!document.execCommand("copy")) throw new Error("cópia não autorizada");
+        campo.remove();
+      }
+      b.textContent="Link copiado";
+    }catch(erro){
+      window.prompt("Copie o link do parecerista:",u.href);
+      b.textContent="Copie o link acima";
+    }
+    setTimeout(()=>b.textContent=antes,1800);
+  });
   document.querySelectorAll(".alternar-etapa").forEach(b=>b.onclick=()=>alternarPareceristaEtapa(b.dataset.id,b.dataset.ativo==="1",b));
   document.querySelectorAll(".excluir-parecerista").forEach(b=>b.onclick=()=>excluirParecerista(b.dataset.id,b.dataset.nome,b));
 }
