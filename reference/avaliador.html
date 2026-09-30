@@ -362,11 +362,16 @@ function notaFila(a){
   return n == null ? "" : n.toFixed(2).replace(".", ",");
 }
 
+function limiteNavegacao(){
+  if (Number(RODADA?.id) === 3) return fila.length - 1;
+  const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
+  return primeiraPendente < 0 ? fila.length - 1 : primeiraPendente;
+}
+
 function render(){
   const ins = fila[atual];
   const feitas = fila.filter(i => minhas[i.id]).length;
-  const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
-  const limite = primeiraPendente < 0 ? fila.length - 1 : primeiraPendente;
+  const limite = limiteNavegacao();
   const listaHtml = fila.map((i, ix) => `
     <button data-ix="${ix}" ${ix>limite?'aria-disabled="true"':''} class="${ix===atual?"ativa":""} ${minhas[i.id]?"avaliada":""} ${ix>limite?'bloqueada':''}" aria-label="${esc(i.codigo)} ${esc(i.equipe)}${minhas[i.id]?' — avaliada':ix>limite?' — bloqueada':' — disponível'}">
       <span class="st ${minhas[i.id]?"feita":ix>limite?'trancada':ix===atual?'em-andamento':''}"></span>
@@ -514,8 +519,7 @@ async function salvar(ins){
 }
 
 function ir(ix){
-  const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
-  const limite = primeiraPendente < 0 ? fila.length - 1 : primeiraPendente;
+  const limite = limiteNavegacao();
   if (ix < 0 || ix >= fila.length || ix > limite) return;
   atual = ix; render(); window.scrollTo({top:0});
 }
