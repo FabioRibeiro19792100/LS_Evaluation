@@ -210,7 +210,7 @@ begin
   if length(trim(coalesce(p_nome,'')))<3 then raise exception 'informe o nome completo do parecerista'; end if;
   if exists(select 1 from avaliadores a where a.papel='parecerista' and a.ativo and lower(trim(a.nome))=lower(trim(p_nome))) then raise exception 'este parecerista já está cadastrado'; end if;
   return query insert into avaliadores(nome,email,papel,token,ativo,contabiliza)
-    values(trim(p_nome),nullif(trim(coalesce(p_email,'')),''),'parecerista','parecerista-'||encode(gen_random_bytes(12),'hex'),true,true)
+    values(trim(p_nome),nullif(trim(coalesce(p_email,'')),''),'parecerista','parecerista-'||replace(gen_random_uuid()::text,'-',''),true,true)
     returning avaliadores.id,avaliadores.nome,avaliadores.email,avaliadores.papel,avaliadores.token,avaliadores.ativo,avaliadores.contabiliza;
 end $$;
 

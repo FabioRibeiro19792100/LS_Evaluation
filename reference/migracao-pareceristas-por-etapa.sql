@@ -21,7 +21,7 @@ begin
   return query
     insert into avaliadores(nome,email,papel,token,ativo,contabiliza)
     values(trim(p_nome),nullif(trim(coalesce(p_email,'')),''),'parecerista',
-           'parecerista-'||encode(gen_random_bytes(12),'hex'),true,true)
+           'parecerista-'||replace(gen_random_uuid()::text,'-',''),true,true)
     returning avaliadores.id,avaliadores.nome,avaliadores.email,avaliadores.papel,
               avaliadores.token,avaliadores.ativo,avaliadores.contabiliza;
 end $$;
