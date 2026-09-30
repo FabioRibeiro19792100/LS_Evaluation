@@ -236,7 +236,7 @@ let CRITERIOS = [
  {k:"viabilidade", nome:"Viabilidade", peso:.15},
  {k:"impacto", nome:"Impacto", peso:.15},
 ];
-let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionadas=new Set();
+let RODADAS=[], RODADA=LS_RODADA(1), CORTE=20, IDS_RODADA=new Set(), selecionadas=new Set(), selecaoAlterada=false;
 // Ordem de desempate (regulamento 5.1.2): EDI, Originalidade, Qualidade, Viabilidade, Impacto
 </script>
 
@@ -367,7 +367,7 @@ async function carregar(){
   const candidatos=(p.data || []).filter(x => x.papel === "parecerista" && x.ativo && x.contabiliza !== false);
   const unicos=new Map();candidatos.forEach(x=>{const chave=x.nome.normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLocaleLowerCase("pt-BR");if(!unicos.has(chave))unicos.set(chave,x)});pareceristas=[...unicos.values()].sort((a,b)=>a.nome.localeCompare(b.nome,"pt-BR"));
   IDS_RODADA=new Set((f.data||[]).map(x=>x.inscricao_id));
-  selecionadas=new Set((f.data||[]).filter(x=>x.selecionada===true||x.selecionada===1).map(x=>x.inscricao_id));
+  if(!selecaoAlterada) selecionadas=new Set((f.data||[]).filter(x=>x.selecionada===true||x.selecionada===1).map(x=>x.inscricao_id));
   atribuicoes=atr.data||[];
   pareceristasEtapaIds=new Set((pr.data||[]).filter(x=>x.ativo!==false).map(x=>x.avaliador_id));
   pareceristasOficiais=pareceristas.filter(x=>pareceristasEtapaIds.has(x.id));
@@ -493,7 +493,7 @@ function render(){
   $("#filtro-lider").onchange = e => { filtrosRanking.lider=e.target.value; render(); };
   $("#filtro-tag").onchange = e => { filtrosRanking.tag=e.target.value; render(); };
   $("#limpar-filtros").onclick = () => { filtrosRanking={escola:"",cidade:"",lider:"",tag:""}; render(); };
-  document.querySelectorAll(".selecionar-equipe").forEach(c=>c.onchange=()=>{c.checked?selecionadas.add(c.value):selecionadas.delete(c.value);const n=$("#total-selecionadas");if(n)n.textContent=selecionadas.size});
+  document.querySelectorAll(".selecionar-equipe").forEach(c=>c.onchange=()=>{selecaoAlterada=true;c.checked?selecionadas.add(c.value):selecionadas.delete(c.value);const n=$("#total-selecionadas");if(n)n.textContent=selecionadas.size});
   const avancar=$("#avancar-rodada"); if(avancar)avancar.onclick=async()=>{if(selecionadas.size!==CORTE){alert(`Selecione exatamente ${CORTE} equipes.`);return}if(!confirm(`Confirmar ${CORTE} equipes e abrir a próxima rodada? As notas desta rodada serão preservadas e a nova rodada começará zerada.`))return;avancar.disabled=true;const proxima=RODADAS.find(x=>x.ordem===RODADA.ordem+1);const r=await cliente.rpc("avancar_equipes",{p_token:token,p_origem:RODADA.id,p_destino:proxima.id,p_inscricoes:[...selecionadas]});if(r.error){alert(r.error.message);avancar.disabled=false;return}const u=new URL(location.href);u.searchParams.set("rodada",proxima.id);location.href=u};
   $("#drawer-conteudo").innerHTML = progAv.length?`<div class="andamento">${progAv.map(x=>{const pct=x.total?Math.round(100*x.n/x.total):0,status=x.n===0?'Não iniciado':x.n>=x.total?'Concluído':'Em andamento';return `<div class="andamento-linha"><div class="andamento-nome">${esc(x.p.nome)}</div><div class="barra" role="progressbar" aria-label="Progresso de ${esc(x.p.nome)}" aria-valuemin="0" aria-valuemax="${x.total}" aria-valuenow="${x.n}"><i style="width:${pct}%"></i></div><div class="andamento-meta"><b>${x.n} / ${x.total}</b><span>${status} · ${pct}%</span></div></div>`}).join("")}</div>`:'<p>Nenhum parecerista foi atribuído nesta etapa.</p>';
   requestAnimationFrame(ajustarAlturaTabela);
