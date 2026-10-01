@@ -144,7 +144,8 @@ language sql security definer set search_path=public as $$
     row_number() over(partition by ar.rodada_id,ar.avaliador_id,ar.inscricao_id order by ar.criado_em),
     row_number() over(partition by ar.rodada_id,ar.avaliador_id,ar.inscricao_id order by ar.criado_em desc)=1
   from avaliacoes_rodada ar join avaliadores a on a.id=ar.avaliador_id
-  where ar.rodada_id=p_rodada_id and exists(select 1 from avaliadores x where x.token=p_token and x.ativo and x.papel='admin')
+  where ar.rodada_id=p_rodada_id and a.ativo and a.contabiliza
+    and exists(select 1 from avaliadores x where x.token=p_token and x.ativo and x.papel='admin')
   order by ar.inscricao_id,a.nome,ar.criado_em
 $$;
 
