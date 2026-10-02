@@ -64,18 +64,16 @@ main{padding:24px;width:100%;max-width:none;min-width:0}
 .titulo-coluna::after{content:"";position:absolute;left:0;bottom:-1px;width:34px;height:2px;background:#77727F}
 .avaliacao-panel{position:sticky;top:var(--topo-h);display:flex;flex-direction:column;min-height:calc(100vh - var(--topo-h));max-height:calc(100vh - var(--topo-h));margin:-24px -24px -24px 0;padding:24px;background:var(--leve);border:0;border-radius:0;overflow-y:auto;color:var(--tinta)}
 .avaliacao-panel>h2{margin-left:0;margin-right:0}
-.avaliacao-panel>.intro-avaliacao{margin:0 0 14px;opacity:.68}
-.intro-avaliacao>p{min-height:var(--regua-pre-controle);height:auto;margin:0 0 8px;color:#4F4B57;font-size:13px;font-weight:500;line-height:1.4}
-.referencia-escala{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;width:100%;margin-left:0;color:var(--cinza);font-size:11px}
-.referencia-escala b{display:grid;place-items:center;width:100%;height:var(--regua-controle-h);border:1px solid #BDB9C4;color:var(--roxo);font-size:12px}
-.referencia-escala .ref-inicio{grid-column:1/3;text-align:left;white-space:nowrap}
-.referencia-escala .ref-fim{grid-column:4/6;text-align:right;white-space:nowrap}
+.avaliacao-panel>.intro-avaliacao{margin:0 0 8px;opacity:.72}
+.intro-avaliacao>p{height:auto;margin:0;color:#4F4B57;font-size:13px;font-weight:500;line-height:1.4}
 .avaliacao-panel .crit{padding-top:10px;margin-bottom:10px}
 .avaliacao-panel .crit>.explicacao{margin-bottom:6px}
 .avaliacao-panel .crit .cab{min-height:24px}
 .avaliacao-panel .crit .desc{font-size:13px;line-height:1.45}
 .avaliacao-panel .escala{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));width:100%;gap:6px}
 .avaliacao-panel .escala button{display:grid;place-items:center;width:100%;max-width:none;height:var(--regua-controle-h);border:1px solid var(--roxo);border-radius:0;background:transparent;color:var(--roxo);font-size:12px;font-weight:700;line-height:1;transform:none;box-shadow:none}
+.avaliacao-panel .escala-legenda{display:flex;justify-content:space-between;gap:12px;margin-top:5px;color:#77717E;font-size:10px;line-height:1.25}
+.avaliacao-panel .escala-legenda span:last-child{text-align:right}
 .avaliacao-panel .acoes{margin-top:auto;margin-bottom:-24px;background:var(--leve);border-top-color:var(--linha)}
 .avaliacao-panel .crit{border-top-color:var(--linha)}
 .avaliacao-panel .criterio-nome{color:var(--roxo)}
@@ -84,7 +82,7 @@ main{padding:24px;width:100%;max-width:none;min-width:0}
 .avaliacao-panel .escala button:hover{border-color:var(--roxo)}
 .avaliacao-panel .escala button.on{background:var(--roxo);border-color:var(--roxo);color:#fff;transform:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.22)}
 .avaliacao-panel .escala button.on::after{display:none}
-.avaliacao-panel .explicacao-conteudo{background:#fff;border-left-color:var(--roxo);color:var(--cinza)}
+.avaliacao-panel .explicacao-conteudo{margin-top:6px;padding:8px 10px;background:#fff;border-left-color:var(--roxo);color:var(--cinza)}
 .avaliacao-panel .explicacao-conteudo h4,.avaliacao-panel .peso-explicacao{color:var(--roxo)}
 .avaliacao-panel textarea{background:#fff;border-color:#fff;color:var(--tinta)}
 .avaliacao-panel .btn{background:var(--roxo);border-color:var(--roxo);color:#fff}
@@ -441,14 +439,14 @@ function inscricaoHtml(i){
     </div>
     <aside class="avaliacao-panel" aria-label="Formulário de avaliação">
     <h2 class="titulo-coluna">Avaliação</h2>
-    <div class="intro-avaliacao"><p>${esc(RODADA.orientacao||"Selecione uma nota para cada critério.")}</p><div class="referencia-escala" aria-label="Escala de 1 a 5"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><span class="ref-inicio">Não atende</span><span class="ref-fim">Atende plenamente</span></div></div>
+    <div class="intro-avaliacao"><p>${esc(RODADA.orientacao||"Selecione uma nota para cada critério.")}</p></div>
     ${avaliacaoLiberada() ? "" : `<div class="aviso-leitura" role="status"><strong>Avaliação ainda não liberada</strong><p>Você já pode navegar pela fila e ler o plano de ação de cada equipe. As notas serão liberadas pela organização no dia da banca.</p></div>`}
     ${CRITERIOS.map(c => `
     <section class="crit" data-k="${c.k}">
-      <details class="explicacao"><summary class="cab"><span class="criterio-nome">${esc(c.nome)}</span><span class="seta" aria-hidden="true"></span></summary><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p>${(c.ex||[]).length ? `<h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>` : ""}</div></details>
+      <div class="explicacao"><div class="cab"><span class="criterio-nome">${esc(c.nome)}</span></div><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p>${(c.ex||[]).length ? `<h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>` : ""}</div></div>
       ${avaliacaoLiberada() ? `<div class="escala" role="radiogroup" aria-label="${esc(c.nome)}">
         ${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" class="${rascunho[c.k]===n?"on":""}" aria-pressed="${rascunho[c.k]===n}">${n}</button>`).join("")}
-      </div>` : ""}
+      </div><div class="escala-legenda" aria-hidden="true"><span>1 · Não atende</span><span>5 · Atende plenamente</span></div>` : ""}
     </section>`).join("")}
     ${avaliacaoLiberada() ? `
     <section class="crit">
