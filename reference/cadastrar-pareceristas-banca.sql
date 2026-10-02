@@ -11,7 +11,8 @@ begin
     select * from (values
       ('Vera Oliveira','Vera.Oliveira@BritishCouncil.Org'),
       ('Barbara Cagliari','barbara.cagliari@britishcouncil.org'),
-      ('Tiago Jesus de Souza','tiago.souza@cps.sp.gov.br')
+      ('Tiago Jesus de Souza','tiago.souza@cps.sp.gov.br'),
+      ('Pietra Tonin','ptonin@grandepremiof1.com.br')
     ) as convidados(nome,email)
   loop
     select a.id into v_id
@@ -61,6 +62,7 @@ join rodada_pareceristas rp
 where lower(trim(a.nome)) in (
   'vera oliveira',
   'barbara cagliari',
-  'tiago jesus de souza'
+  'tiago jesus de souza',
+  'pietra tonin'
 )
 order by a.nome;
