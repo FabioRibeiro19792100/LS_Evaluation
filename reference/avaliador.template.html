@@ -443,7 +443,7 @@ function inscricaoHtml(i){
     ${avaliacaoLiberada() ? "" : `<div class="aviso-leitura" role="status"><strong>Avaliação ainda não liberada</strong><p>Você já pode navegar pela fila e ler o plano de ação de cada equipe. As notas serão liberadas pela organização no dia da banca.</p></div>`}
     ${CRITERIOS.map(c => `
     <section class="crit" data-k="${c.k}">
-      <div class="explicacao"><div class="cab"><span class="criterio-nome">${esc(c.nome)}</span></div><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p>${(c.ex||[]).length ? `<h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>` : ""}</div></div>
+      <div class="explicacao"><div class="cab"><span class="criterio-nome">${esc(c.nome)}</span></div><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p></div></div>
       ${avaliacaoLiberada() ? `<div class="escala" role="radiogroup" aria-label="${esc(c.nome)}">
         ${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" class="${rascunho[c.k]===n?"on":""}" aria-pressed="${rascunho[c.k]===n}">${n}</button>`).join("")}
       </div><div class="escala-legenda" aria-hidden="true"><span>1 · Não atende</span><span>5 · Atende plenamente</span></div>` : ""}
