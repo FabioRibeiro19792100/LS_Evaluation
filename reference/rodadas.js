@@ -26,7 +26,7 @@ window.LS_RODADAS = [
     criterios: [
       {k:"viabilidade", nome:"Viabilidade", curto:"Viabilidade", peso:25, desc:"Consistência do caminho de implementação apresentado.", ex:[]},
       {k:"inovacao", nome:"Inovação", curto:"Inovação", peso:25, desc:"Originalidade da solução e da abordagem apresentada no pitch.", ex:[]},
-      {k:"arguicao", nome:"Arguição", curto:"Arguição", peso:25, desc:"Clareza e consistência da argumentação diante da banca.", ex:[]},
+      {k:"arguicao", nome:"Arguição", curto:"Arguição", peso:25, desc:"Clareza e consistência da argumentação da equipe diante da banca.", ex:[]},
       {k:"impacto", nome:"Impacto", curto:"Impacto", peso:25, desc:"Potencial de transformação da solução para a comunidade escolar.", ex:[]}
     ]
   }

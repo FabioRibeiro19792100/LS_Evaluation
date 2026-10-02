@@ -181,6 +181,9 @@ textarea{width:100%;max-width:72ch;font:inherit;padding:10px;border:1.5px solid 
 .aviso{color:var(--cinza)}
 .aviso.erro{color:var(--vermelho)}
 .aviso.ok{color:var(--ok)}
+.aviso-leitura{margin:0 0 14px;padding:12px 14px;border-left:3px solid var(--roxo);background:#fff;color:var(--tinta)}
+.aviso-leitura strong{display:block;margin-bottom:4px;color:var(--roxo);font-size:14px}
+.aviso-leitura p{margin:0;color:var(--cinza);font-size:13px;line-height:1.45}
 .vazio{padding:48px 24px;max-width:60ch}
 .vazio h2{color:#2F2C38;font-size:20px;margin:0 0 8px}
 .acesso-dados{max-width:560px;margin:56px auto;padding:28px;border:1px solid var(--linha);background:#fff;box-shadow:0 12px 34px rgba(26,21,51,.09)}
@@ -362,6 +365,11 @@ function notaFila(a){
   return n == null ? "" : n.toFixed(2).replace(".", ",");
 }
 
+function avaliacaoLiberada(){
+  if (Number(RODADA?.id) !== 3) return true;
+  return RODADA?.status === "aberta";
+}
+
 function limiteNavegacao(){
   if (Number(RODADA?.id) === 3) return fila.length - 1;
   const primeiraPendente = fila.findIndex(i => !minhas[i.id]);
@@ -396,7 +404,7 @@ function render(){
     ir(ix);
   });
   $("#sel").onchange = e => ir(+e.target.value);
-  if (ins) ligarFormulario(ins);
+  if (ins && avaliacaoLiberada()) ligarFormulario(ins);
 }
 
 function inscricaoHtml(i){
@@ -434,13 +442,15 @@ function inscricaoHtml(i){
     <aside class="avaliacao-panel" aria-label="Formulário de avaliação">
     <h2 class="titulo-coluna">Avaliação</h2>
     <div class="intro-avaliacao"><p>${esc(RODADA.orientacao||"Selecione uma nota para cada critério.")}</p><div class="referencia-escala" aria-label="Escala de 1 a 5"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><span class="ref-inicio">Não atende</span><span class="ref-fim">Atende plenamente</span></div></div>
+    ${avaliacaoLiberada() ? "" : `<div class="aviso-leitura" role="status"><strong>Avaliação ainda não liberada</strong><p>Você já pode navegar pela fila e ler o plano de ação de cada equipe. As notas serão liberadas pela organização no dia da banca.</p></div>`}
     ${CRITERIOS.map(c => `
     <section class="crit" data-k="${c.k}">
-      <details class="explicacao"><summary class="cab"><span class="criterio-nome">${esc(c.nome)}</span><span class="seta" aria-hidden="true"></span></summary><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p><h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul></div></details>
-      <div class="escala" role="radiogroup" aria-label="${esc(c.nome)}">
+      <details class="explicacao"><summary class="cab"><span class="criterio-nome">${esc(c.nome)}</span><span class="seta" aria-hidden="true"></span></summary><div class="explicacao-conteudo"><div class="peso-explicacao">Peso na nota final: ${c.peso}%</div><p class="desc">${esc(c.desc)}</p>${(c.ex||[]).length ? `<h4>O que observar</h4><ul>${c.ex.map(e=>`<li>${esc(e)}</li>`).join("")}</ul>` : ""}</div></details>
+      ${avaliacaoLiberada() ? `<div class="escala" role="radiogroup" aria-label="${esc(c.nome)}">
         ${[1,2,3,4,5].map(n=>`<button type="button" data-n="${n}" class="${rascunho[c.k]===n?"on":""}" aria-pressed="${rascunho[c.k]===n}">${n}</button>`).join("")}
-      </div>
+      </div>` : ""}
     </section>`).join("")}
+    ${avaliacaoLiberada() ? `
     <section class="crit">
       <div class="comentario-campo">
         <label class="sr-only" for="coment">Comentário (opcional)</label>
@@ -451,14 +461,14 @@ function inscricaoHtml(i){
       <button class="btn" id="salvar">${a ? "Salvar nova versão" : "Salvar avaliação"}</button>
       <button class="btn sec" id="prox">Próxima pendente</button>
       <span class="aviso" id="aviso">${a ? "Última versão salva em " + fmt(a.criado_em) + "." : ""}</span>
-    </div>
+    </div>` : ""}
     </aside>
   </article>`;
 }
 
 function cartaoCanvas(titulo,valor,larga=false){return `<article class="canvas-card ${larga?'larga':''}"><h4>${esc(titulo)}</h4>${paragrafos(valor||"Não informado")}</article>`}
 function conteudoProposta(i){
-  if(RODADA.id!==2)return `<section class="narr"><div class="narr-bloco"><div class="pergunta-bloco"><h3>${esc(RODADA.entrega||"Narrativa de ideação")}</h3><p>Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?</p></div><div class="resposta-bloco"><span class="narr-rotulo">Resposta da equipe</span>${paragrafos(i.narrativa)}</div></div></section>`;
+  if(![2,3].includes(Number(RODADA.id)))return `<section class="narr"><div class="narr-bloco"><div class="pergunta-bloco"><h3>${esc(RODADA.entrega||"Narrativa de ideação")}</h3><p>Qual problema da sua comunidade escolar a sua equipe quer resolver, como pretende resolvê-lo e qual impacto a solução já gerou ou poderá gerar em sala de aula?</p></div><div class="resposta-bloco"><span class="narr-rotulo">Resposta da equipe</span>${paragrafos(i.narrativa)}</div></div></section>`;
   const p=i.plano_acao;
   if(!p)return `<section class="canvas"><div class="canvas-cab"><h3>Business Model Canvas</h3><p>O plano de ação desta equipe não foi localizado na base importada.</p></div></section>`;
   return `<section class="canvas"><div class="canvas-cab"><h3>Business Model Canvas</h3><p>Plano de ação submetido pela equipe para esta etapa.</p></div><div class="canvas-projeto"><span>Projeto</span><strong>${esc(p.projeto||i.equipe)}</strong></div><div class="canvas-secao">Contexto e solução</div><div class="canvas-grid">${cartaoCanvas("Problema",p.problema)}${cartaoCanvas("Públicos beneficiados",p.beneficiarios)}${cartaoCanvas("Solução proposta",p.solucao,true)}${cartaoCanvas("Originalidade e criatividade",p.originalidade)}${cartaoCanvas("Diversidade e impacto social",p.diversidade_impacto)}</div><div class="canvas-secao">Modelo de ação</div><div class="canvas-grid">${cartaoCanvas("Proposta de valor",p.proposta_valor)}${cartaoCanvas("Segmentos de públicos",p.segmentos)}${cartaoCanvas("Canais",p.canais)}${cartaoCanvas("Relacionamento com usuários",p.relacionamento)}${cartaoCanvas("Sustentação e perenidade",p.sustentacao)}${cartaoCanvas("Recursos principais",p.recursos)}${cartaoCanvas("Atividades-chave",p.atividades)}${cartaoCanvas("Parcerias-chave",p.parcerias)}${cartaoCanvas("Estrutura de custos",p.custos,true)}</div><div class="canvas-secao">Aplicação STEM</div><article class="canvas-card larga"><div class="canvas-stem">${(p.stem||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div>${paragrafos(p.stem_aplicacao||"Não informado")}</article></section>`;
@@ -497,6 +507,7 @@ function completo(){ return CRITERIOS.every(c => rascunho[c.k] >= 1); }
 function checar(){ $("#salvar").setAttribute("aria-disabled", completo() ? "false" : "true"); }
 
 async function salvar(ins){
+  if (!avaliacaoLiberada()) return;
   if (!completo()){ $("#modal-incompleta").showModal(); return; }
   const btn = $("#salvar"), av = $("#aviso");
   btn.disabled = true; av.className = "aviso"; av.textContent = "Salvando…";
