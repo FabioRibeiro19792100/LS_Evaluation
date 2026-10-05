@@ -87,6 +87,7 @@ tr.linha:hover{background:var(--leve)}
 .ranking-table td:nth-child(10){background:#E1E3E7;font-size:14px;color:#2F2B3E}
 .ranking-table tr.linha:hover td:nth-child(10){background:#D5D8DE}
 .ranking-table th.media-final,.ranking-table td.media-final{width:108px!important;border-left:1px solid #C7CAD1!important;text-align:center!important}.ranking-table th.media-final{background:#C9CDD4!important;color:#2F2B3E!important;font-weight:600}.ranking-table td.media-final{background:#E1E3E7!important;font-size:14px;color:#2F2B3E}
+.nota-criterio{display:flex;min-height:34px;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}.nota-criterio .nota-valor{font-size:inherit}.nota-criterio .nota-contribuicao{margin-top:4px;color:#8A8690;font-family:inherit;font-size:9px;font-weight:500;white-space:nowrap}
 .status-avaliacao{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap}
 .status-avaliacao::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
 .status-avaliacao.concluida{background:#E7F5ED;color:#176B43}
@@ -550,13 +551,14 @@ function linha(r){
   const atuais = todas.filter(a=>a.inscricao_id===i.id && a.atual);
   const atribuidosEquipe=new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false).map(x=>x.avaliador_id));
   const avaliadoresEquipe=pareceristas.filter(p=>atribuidosEquipe.has(p.id));
-  const avaliacoes = avaliadoresEquipe.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id);return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num criterio-col">${n1(a[c.k])}</td>`).join(""):CRITERIOS.map(()=>`<td class="num criterio-col">—</td>`).join("")}<td class="num media-final"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
+  const notaPonderada=(valor,c)=>`<div class="nota-criterio"><span class="nota-valor">${n2(valor)}</span><span class="nota-contribuicao">× ${Math.round(c.peso*100)}% = ${n2(valor*c.peso)}</span></div>`;
+  const avaliacoes = avaliadoresEquipe.map(p=>{const a=atuais.find(x=>x.avaliador_id===p.id);return `<tr class="linha-parecerista" data-id="${esc(i.id)}" hidden><td></td><td></td><td><div class="parecerista-identidade"><span class="parecerista-nome">${esc(p.nome)}</span>${a?`<span class="parecerista-data">${fmt(a.criado_em)}</span>`:""}</div></td><td><span class="estado-parecer">${a?'Concluída':'Pendente'}</span></td>${a?CRITERIOS.map(c=>`<td class="num criterio-col">${notaPonderada(a[c.k],c)}</td>`).join(""):CRITERIOS.map(()=>`<td class="num criterio-col">—</td>`).join("")}<td class="num media-final"><b>${a?n2(pontos(a)):'—'}</b></td></tr>`}).join("");
   return `<tr class="${cls}" data-id="${esc(i.id)}">
     <td class="num pos">${r.elegivel&&RODADA.id<RODADAS.length?`<label class="selecao-pos"><input class="selecionar-equipe" type="checkbox" value="${esc(i.id)}" ${selecionadas.has(i.id)?'checked':''}><span>${r.pos??'—'}</span></label>`:(r.pos??'—')}</td>
     <td>${esc(i.codigo)}</td>
     <td><span class="equipe">${esc(i.equipe)}</span>${tags.join("")}<div class="escola">${esc(nomeEscola(i.escola))}</div><div class="professor">Líder: Prof(a) ${esc(i.professor)}</div><div class="cidade">${esc(i.municipio)} · ${esc(i.uf)}</div></td>
     <td><div class="status-controle"><span class="status-avaliacao ${status.classe}">${status.texto}</span>${r.elegivel?`<button class="ver-avaliacoes" type="button" data-id="${esc(i.id)}" aria-expanded="false" aria-label="Mostrar avaliações dos pareceristas"></button>`:""}</div></td>
-    ${CRITERIOS.map(c=>`<td class="num criterio-col">${r.elegivel?n2(r.medias[c.k]):"—"}</td>`).join("")}
+    ${CRITERIOS.map(c=>`<td class="num criterio-col">${r.elegivel&&r.medias[c.k]!=null?notaPonderada(r.medias[c.k],c):"—"}</td>`).join("")}
     <td class="num media-final"><b>${r.elegivel?n2(r.final):"—"}</b></td>
   </tr>${r.elegivel?avaliacoes:""}`;
 }
