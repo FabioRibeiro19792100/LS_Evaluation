@@ -55,7 +55,7 @@ h2{font-size:13px;font-weight:600;color:var(--roxo);margin:28px 0 10px}
 .tabela-wrap{height:360px;min-height:220px;overflow:auto;border-top:0}
 .tabela-interior{min-width:1120px}
 .faixa-criterios{position:sticky;z-index:10;top:0;height:21px;background:#fff}
-.marcador-criterios{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:44.628%;height:21px;margin-left:46.446%;color:#77737E;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
+.marcador-criterios{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;width:var(--criterios-largura);height:21px;margin-left:var(--criterios-inicio);color:#77737E;font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap}
 .marcador-criterios::before,.marcador-criterios::after{content:"";height:1px;background:#C9C7CE}
 table{border-collapse:collapse;width:100%;min-width:900px}
 th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--linha);vertical-align:top}
@@ -467,7 +467,7 @@ function render(){
   </div>
   <div class="resultado-filtro">${rows.length} ${rows.length===1?'inscrição encontrada':'inscrições encontradas'}</div>
   ${RODADA.id<RODADAS.length?`<div class="controle-selecao"><strong><span id="total-selecionadas">${selecionadas.size}</span> de ${CORTE} selecionadas</strong><button class="btn" id="avancar-rodada" type="button">Criar ${esc(RODADAS.find(x=>x.ordem===RODADA.ordem+1)?.nome||'próxima rodada')}</button></div>`:""}
-  <div class="tabela-wrap"><div class="tabela-interior"><div class="faixa-criterios"><div class="marcador-criterios"><span>Critérios de avaliação</span></div></div><table class="ranking-table">
+  <div class="tabela-wrap"><div class="tabela-interior"><div class="faixa-criterios"><div class="marcador-criterios" style="--criterios-inicio:${(562/(562+(CRITERIOS.length+1)*108)*100).toFixed(4)}%;--criterios-largura:${(CRITERIOS.length*108/(562+(CRITERIOS.length+1)*108)*100).toFixed(4)}%"><span>Critérios de avaliação</span></div></div><table class="ranking-table">
     <thead><tr>
       <th data-c="pos">Posição</th>
       <th data-c="codigo">Código</th>
