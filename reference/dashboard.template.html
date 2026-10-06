@@ -394,7 +394,11 @@ function consolidar(){
   const base=(RODADA.id===1?INSCRICOES:INSCRICOES.filter(i=>IDS_RODADA.has(i.id))).filter(i=>!CODIGOS_OCULTOS.has(i.codigo));
   consolidado = base.map(i => {
     const avsTodas = atuais.filter(a => a.inscricao_id === i.id);
-    const idsAtribuidos = new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false).map(x=>x.avaliador_id));
+    // A situação da equipe deve refletir apenas os pareceristas oficiais que
+    // participam atualmente desta etapa. Atribuições antigas podem continuar
+    // preservadas no banco para auditoria, mas não podem manter a equipe
+    // artificialmente em "Em andamento".
+    const idsAtribuidos = new Set(atribuicoes.filter(x=>x.inscricao_id===i.id&&x.ativa!==false&&oficiaisIds.has(x.avaliador_id)).map(x=>x.avaliador_id));
     const avs = avsTodas.filter(a => oficiaisIds.has(a.avaliador_id) && idsAtribuidos.has(a.avaliador_id));
     const medias = {};
     CRITERIOS.forEach(c => medias[c.k] = avs.length ? avs.reduce((s,a)=>s+a[c.k],0)/avs.length : null);
