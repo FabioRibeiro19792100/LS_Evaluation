@@ -21,7 +21,7 @@ window.LS_RODADAS = [
   },
   {
     id: 3, slug: "banca", nome: "Banca", titulo: "Avaliação da banca final",
-    entrega: "Pitch e arguição", corte: 1,
+    entrega: "Pitch e arguição", corte: 3,
     orientacao: "Avalie o pitch de até 3 minutos e a arguição de até 5 minutos realizada pela banca.",
     criterios: [
       {k:"viabilidade", nome:"Viabilidade", curto:"Viabilidade", peso:25, desc:"Consistência do caminho de implementação apresentado.", ex:[]},
