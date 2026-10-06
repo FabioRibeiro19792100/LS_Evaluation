@@ -95,7 +95,6 @@ where id=2;
 
 update rodadas set
   orientacao='Avalie o pitch de até 3 minutos e a arguição de até 5 minutos realizada pela banca.',
-  corte=3,
   criterios='[{"k":"viabilidade","nome":"Viabilidade","curto":"Viabilidade","peso":25},{"k":"inovacao","nome":"Inovação","curto":"Inovação","peso":25},{"k":"arguicao","nome":"Arguição","curto":"Arguição","peso":25},{"k":"impacto","nome":"Impacto","curto":"Impacto","peso":25}]'::jsonb
 where id=3;
 
